@@ -1,0 +1,20 @@
+.image-placeholder {
+  background-color: #e9ecef;
+  border: 2px dashed #ced4da;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.image-placeholder:hover {
+  background-color: #dee2e6;
+  border-color: #adb5bd;
+}
+
+.placeholder-icon {
+  opacity: 0.6;
+}
+
