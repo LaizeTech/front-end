@@ -1,0 +1,318 @@
+.dashboard {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  max-width: 1100px;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 4px 0;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Revenue Card */
+.revenue-card {
+
+  grid-column: span 1;
+  background: linear-gradient(135deg, #e91e63, #ad1457);
+  color: white;
+}
+
+.revenue-card .card-header h3,
+.revenue-card .card-subtitle {
+  color: white;
+}
+
+.revenue-period {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.revenue-amount {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin-top: 16px;
+}
+
+/* Category Card */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #dc3545;
+}
+
+.category-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.category-icon.low-stock {
+  background-color: #dc3545;
+}
+
+.category-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 14px;
+}
+
+.category-quantity {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.category-store {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Sales Card */
+.sales-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sales-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.sales-name {
+  font-weight: 500;
+  color: #212529;
+}
+
+.sales-value {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Activity Card */
+.activity-list {
+  margin-bottom: 20px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.activity-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+.activity-icon.entry {
+  background-color: #28a745;
+}
+
+.activity-icon.exit {
+  background-color: #dc3545;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activity-count {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.activity-description {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Products Card */
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.product-icon {
+  width: 12px;
+  height: 12px;
+  background-color: #0d6efd;
+  border-radius: 50%;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 14px;
+}
+
+.product-quantity {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.product-store {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Employees Card */
+.employees-count {
+  font-size: 72px;
+  font-weight: 700;
+  color: #e91e63;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .revenue-card {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .dashboard-card {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .revenue-amount {
+    font-size: 36px;
+  }
+  
+  .employees-count {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 12px;
+  }
+  
+  .dashboard-card {
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .revenue-amount {
+    font-size: 28px;
+  }
+  
+  .employees-count {
+    font-size: 48px;
+  }
+}
+
