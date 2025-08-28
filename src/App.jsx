@@ -5,6 +5,7 @@ import Login from './login';
 import Dashboard from './dashboard';
 import Estoque from './estoque';
 import Configuracoes from './configuracoes';
+import Funcionarios from './pages/Funcionarios';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="estoque" element={<Estoque />} />
             <Route path="configuracoes" element={<Configuracoes />} />
+            <Route path="funcionarios" element={<Funcionarios />} />
           </Route>
         </Routes>
       </div>
