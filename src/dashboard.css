@@ -1,15 +1,15 @@
 .dashboard {
-  padding: 24px;
+  padding: 16px;
   background-color: #f8f9fa;
   min-height: 100vh;
 }
 
 .dashboard-header {
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   color: #212529;
   margin: 0;
@@ -17,44 +17,44 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  max-width: 1100px;
+  max-width: 100%;
 }
 
 .dashboard-card {
   background: white;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #e9ecef;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 140px;
 }
 
 .dashboard-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
 }
 
 .card-header {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .card-header h3 {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: #212529;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0;
 }
 
 .card-subtitle {
-  font-size: 14px;
+  font-size: 11px;
   color: #6c757d;
 }
 
 /* Revenue Card */
 .revenue-card {
-
   grid-column: span 1;
   background: linear-gradient(135deg, #e91e63, #ad1457);
   color: white;
@@ -66,63 +66,80 @@
 }
 
 .revenue-period {
-  font-size: 14px;
+  font-size: 11px;
   opacity: 0.9;
 }
 
 .revenue-amount {
-  font-size: 48px;
+  font-size: 24px;
   font-weight: 700;
   color: white;
-  margin-top: 16px;
+  margin-top: 6px;
 }
 
-/* Category Card */
-.category-list {
+/* Category & Products Cards (unificados) */
+.category-list,
+.products-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
+}
+
+.category-item,
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid;
 }
 
 .category-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #dc3545;
+  border-color: #dc3545;
 }
 
-.category-icon {
-  width: 12px;
-  height: 12px;
+.product-item {
+  border-color: #0d6efd;
+}
+
+.category-icon,
+.product-icon {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  flex-shrink: 0; /* garante alinhamento */
+  margin-top: 2px; /* ajusta posição vertical */
 }
 
 .category-icon.low-stock {
   background-color: #dc3545;
 }
 
-.category-details {
+.product-icon {
+  background-color: #0d6efd;
+}
+
+.category-details,
+.product-details {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
-.category-name {
+.category-name,
+.product-name {
   font-weight: 600;
   color: #212529;
-  font-size: 14px;
+  font-size: 12px;
 }
 
-.category-quantity {
-  font-size: 12px;
-  color: #6c757d;
-}
-
-.category-store {
-  font-size: 12px;
+.category-quantity,
+.category-store,
+.product-quantity,
+.product-store {
+  font-size: 10px;
   color: #6c757d;
 }
 
@@ -130,51 +147,54 @@
 .sales-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .sales-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 6px;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .sales-name {
   font-weight: 500;
   color: #212529;
+  font-size: 12px;
 }
 
 .sales-value {
   font-weight: 600;
   color: #495057;
+  font-size: 12px;
 }
 
 /* Activity Card */
 .activity-list {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .activity-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
+  gap: 8px;
+  padding: 8px;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .activity-icon {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 600;
+  font-size: 12px;
 }
 
 .activity-icon.entry {
@@ -188,80 +208,34 @@
 .activity-details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
 }
 
 .activity-count {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   color: #212529;
 }
 
 .activity-description {
-  font-size: 14px;
-  color: #6c757d;
-}
-
-/* Products Card */
-.products-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.product-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.product-icon {
-  width: 12px;
-  height: 12px;
-  background-color: #0d6efd;
-  border-radius: 50%;
-}
-
-.product-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.product-name {
-  font-weight: 600;
-  color: #212529;
-  font-size: 14px;
-}
-
-.product-quantity {
-  font-size: 12px;
-  color: #6c757d;
-}
-
-.product-store {
-  font-size: 12px;
+  font-size: 11px;
   color: #6c757d;
 }
 
 /* Employees Card */
 .employees-count {
-  font-size: 72px;
+  font-size: 32px;
   font-weight: 700;
   color: #e91e63;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 /* Responsive */
 @media (max-width: 1200px) {
   .dashboard-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
-  
   .revenue-card {
     grid-column: span 1;
   }
@@ -269,50 +243,59 @@
 
 @media (max-width: 768px) {
   .dashboard {
-    padding: 16px;
+    padding: 12px;
   }
-  
   .dashboard-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
   }
-  
   .dashboard-card {
-    padding: 16px;
+    padding: 10px;
   }
-  
   .page-title {
-    font-size: 28px;
+    font-size: 20px;
   }
-  
   .revenue-amount {
-    font-size: 36px;
+    font-size: 20px;
   }
-  
   .employees-count {
-    font-size: 56px;
+    font-size: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard {
-    padding: 12px;
+    padding: 10px;
   }
-  
   .dashboard-card {
-    padding: 12px;
+    padding: 8px;
   }
-  
   .page-title {
-    font-size: 24px;
+    font-size: 18px;
   }
-  
   .revenue-amount {
-    font-size: 28px;
+    font-size: 18px;
   }
-  
   .employees-count {
-    font-size: 48px;
+    font-size: 20px;
   }
 }
 
+/* Normaliza tipografia dos Produtos para ficar igual ao Category */
+.dashboard .products-card .product-details .product-name {
+  font-size: 12px !important;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.dashboard .products-card .product-details .product-quantity,
+.dashboard .products-card .product-details .product-store {
+  font-size: 10px !important;
+  line-height: 1.2;
+}
+
+/* Garante o mesmo “respiro” dos itens da lista */
+.dashboard .products-card .product-item {
+  padding: 6px !important;
+  gap: 8px !important;
+}

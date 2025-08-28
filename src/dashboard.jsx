@@ -47,7 +47,7 @@ const Dashboard = () => {
             <span className="card-subtitle">Produtos com estoque baixo</span>
           </div>
           <div className="category-list">
-            {categoryData.map((item, index) => (
+            {categoryData.slice(0, 2).map((item, index) => (
               <div key={index} className="category-item">
                 <div className="category-info">
                   <div className="category-icon low-stock"></div>
@@ -113,7 +113,7 @@ const Dashboard = () => {
             <span className="card-subtitle">Últimos 5 produtos adicionados/ atualizados</span>
           </div>
           <div className="products-list">
-            {recentProducts.map((product, index) => (
+            {recentProducts.slice(0, 2).map((product, index) => (
               <div key={index} className="product-item">
                 <div className="product-icon"></div>
                 <div className="product-details">
@@ -139,4 +139,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
