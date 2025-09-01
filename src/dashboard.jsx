@@ -24,6 +24,31 @@ const Dashboard = () => {
 
   const activeEmployees = 12;
 
+  const [pessoas, setPessoas] = useState([]); // estado para armazenar pessoas
+
+    // Função usando then/catch
+    function buscarThenCatch() {
+      console.log("Utilizando Fetch com .then() e .catch()!");
+
+      fetch("http://localhost:8080/pessoas")
+          .then(function (resposta) {
+            console.log("then resposta:", resposta);
+            return resposta.json(); // converte a resposta em JSON
+          })
+          .then(function (dados) {
+            console.log("then dados", dados);
+            setPessoas(dados); // salva no estado
+          })
+          .catch(function (erro) {
+            console.warn("erro: ", erro);
+          });
+    }
+
+    // Chama a função ao carregar o componente
+    useEffect(() => {
+      buscarThenCatch();
+    }, []);
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
