@@ -1,0 +1,288 @@
+.saidas {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+}
+
+.help-icon:hover {
+  color: #e91e63;
+}
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.exits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.exits-table thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.exits-table th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  white-space: nowrap;
+  border-right: 1px solid #e9ecef;
+}
+
+.exits-table th:last-child {
+  border-right: none;
+}
+
+.checkbox-column {
+  width: 50px;
+  text-align: center;
+}
+
+.sortable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sortable-header:hover {
+  color: #e91e63;
+}
+
+.sort-icon {
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.sortable-header:hover .sort-icon {
+  color: #e91e63;
+}
+
+.exits-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s ease;
+}
+
+.exits-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.exits-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.exits-table td {
+  padding: 16px 12px;
+  vertical-align: middle;
+  border-right: 1px solid #e9ecef;
+}
+
+.exits-table td:last-child {
+  border-right: none;
+}
+
+.table-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #e91e63;
+  cursor: pointer;
+}
+
+.product-name {
+  font-weight: 500;
+  color: #212529;
+  min-width: 150px;
+}
+
+.quantity {
+  font-weight: 600;
+  color: #495057;
+  text-align: center;
+  min-width: 80px;
+}
+
+.platform-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.platform-badge.orange {
+  background-color: #fd7e14;
+}
+
+.platform-badge.blue {
+  background-color: #0d6efd;
+}
+
+.platform-badge.gray {
+  background-color: #6c757d;
+}
+
+.date {
+  color: #495057;
+  min-width: 100px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.status-badge.green {
+  background-color: #28a745;
+}
+
+.status-badge.red {
+  background-color: #dc3545;
+}
+
+.price {
+  font-weight: 600;
+  color: #28a745;
+  min-width: 80px;
+}
+
+.supplier {
+  color: #495057;
+  min-width: 80px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .saidas {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .exits-table {
+    font-size: 12px;
+  }
+  
+  .exits-table th,
+  .exits-table td {
+    padding: 12px 8px;
+  }
+  
+  .product-name {
+    min-width: 120px;
+  }
+  
+  .quantity,
+  .date,
+  .price,
+  .supplier {
+    min-width: 60px;
+  }
+  
+  .platform-badge,
+  .status-badge {
+    min-width: 60px;
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .saidas {
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .exits-table {
+    font-size: 11px;
+  }
+  
+  .exits-table th,
+  .exits-table td {
+    padding: 8px 6px;
+  }
+  
+  .checkbox-column {
+    width: 40px;
+  }
+  
+  .table-checkbox {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .product-name {
+    min-width: 100px;
+  }
+  
+  .quantity,
+  .date,
+  .price,
+  .supplier {
+    min-width: 50px;
+  }
+}
+
+/* Scrollbar styling */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
