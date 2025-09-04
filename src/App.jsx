@@ -5,7 +5,7 @@ import Login from './login';
 import Dashboard from './dashboard';
 import Estoque from './estoque';
 import Configuracoes from './configuracoes';
-import Funcionarios from './funcionarios';
+import Funcionarios from './Funcionarios';
 import MetricasMensais from './MetricasMensais';
 import './App.css';
 
