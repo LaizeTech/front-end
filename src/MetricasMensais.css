@@ -1,0 +1,257 @@
+.metricas-mensais {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.add-platform-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #e91e63;
+  border-radius: 6px;
+  color: #e91e63;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-platform-btn:hover {
+  background-color: #e91e63;
+  color: white;
+}
+
+.platform-selector {
+  margin-bottom: 32px;
+}
+
+.selector-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+}
+
+.platform-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #e91e63, #d81b60);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 280px;
+  transition: all 0.2s ease;
+}
+
+.platform-dropdown:hover {
+  background: linear-gradient(135deg, #d81b60, #c2185b);
+  transform: translateY(-1px);
+}
+
+.platform-label {
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  background-color: white;
+  color: #e91e63;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e91e63;
+}
+
+.metrics-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.stats-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.stat-value.highlight {
+  color: #e91e63;
+  font-weight: 700;
+}
+
+.revenue-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.revenue-label {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.revenue-amount {
+  font-size: 36px;
+  font-weight: 700;
+  color: #e91e63;
+}
+
+.inactive-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  grid-column: 1 / -1;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.see-more {
+  font-size: 14px;
+  color: #e91e63;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.inactive-list {
+  display: flex;
+  gap: 12px;
+}
+
+.inactive-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.charts-section {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e91e63;
+  margin: 0 0 20px 0;
+}
+
+.chart-container {
+  width: 100%;
+  height: 250px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .metrics-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .metricas-mensais {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .platform-dropdown {
+    min-width: 100%;
+  }
+  
+  .inactive-list {
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    height: 200px;
+  }
+}

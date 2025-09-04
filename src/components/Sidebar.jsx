@@ -17,10 +17,21 @@ import './Sidebar.css';
 const Sidebar = () => {
   const location = useLocation();
 
+  const [expandedItem, setExpandedItem] = React.useState(null);
+
   const menuItems = [
     { path: '/', icon: Home, label: 'Início' },
     { path: '/estoque', icon: Package, label: 'Estoque' },
-    { path: '/dashboard', icon: BarChart3, label: 'Dashboard' },
+    { 
+      path: '/dashboard', 
+      icon: BarChart3, 
+      label: 'Dashboard',
+      subItems: [
+        { path: '/dashboard', label: 'Overview' },
+        { path: '/dashboard/metricas-mensais', label: 'Métricas Mensais' },
+        { path: '/dashboard/metricas-anuais', label: 'Métricas Anuais' }
+      ]
+    },
     { path: '/funcionarios', icon: Users, label: 'Funcionários' },
     { path: '/entradas', icon: ArrowUpCircle, label: 'Entradas' },
     { path: '/saidas', icon: ArrowDownCircle, label: 'Saídas' },
@@ -54,13 +65,32 @@ const Sidebar = () => {
             
             return (
               <li key={item.path} className="nav-item">
-                <Link 
-                  to={item.path} 
+                <div 
                   className={`nav-link ${isActive ? 'active' : ''}`}
+                  onClick={() => item.subItems && setExpandedItem(expandedItem === item.path ? null : item.path)}
                 >
-                  <Icon size={20} className="nav-icon" />
-                  <span className="nav-label">{item.label}</span>
-                </Link>
+                  <div className="nav-link-content">
+                    <Icon size={20} className="nav-icon" />
+                    <span className="nav-label">{item.label}</span>
+                  </div>
+                  {item.subItems && (
+                    <span className={`dropdown-arrow ${expandedItem === item.path ? 'expanded' : ''}`}>▼</span>
+                  )}
+                </div>
+                {item.subItems && expandedItem === item.path && (
+                  <ul className="subnav-list">
+                    {item.subItems.map((subItem) => (
+                      <li key={subItem.path} className="subnav-item">
+                        <Link 
+                          to={subItem.path} 
+                          className={`subnav-link ${location.pathname === subItem.path ? 'active' : ''}`}
+                        >
+                          {subItem.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             );
           })}

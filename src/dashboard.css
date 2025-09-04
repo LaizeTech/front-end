@@ -6,6 +6,79 @@
 
 .dashboard-header {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metrics-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #212529;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-content {
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  z-index: 1;
+  display: none;
+  border: 1px solid #e9ecef;
+}
+
+.dropdown-content.open {
+  display: block;
+}
+
+.dropdown-content a {
+  color: #212529;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-content a:hover {
+  background-color: #f8f9fa;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  z-index: 1;
+  display: none;
+}
+
+.dropdown-content.open {
+  display: block;
+}
+
+.dropdown-content a {
+  color: #212529;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f8f9fa;
 }
 
 .page-title {
@@ -229,6 +302,43 @@
   color: #e91e63;
   text-align: center;
   margin-top: 8px;
+}
+
+/* Subnav Links */
+.subnav-link {
+  display: flex;
+  align-items: center; /* Ensures text is vertically aligned */
+  padding: 8px 12px;
+  color: #000; /* Keeps text black */
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  text-align: left; /* Ensures proper alignment */
+  margin-left: 20px; /* Adds hierarchy spacing */
+  line-height: 1.2; /* Adjusts line height for better alignment */
+  position: relative;
+  top: -2px; /* Moves text slightly upwards */
+}
+
+.subnav-link .nav-icon {
+  margin-right: 8px; /* Adds space between icon and text */
+  display: none; /* Removes the dropdown icon */
+}
+
+.subnav-link:hover {
+  background-color: #e9ecef;
+  color: #000; /* Keeps hover color black */
+}
+
+.subnav-link.active {
+  background-color: #e9ecef;
+  color: #000; /* Keeps active color black */
+  font-weight: 500;
+}
+
+.dropdown-arrow {
+  display: none;
 }
 
 /* Responsive */

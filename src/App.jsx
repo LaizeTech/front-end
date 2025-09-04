@@ -10,7 +10,6 @@ import Saidas from './saidas';
 import Funcionarios from './Funcionarios';
 import MetricasMensais from './MetricasMensais';
 import MetricasAnuais from './MetricasAnuais'
-
 import './App.css';
 
 function App() {
@@ -21,7 +20,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard">
+              <Route index element={<Dashboard />} />
+              <Route path="metricas-mensais" element={<MetricasMensais />} />
+              <Route path="metricas-anuais" element={<MetricasAnuais />} />
+            </Route>
             <Route path="estoque" element={<Estoque />} />
             <Route path="configuracoes" element={<Configuracoes />} />
             <Route path="funcionarios" element={<Funcionarios />} />
