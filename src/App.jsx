@@ -7,6 +7,8 @@ import Estoque from './estoque';
 import Configuracoes from './configuracoes';
 import Funcionarios from './Funcionarios';
 import MetricasMensais from './MetricasMensais';
+import MetricasAnuais from './pages/MetricasAnuais';
+
 import './App.css';
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
             <Route path="configuracoes" element={<Configuracoes />} />
             <Route path="funcionarios" element={<Funcionarios />} />
             <Route path="metricas-mensais" element={<MetricasMensais />} />
+            <Route path="metricas-anuais" element={<MetricasAnuais />} />
           </Route>
         </Routes>
       </div>
