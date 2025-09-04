@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Package, Users, DollarSign } from 'lucide-react';
 import './Dashboard.css';
@@ -24,6 +24,31 @@ const Dashboard = () => {
 
   const activeEmployees = 12;
 
+  const [renda, setrenda] = useState([]); // estado para armazenar renda
+
+  // Função usando then/catch
+  function buscarThenCatch() {
+    console.log("Utilizando Fetch com .then() e .catch()!");
+
+    fetch("http://localhost:8080/saidas/renda-bruta-7dias")
+      .then(function (resposta) {
+        console.log("then resposta:", resposta);
+        return resposta.json(); // converte a resposta em JSON
+      })
+      .then(function (dados) {
+        console.log("then dados", dados);
+        setrenda(dados); // salva no estado
+      })
+      .catch(function (erro) {
+        console.warn("erro: ", erro);
+      });
+  }
+
+  // Chama a função ao carregar o componente
+  useEffect(() => {
+    buscarThenCatch();
+  }, []);
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -31,13 +56,15 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-grid">
-        {/* Revenue Card */}
+        {/* Revenue Card */}  
         <div className="dashboard-card revenue-card">
           <div className="card-header">
             <h3>Semana e mês atual</h3>
             <span className="revenue-period">Receita total dos últimos 7 dias</span>
           </div>
-          <div className="revenue-amount">R$ 570,86</div>
+          <div className="revenue-amount">
+            {renda ? `R$ ${renda.renda_bruta_7dias}` : 'Carregando...'}
+          </div>
         </div>
 
         {/* Category Section */}

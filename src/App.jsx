@@ -5,9 +5,11 @@ import Login from './login';
 import Dashboard from './dashboard';
 import Estoque from './estoque';
 import Configuracoes from './configuracoes';
-import Funcionarios from './funcionarios';
 import Entradas from './entradas';
 import Saidas from './saidas';
+import Funcionarios from './Funcionarios';
+import MetricasMensais from './MetricasMensais';
+import MetricasAnuais from './MetricasAnuais';
 import './App.css';
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path="funcionarios" element={<Funcionarios />} />
             <Route path="entradas" element={<Entradas />} />
             <Route path="saidas" element={<Saidas />} />
+            <Route path="metricas-mensais" element={<MetricasMensais />} />
+            <Route path="metricas-anuais" element={<MetricasAnuais />} />
           </Route>
         </Routes>
       </div>
