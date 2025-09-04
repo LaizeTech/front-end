@@ -9,7 +9,8 @@ import Entradas from './entradas';
 import Saidas from './saidas';
 import Funcionarios from './Funcionarios';
 import MetricasMensais from './MetricasMensais';
-import MetricasAnuais from './MetricasAnuais';
+import MetricasAnuais from './MetricasAnuais'
+
 import './App.css';
 
 function App() {
