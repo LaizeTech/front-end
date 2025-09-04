@@ -5,7 +5,7 @@ import Login from './login';
 import Dashboard from './dashboard';
 import Estoque from './estoque';
 import Configuracoes from './configuracoes';
-import Funcionarios from './pages/Funcionarios';
+import Funcionarios from './Funcionarios';
 import './App.css';
 
 function App() {
