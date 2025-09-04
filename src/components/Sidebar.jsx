@@ -24,7 +24,6 @@ const Sidebar = () => {
     { path: '/funcionarios', icon: Users, label: 'Funcionários' },
     { path: '/entradas', icon: ArrowUpCircle, label: 'Entradas' },
     { path: '/saidas', icon: ArrowDownCircle, label: 'Saídas' },
-    { path: '/configuracoes', icon: Settings, label: 'Configurações' },
   ];
 
   return (
@@ -73,7 +72,7 @@ const Sidebar = () => {
           <div className="user-avatar">
             <User size={16} />
           </div>
-          <span className="user-text">Conta</span>
+          <Link to="/configuracoes" className="user-text">Conta</Link>
         </div>
         <button className="logout-btn">
           <LogOut size={16} />
