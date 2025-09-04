@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Package, Users, DollarSign } from 'lucide-react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const location = useLocation();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
-  // Só mostra o dashboard principal se estiver na rota exata /dashboard
-  const isMainDashboard = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
-
   const salesData = [
     { name: 'Shoope', value: 40 },
     { name: 'Nuvem Shop', value: 40 },
@@ -60,24 +53,9 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="dashboard-header">
         <h1 className="page-title">Overview</h1>
-        <div className="metrics-dropdown">
-          <button 
-            className="dropdown-button"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            Métricas
-            <span style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
-          </button>
-          <div className={`dropdown-content ${isDropdownOpen ? 'open' : ''}`}>
-            <Link to="/dashboard" onClick={() => setIsDropdownOpen(false)}>Dashboard</Link>
-            <Link to="/dashboard/metricas-mensais" onClick={() => setIsDropdownOpen(false)}>Métricas Mensais</Link>
-            <Link to="/dashboard/metricas-anuais" onClick={() => setIsDropdownOpen(false)}>Métricas Anuais</Link>
-          </div>
-        </div>
       </div>
 
-      {isMainDashboard ? (
-        <div className="dashboard-grid">
+      <div className="dashboard-grid">
         {/* Revenue Card */}  
         <div className="dashboard-card revenue-card">
           <div className="card-header">
@@ -183,9 +161,6 @@ const Dashboard = () => {
           <div className="employees-count">{activeEmployees}</div>
         </div>
       </div>
-      ) : (
-        <Outlet />
-      )}
     </div>
   );
 };
