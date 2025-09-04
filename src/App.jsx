@@ -7,7 +7,7 @@ import Estoque from './estoque';
 import Configuracoes from './configuracoes';
 import Funcionarios from './Funcionarios';
 import MetricasMensais from './MetricasMensais';
-import MetricasAnuais from './pages/MetricasAnuais';
+import MetricasAnuais from './MetricasAnuais';
 
 import './App.css';
 
