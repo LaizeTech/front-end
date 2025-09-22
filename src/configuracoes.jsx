@@ -86,7 +86,7 @@ const Configuracoes = () => {
 
   const buscarDadosUsuario = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/pessoas/${id}`);
+      const response = await fetch(`http://localhost:8080/usuarios/${id}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       
@@ -134,7 +134,7 @@ const Configuracoes = () => {
 
   // Função para atualizar apenas a senha
   const atualizarSenha = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${id}/alterar-senha`;
     
     try {
       const response = await fetch(url, {
@@ -160,7 +160,7 @@ const Configuracoes = () => {
 
   // Função para atualizar apenas o email
   const atualizarEmail = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${id}/alterar-email`;
     
     try {
       const response = await fetch(url, {
@@ -184,39 +184,9 @@ const Configuracoes = () => {
     }
   };
 
-  // Função para atualizar email e senha
-  const atualizarEmailSenha = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
-    
-    try {
-      const response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: profileData.email,
-          senha: profileData.password
-        })
-      });
-      
-      if (!response.ok) throw new Error('Network response was not ok');
-      
-      console.log('Email e senha atualizados com sucesso usando PATCH:', { 
-        email: profileData.email, 
-        senha: profileData.password 
-      });
-      return { success: true, method: 'PATCH', fields: ['email', 'senha'] };
-      
-    } catch (error) {
-      console.error('Error updating email and password:', error);
-      return { success: false, error };
-    }
-  };
-
   // Função para atualizar todos os dados do usuário
   const atualizarUsuario = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${id}`;
     
     try {
       const response = await fetch(url, {
@@ -260,7 +230,7 @@ const Configuracoes = () => {
     if (nomeChanged && emailChanged && senhaChanged) {
       return { func: atualizarUsuario, description: 'Atualizando todos os dados (PUT)' };
     } else if (emailChanged && senhaChanged) {
-      return { func: atualizarEmailSenha, description: 'Atualizando email e senha (PATCH)' };
+      return { func: atualizarUsuario, description: 'Atualizando usuário completo (PUT)' };
     } else if (nomeChanged) {
       return { func: atualizarUsuario, description: 'Atualizando usuário completo (PUT)' };
     } else if (senhaChanged) {
