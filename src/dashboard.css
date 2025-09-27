@@ -135,7 +135,7 @@
 
 .revenue-card .card-header h3,
 .revenue-card .card-subtitle {
-  color: white;
+  color: black;
 }
 
 .revenue-period {
@@ -158,6 +158,32 @@
   gap: 8px;
 }
 
+/* Estilo para lista com scroll */
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Personalização da scrollbar */
+.scrollable-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
 .category-item,
 .product-item {
   display: flex;
@@ -171,6 +197,19 @@
 
 .category-item {
   border-color: #dc3545;
+}
+
+/* Cores específicas para cada tipo de alerta */
+.category-item.alert-red {
+  border-color: #dc3545;
+}
+
+.category-item.alert-yellow {
+  border-color: #ffc107;
+}
+
+.category-item.alert-purple {
+  border-color: #6f42c1;
 }
 
 .product-item {
@@ -188,6 +227,19 @@
 
 .category-icon.low-stock {
   background-color: #dc3545;
+}
+
+/* Estilos para diferentes tipos de alerta */
+.category-icon.alert-red {
+  background-color: #dc3545;
+}
+
+.category-icon.alert-yellow {
+  background-color: #ffc107;
+}
+
+.category-icon.alert-purple {
+  background-color: #6f42c1;
 }
 
 .product-icon {
@@ -301,7 +353,11 @@
   font-weight: 700;
   color: #e91e63;
   text-align: center;
-  margin-top: 8px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
 }
 
 /* Subnav Links */
