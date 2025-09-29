@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Package, Users, DollarSign } from 'lucide-react';
+import { TrendingUp, Package, Users, DollarSign, Bot } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -51,6 +51,11 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
+      {/* Chatbot Button */}
+      <button className="chatbot-button" title="Abrir Chat">
+        <Bot size={28} />
+      </button>
+
       <div className="dashboard-header">
         <h1 className="page-title">Overview</h1>
       </div>
