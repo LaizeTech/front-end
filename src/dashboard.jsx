@@ -22,7 +22,12 @@ const Dashboard = () => {
     { name: 'Delineador', quantity: 5 },
   ];
 
-  const activeEmployees = 12;
+  const [activeEmployees, setActiveEmployees] = useState(0);
+  const [alertaProdutos, setAlertaProdutos] = useState([]); // estado para armazenar alertas de produtos
+  const [vendasPorPlataforma, setVendasPorPlataforma] = useState([]); // estado para armazenar vendas por plataforma
+  const [ultimasCompras, setUltimasCompras] = useState([]); // estado para armazenar últimas compras
+  const [entradasUltimos3Dias, setEntradasUltimos3Dias] = useState(0); // estado para armazenar entradas dos últimos 3 dias
+  const [saidasUltimos3Dias, setSaidasUltimos3Dias] = useState(0); // estado para armazenar saídas dos últimos 3 dias
 
   const [renda, setrenda] = useState([]); // estado para armazenar renda
 
@@ -33,6 +38,10 @@ const Dashboard = () => {
     fetch("http://localhost:8080/saidas/renda-bruta-7dias")
       .then(function (resposta) {
         console.log("then resposta:", resposta);
+        if (resposta.status === 204) {
+          // Sem conteúdo, define como 0
+          return { renda_bruta_7dias: 0 };
+        }
         return resposta.json(); // converte a resposta em JSON
       })
       .then(function (dados) {
@@ -44,9 +53,223 @@ const Dashboard = () => {
       });
   }
 
-  // Chama a função ao carregar o componente
+  // Função para buscar funcionários ativos
+  function buscarFuncionariosAtivos() {
+    console.log("Buscando funcionários ativos...");
+
+    fetch("http://localhost:8080/usuarios/contar-ativos", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta funcionários:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return { usuarios_ativos: 0 };
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados funcionários", dados);
+        setActiveEmployees(dados.usuarios_ativos || 0);
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar funcionários: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setActiveEmployees(0);
+      });
+  }
+
+  // Função para buscar alertas de produtos
+  function buscarAlertasProdutos() {
+    console.log("Buscando alertas de produtos...");
+
+    fetch("http://localhost:8080/alertas/produto-alerta", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta alertas:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return [];
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados alertas", dados);
+        setAlertaProdutos(dados || []);
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar alertas: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setAlertaProdutos([]);
+      });
+  }
+
+  // Função para buscar vendas por plataforma
+  function buscarVendasPorPlataforma() {
+    console.log("Buscando vendas por plataforma...");
+
+    fetch("http://localhost:8080/saidas/por-plataforma", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta vendas:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return "sem_vendas";
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados vendas", dados);
+        if (dados === "sem_vendas") {
+          setVendasPorPlataforma("sem_vendas");
+        } else {
+          setVendasPorPlataforma(dados || []);
+        }
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar vendas: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setVendasPorPlataforma([]);
+      });
+  }
+
+  // Função para buscar últimas compras
+  function buscarUltimasCompras() {
+    console.log("Buscando últimas compras...");
+
+    fetch("http://localhost:8080/compras/ultimas-compras", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta compras:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return [];
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados compras", dados);
+        setUltimasCompras(dados || []);
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar compras: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setUltimasCompras([]);
+      });
+  }
+
+  // Função para buscar entradas dos últimos 3 dias
+  function buscarEntradasUltimos3Dias() {
+    console.log("Buscando entradas dos últimos 3 dias...");
+
+    fetch("http://localhost:8080/compras/contagem-ultimos-3-dias", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta entradas:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return { quantidade_entradas_ultimos_3_dias: 0 };
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados entradas", dados);
+        setEntradasUltimos3Dias(dados.quantidade_entradas_ultimos_3_dias || 0);
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar entradas: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setEntradasUltimos3Dias(0);
+      });
+  }
+
+  // Função para buscar saídas dos últimos 3 dias
+  function buscarSaidasUltimos3Dias() {
+    console.log("Buscando saídas dos últimos 3 dias...");
+
+    fetch("http://localhost:8080/saidas/quantidade-ultimos-3-dias", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors'
+    })
+      .then(function (resposta) {
+        console.log("resposta saídas:", resposta);
+        console.log("status:", resposta.status);
+        if (resposta.status === 204) {
+          return { quantidade_saidas_ultimos_3_dias: 0 };
+        }
+        if (!resposta.ok) {
+          throw new Error(`HTTP error! status: ${resposta.status}`);
+        }
+        return resposta.json();
+      })
+      .then(function (dados) {
+        console.log("dados saídas", dados);
+        setSaidasUltimos3Dias(dados.quantidade_saidas_ultimos_3_dias || 0);
+      })
+      .catch(function (erro) {
+        console.error("erro ao buscar saídas: ", erro);
+        console.error("Tipo do erro:", erro.name);
+        console.error("Mensagem:", erro.message);
+        setSaidasUltimos3Dias(0);
+      });
+  }
+
+  // Chama as funções ao carregar o componente
   useEffect(() => {
     buscarThenCatch();
+    buscarFuncionariosAtivos();
+    buscarAlertasProdutos();
+    buscarVendasPorPlataforma();
+    buscarUltimasCompras();
+    buscarEntradasUltimos3Dias();
+    buscarSaidasUltimos3Dias();
   }, []);
 
   return (
@@ -75,22 +298,41 @@ const Dashboard = () => {
         {/* Category Section */}
         <div className="dashboard-card category-card">
           <div className="card-header">
-            <h3>Category</h3>
-            <span className="card-subtitle">Produtos com estoque baixo</span>
+            <h3>Alerta Quantidade</h3>
+            <span className="card-subtitle">Produtos com estoque baixo ({alertaProdutos.length} produtos)</span>
           </div>
-          <div className="category-list">
-            {categoryData.slice(0, 2).map((item, index) => (
-              <div key={index} className="category-item">
+          <div className="category-list scrollable-list">
+            {alertaProdutos.map((item, index) => (
+              <div key={index} className={`category-item ${
+                item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
+                item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
+                item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
+                'alert-red'
+              }`}>
                 <div className="category-info">
-                  <div className="category-icon low-stock"></div>
+                  <div className={`category-icon ${
+                    item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
+                    item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
+                    item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
+                    'low-stock'
+                  }`}></div>
                   <div className="category-details">
-                    <span className="category-name">{item.name}</span>
-                    <span className="category-quantity">Quantidade: {item.quantity}</span>
-                    <span className="category-store">NuvemShop - Shoope</span>
+                    <span className="category-name">{item.nome_produto}</span>
+                    <span className="category-quantity">Quantidade: {item.quantidade_produto}</span>
+                    <span className="category-store">{item.nivel_alerta}</span>
                   </div>
                 </div>
               </div>
             ))}
+            {alertaProdutos.length === 0 && (
+              <div className="category-item">
+                <div className="category-info">
+                  <div className="category-details">
+                    <span className="category-name">Carregando produtos...</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -98,14 +340,33 @@ const Dashboard = () => {
         <div className="dashboard-card sales-card">
           <div className="card-header">
             <h3>Vendas do mês</h3>
+            <span className="card-subtitle">
+              {vendasPorPlataforma === "sem_vendas" 
+                ? "Não houve vendas no mês" 
+                : Array.isArray(vendasPorPlataforma) 
+                  ? `Vendas por plataforma (${vendasPorPlataforma.length} plataformas)`
+                  : "Carregando..."}
+            </span>
           </div>
           <div className="sales-list">
-            {salesData.map((item, index) => (
-              <div key={index} className="sales-item">
-                <span className="sales-name">{item.name}</span>
-                <span className="sales-value">Qnt: {item.value}</span>
+            {vendasPorPlataforma === "sem_vendas" ? (
+              <div className="sales-item">
+                <span className="sales-name">Não houve vendas no mês</span>
+                <span className="sales-value">0</span>
               </div>
-            ))}
+            ) : Array.isArray(vendasPorPlataforma) ? (
+              vendasPorPlataforma.map((item, index) => (
+                <div key={index} className="sales-item">
+                  <span className="sales-name">{item.plataforma}</span>
+                  <span className="sales-value">Quantidade: {item.quantidade_venda}</span>
+                </div>
+              ))
+            ) : (
+              <div className="sales-item">
+                <span className="sales-name">Carregando vendas...</span>
+                <span className="sales-value">-</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -118,7 +379,7 @@ const Dashboard = () => {
             <div className="activity-item">
               <div className="activity-icon entry"></div>
               <div className="activity-details">
-                <span className="activity-count">40 +</span>
+                <span className="activity-count">{entradasUltimos3Dias} +</span>
                 <span className="activity-description">Quantidade de produtos que entraram</span>
               </div>
             </div>
@@ -131,7 +392,7 @@ const Dashboard = () => {
             <div className="activity-item">
               <div className="activity-icon exit"></div>
               <div className="activity-details">
-                <span className="activity-count">15 -</span>
+                <span className="activity-count">{saidasUltimos3Dias} -</span>
                 <span className="activity-description">Quantidade de produtos que saíram</span>
               </div>
             </div>
@@ -141,20 +402,27 @@ const Dashboard = () => {
         {/* Latest Products */}
         <div className="dashboard-card products-card">
           <div className="card-header">
-            <h3>Category</h3>
-            <span className="card-subtitle">Últimos 5 produtos adicionados/ atualizados</span>
+            <h3>Recentes Entradas</h3>
+            <span className="card-subtitle">Últimas compras realizadas ({ultimasCompras.length} produtos)</span>
           </div>
-          <div className="products-list">
-            {recentProducts.slice(0, 2).map((product, index) => (
+          <div className="products-list scrollable-list">
+            {ultimasCompras.map((product, index) => (
               <div key={index} className="product-item">
                 <div className="product-icon"></div>
                 <div className="product-details">
-                  <span className="product-name">{product.name}</span>
-                  <span className="product-quantity">Quantidade: {product.quantity}</span>
-                  <span className="product-store">NuvemShop - Loja Física</span>
+                  <span className="product-name">{product.nome_produto}</span>
+                  <span className="product-quantity">Quantidade: {product.quantidade_produto}</span>
+                  <span className="product-store">Preço: R$ {product.preco_compra.toFixed(2)}</span>
                 </div>
               </div>
             ))}
+            {ultimasCompras.length === 0 && (
+              <div className="product-item">
+                <div className="product-details">
+                  <span className="product-name">Carregando compras...</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
