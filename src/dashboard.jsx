@@ -102,7 +102,7 @@ const Dashboard = () => {
         console.log("resposta alertas:", resposta);
         console.log("status:", resposta.status);
         if (resposta.status === 204) {
-          return [];
+          return "sem_alertas";
         }
         if (!resposta.ok) {
           throw new Error(`HTTP error! status: ${resposta.status}`);
@@ -111,7 +111,11 @@ const Dashboard = () => {
       })
       .then(function (dados) {
         console.log("dados alertas", dados);
-        setAlertaProdutos(dados || []);
+        if (dados === "sem_alertas") {
+          setAlertaProdutos("sem_alertas");
+        } else {
+          setAlertaProdutos(dados || []);
+        }
       })
       .catch(function (erro) {
         console.error("erro ao buscar alertas: ", erro);
@@ -174,7 +178,7 @@ const Dashboard = () => {
         console.log("resposta compras:", resposta);
         console.log("status:", resposta.status);
         if (resposta.status === 204) {
-          return [];
+          return "sem_compras";
         }
         if (!resposta.ok) {
           throw new Error(`HTTP error! status: ${resposta.status}`);
@@ -183,7 +187,11 @@ const Dashboard = () => {
       })
       .then(function (dados) {
         console.log("dados compras", dados);
-        setUltimasCompras(dados || []);
+        if (dados === "sem_compras") {
+          setUltimasCompras("sem_compras");
+        } else {
+          setUltimasCompras(dados || []);
+        }
       })
       .catch(function (erro) {
         console.error("erro ao buscar compras: ", erro);
@@ -294,32 +302,47 @@ const Dashboard = () => {
         <div className="dashboard-card category-card">
           <div className="card-header">
             <h3>Alerta Quantidade</h3>
-            <span className="card-subtitle">Produtos com estoque baixo ({alertaProdutos.length} produtos)</span>
+            <span className="card-subtitle">
+              {alertaProdutos === "sem_alertas" 
+                ? "Não existe produtos com alertas de quantidade" 
+                : Array.isArray(alertaProdutos) 
+                  ? `Produtos com estoque baixo (${alertaProdutos.length} produtos)`
+                  : "Carregando..."}
+            </span>
           </div>
           <div className="category-list scrollable-list">
-            {alertaProdutos.map((item, index) => (
-              <div key={index} className={`category-item ${
-                item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
-                item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
-                item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
-                'alert-red'
-              }`}>
+            {alertaProdutos === "sem_alertas" ? (
+              <div className="category-item">
                 <div className="category-info">
-                  <div className={`category-icon ${
-                    item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
-                    item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
-                    item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
-                    'low-stock'
-                  }`}></div>
                   <div className="category-details">
-                    <span className="category-name">{item.nome_produto}</span>
-                    <span className="category-quantity">Quantidade: {item.quantidade_produto}</span>
-                    <span className="category-store">{item.nivel_alerta}</span>
+                    <span className="category-name">Não existe produtos com alertas de quantidade</span>
                   </div>
                 </div>
               </div>
-            ))}
-            {alertaProdutos.length === 0 && (
+            ) : Array.isArray(alertaProdutos) ? (
+              alertaProdutos.map((item, index) => (
+                <div key={index} className={`category-item ${
+                  item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
+                  item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
+                  item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
+                  'alert-red'
+                }`}>
+                  <div className="category-info">
+                    <div className={`category-icon ${
+                      item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
+                      item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
+                      item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
+                      'low-stock'
+                    }`}></div>
+                    <div className="category-details">
+                      <span className="category-name">{item.nome_produto}</span>
+                      <span className="category-quantity">Quantidade: {item.quantidade_produto}</span>
+                      <span className="category-store">{item.nivel_alerta}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
               <div className="category-item">
                 <div className="category-info">
                   <div className="category-details">
@@ -398,20 +421,33 @@ const Dashboard = () => {
         <div className="dashboard-card products-card">
           <div className="card-header">
             <h3>Recentes Entradas</h3>
-            <span className="card-subtitle">Últimas compras realizadas ({ultimasCompras.length} produtos)</span>
+            <span className="card-subtitle">
+              {ultimasCompras === "sem_compras" 
+                ? "Não houve compras recentes" 
+                : Array.isArray(ultimasCompras) 
+                  ? `Últimas compras realizadas (${ultimasCompras.length} produtos)`
+                  : "Carregando..."}
+            </span>
           </div>
           <div className="products-list scrollable-list">
-            {ultimasCompras.map((product, index) => (
-              <div key={index} className="product-item">
-                <div className="product-icon"></div>
+            {ultimasCompras === "sem_compras" ? (
+              <div className="product-item">
                 <div className="product-details">
-                  <span className="product-name">{product.nome_produto}</span>
-                  <span className="product-quantity">Quantidade: {product.quantidade_produto}</span>
-                  <span className="product-store">Preço: R$ {product.preco_compra.toFixed(2)}</span>
+                  <span className="product-name">Não houve compras recentes</span>
                 </div>
               </div>
-            ))}
-            {ultimasCompras.length === 0 && (
+            ) : Array.isArray(ultimasCompras) ? (
+              ultimasCompras.map((product, index) => (
+                <div key={index} className="product-item">
+                  <div className="product-icon"></div>
+                  <div className="product-details">
+                    <span className="product-name">{product.nome_produto}</span>
+                    <span className="product-quantity">Quantidade: {product.quantidade_produto}</span>
+                    <span className="product-store">Preço: R$ {product.preco_compra.toFixed(2)}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
               <div className="product-item">
                 <div className="product-details">
                   <span className="product-name">Carregando compras...</span>
