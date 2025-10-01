@@ -76,11 +76,6 @@ const Login = () => {
               Entrar
             </button>
           </form>
-
-          <div className="signup-link">
-            <span>Não tem uma conta? </span>
-            <a href="#" className="signup-text">faça uma agora!</a>
-          </div>
         </div>
       </div>
     </div>
