@@ -722,6 +722,12 @@ const Estoque = () => {
     setIsAddCategoryModalOpen(false);
   };
 
+  // Ordena os produtos: vermelho primeiro, depois amarelo, depois verde
+  const colorOrder = { red: 0, yellow: 1, green: 2 };
+  const sortedProducts = [...products].sort((a, b) => {
+    return (colorOrder[a.statusColor] ?? 99) - (colorOrder[b.statusColor] ?? 99);
+  });
+
   return (
     <div className="estoque">
       <div className="estoque-header">
@@ -753,7 +759,7 @@ const Estoque = () => {
       </div>
 
       <div className="products-grid">
-        {products.map((product) => (
+        {sortedProducts.map((product) => (
           <div key={product.id} className="product-card">
             <div className="product-image">
               {/* Placeholder for product image */}

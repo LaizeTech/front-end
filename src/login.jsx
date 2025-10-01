@@ -9,35 +9,10 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:8080/usuarios/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          senha: password,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        alert(errorMessage);
-        return;
-      }
-
-      const data = await response.json();
-
-      localStorage.setItem("user", JSON.stringify(data));
-
-      navigate("/");
-    } catch (error) {
-      console.error("Erro no login:", error);
-      alert("Erro ao conectar com o servidor.");
+    if (email && password) {
+      navigate('/');
     }
   };
 

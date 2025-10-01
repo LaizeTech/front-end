@@ -18,9 +18,8 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/', icon: Home, label: 'Início' },
+    { path: '/dashboard', icon: Home, label: 'Início' },
     { path: '/estoque', icon: Package, label: 'Estoque' },
-    { path: '/dashboard', icon: BarChart3, label: 'OverView' },
     { path: '/metricas-mensais', icon: BarChart3, label: 'Métricas Mensais' },
     { path: '/metricas-anuais', icon: BarChart3, label: 'Métricas Anuais' },
     { path: '/funcionarios', icon: Users, label: 'Funcionários' },
@@ -77,8 +76,8 @@ const Sidebar = () => {
           <Link to="/configuracoes" className="user-text">Conta</Link>
         </div>
         <button className="logout-btn">
-          <LogOut size={16} />
-          <span>Sair</span>
+          <LogOut size={16}/>
+          <Link to="/login" className="logout-btn">Sair</Link>
         </button>
       </div>
     </div>
