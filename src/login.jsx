@@ -9,10 +9,51 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email && password) {
-      navigate('/');
+
+    try {
+      const response = await fetch("http://localhost:8080/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          senha: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        alert(errorMessage);
+        return;
+      }
+
+      const data = await response.json();
+
+      // Armazenar dados do usuário no sessionStorage
+      sessionStorage.setItem("user", JSON.stringify(data));
+      
+      // Armazenar dados específicos para fácil acesso
+      sessionStorage.setItem("userId", data.idUsuario);
+      sessionStorage.setItem("userName", data.nome);
+      sessionStorage.setItem("userEmail", data.email);
+      sessionStorage.setItem("acessoFinanceiro", data.acessoFinanceiro);
+      sessionStorage.setItem("statusAtivo", data.statusAtivo);
+      
+      // Armazenar dados da empresa
+      if (data.empresa) {
+        sessionStorage.setItem("empresa", JSON.stringify(data.empresa));
+        sessionStorage.setItem("empresaId", data.empresa.idEmpresa);
+        sessionStorage.setItem("empresaNome", data.empresa.nomeEmpresa);
+        sessionStorage.setItem("empresaCnpj", data.empresa.cnpj);
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Erro no login:", error);
+      alert("Erro ao conectar com o servidor.");
     }
   };
 
