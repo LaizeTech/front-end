@@ -29,6 +29,39 @@
   margin: 0 0 24px 0;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header .section-title {
+  margin: 0;
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Form Section */
 .form-section {
   background: white;
@@ -77,6 +110,36 @@
   color: #6c757d;
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 45px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
 .submit-btn {
   padding: 14px 24px;
   background: linear-gradient(135deg, #e91e63, #ad1457);
@@ -116,104 +179,52 @@
   gap: 16px;
 }
 
-.employee-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  transition: all 0.2s ease;
+.loading-message,
+.error-message,
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
-.employee-card:hover {
-  background-color: #e9ecef;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.employee-avatar {
-  flex-shrink: 0;
-}
-
-.avatar-circle {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #e91e63, #ad1457);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.employee-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.employee-name {
+.loading-message p {
+  color: #6b7280;
   font-size: 16px;
-  font-weight: 600;
-  color: #212529;
   margin: 0;
 }
 
-.employee-role {
-  font-size: 14px;
-  color: #6c757d;
+.error-message p {
+  color: #dc2626;
+  font-size: 16px;
+  margin: 0 0 16px 0;
+}
+
+.empty-message p {
+  color: #9ca3af;
+  font-size: 16px;
   margin: 0;
 }
 
-.employee-status {
-  flex-shrink: 0;
-}
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
+.retry-btn {
+  padding: 8px 16px;
+  background-color: #3b82f6;
   color: white;
-}
-
-.status-badge.green {
-  background-color: #28a745;
-}
-
-.status-badge.red {
-  background-color: #dc3545;
-}
-
-.employee-actions {
-  flex-shrink: 0;
-}
-
-.action-btn {
-  width: 32px;
-  height: 32px;
-  background-color: transparent;
-  border: 1px solid #ced4da;
+  border: none;
   border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #6c757d;
+  transition: background-color 0.2s ease;
 }
 
-.action-btn:hover {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
-  color: #495057;
+.retry-btn:hover {
+  background-color: #2563eb;
 }
+
+
+
+
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -241,16 +252,7 @@
     padding: 16px;
   }
   
-  .employee-card {
-    padding: 12px;
-    gap: 12px;
-  }
-  
-  .avatar-circle {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-  }
+
 }
 
 @media (max-width: 480px) {
@@ -267,19 +269,6 @@
     padding: 12px;
   }
   
-  .employee-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .employee-info {
-    width: 100%;
-  }
-  
-  .employee-status,
-  .employee-actions {
-    align-self: flex-end;
-  }
+
 }
 

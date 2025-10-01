@@ -1,46 +1,70 @@
-import React, { useState } from 'react';
-import { MoreHorizontal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import EmployeeCard from './components/EmployeeCard';
+import EditEmployeeModal from './components/EditEmployeeModal';
 import './Funcionarios.css';
 
 const Funcionarios = () => {
+  const id_empresa = 1; //tenho que colocar session storage
+
   const [formData, setFormData] = useState({
     name: '',
-    cpf: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
 
-  const employees = [
-    {
-      id: 1,
-      name: 'Letícia Andrade',
-      role: 'Vendedora',
-      status: 'ATIVO',
-      statusColor: 'green'
-    },
-    {
-      id: 2,
-      name: 'Eduardo Venturi',
-      role: 'Vendedor',
-      status: 'DESATIVO',
-      statusColor: 'red'
-    },
-    {
-      id: 3,
-      name: 'Eduardo Venturi',
-      role: 'Vendedor',
-      status: 'ATIVO',
-      statusColor: 'green'
-    },
-    {
-      id: 4,
-      name: 'Eduardo Venturi',
-      role: 'Vendedor',
-      status: 'ATIVO',
-      statusColor: 'green'
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Função para buscar funcionários
+  const fetchEmployees = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch(`http://localhost:8080/usuarios/buscar-funcionarios/${id_empresa}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Mapear os dados da API para o formato esperado pelos componentes
+      const mappedEmployees = data.map(employee => ({
+        id: employee.idUsuario,
+        name: employee.nome,
+        email: '', // não vem da API, será preenchido apenas no modal de edição
+        role: 'Funcionário', // valor padrão já que não vem da API
+        status: employee.statusAtivo ? 'ATIVO' : 'DESATIVO',
+        statusColor: employee.statusAtivo ? 'green' : 'red'
+      }));
+
+      setEmployees(mappedEmployees);
+    } catch (error) {
+      console.error('Erro ao buscar funcionários:', error);
+      setError('Erro ao carregar funcionários. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  // Carregar funcionários quando o componente montar
+  useEffect(() => {
+    fetchEmployees();
+  }, [id_empresa]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,9 +74,105 @@ const Funcionarios = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const createUser = async (userData) => {
+    try {
+      const response = await fetch('http://localhost:8080/usuarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    // Validação básica
+    if (formData.password !== formData.confirmPassword) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+
+    // Preparar dados no formato solicitado
+    const userData = {
+      nome: formData.name,
+      email: formData.email,
+      senha: formData.password,
+      acessoFinanceiro: false, // hard coded
+      statusAtivo: 1, // hard coded
+      idEmpresa: id_empresa // hard coded
+    };
+
+    try {
+      const result = await createUser(userData);
+      console.log('Usuário criado com sucesso:', result);
+      alert('Funcionário cadastrado com sucesso!');
+      
+      // Limpar formulário após sucesso
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+
+      // Reset password visibility
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+
+      // Recarregar lista de funcionários
+      await fetchEmployees();
+    } catch (error) {
+      alert('Erro ao cadastrar funcionário. Tente novamente.');
+    }
+  };
+
+  const handleEditEmployee = (employee) => {
+    setSelectedEmployee(employee);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteEmployee = (employee) => {
+    if (window.confirm(`Tem certeza que deseja excluir o funcionário ${employee.name}?`)) {
+      console.log('Excluir funcionário:', employee);
+      // Aqui você pode implementar a lógica de exclusão
+      // Por exemplo: chamar API de delete
+    }
+  };
+
+  const handleSaveEmployee = async (updatedEmployee) => {
+    try {
+      // Aqui você implementaria a chamada para a API de atualização
+      console.log('Salvar funcionário atualizado:', updatedEmployee);
+      
+      // Exemplo de como seria a chamada para API:
+      // const response = await updateEmployee(updatedEmployee);
+      
+      alert('Funcionário atualizado com sucesso!');
+      // Aqui você atualizaria a lista de funcionários
+      
+    } catch (error) {
+      console.error('Erro ao atualizar funcionário:', error);
+      alert('Erro ao atualizar funcionário. Tente novamente.');
+      throw error;
+    }
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setSelectedEmployee(null);
   };
 
   return (
@@ -82,20 +202,6 @@ const Funcionarios = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="cpf" className="form-label">CPF</label>
-              <input
-                type="text"
-                id="cpf"
-                name="cpf"
-                value={formData.cpf}
-                onChange={handleInputChange}
-                placeholder="xxx.xxx.xx"
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div className="form-group">
               <label htmlFor="email" className="form-label">Email</label>
               <input
                 type="email"
@@ -111,30 +217,48 @@ const Funcionarios = () => {
 
             <div className="form-group">
               <label htmlFor="password" className="form-label">Nova senha</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="Insira sua nova senha"
-                className="form-input"
-                required
-              />
+              <div className="password-input-container">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Insira sua nova senha"
+                  className="form-input password-input"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <div className="form-group">
               <label htmlFor="confirmPassword" className="form-label">Confirmar senha</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder="Confirme sua nova senha"
-                className="form-input"
-                required
-              />
+              <div className="password-input-container">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirme sua nova senha"
+                  className="form-input password-input"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" className="submit-btn">
@@ -145,47 +269,57 @@ const Funcionarios = () => {
 
         {/* Employees List */}
         <div className="employees-section">
-          <h2 className="section-title">Funcionários cadastrados</h2>
+          <div className="section-header">
+            <h2 className="section-title">Funcionários cadastrados</h2>
+            <button 
+              onClick={fetchEmployees} 
+              className="refresh-btn"
+              disabled={loading}
+            >
+              {loading ? 'Carregando...' : 'Atualizar'}
+            </button>
+          </div>
           
           <div className="employees-list">
-            {employees.map((employee) => (
-              <div key={employee.id} className="employee-card">
-                <div className="employee-avatar">
-                  <div className="avatar-circle">
-                    {employee.name.charAt(0)}
-                  </div>
-                </div>
-                
-                <div className="employee-info">
-                  <h3 className="employee-name">{employee.name}</h3>
-                  <p className="employee-role">{employee.role}</p>
-                </div>
-                
-                <div className="employee-status">
-                  <span className={`status-badge ${employee.statusColor}`}>
-                    {employee.status}
-                  </span>
-                </div>
-                
-                <div className="employee-actions">
-                  <button className="action-btn">
-                    <MoreHorizontal size={16} />
-                  </button>
-                </div>
+            {loading ? (
+              <div className="loading-message">
+                <p>Carregando funcionários...</p>
               </div>
-            ))}
+            ) : error ? (
+              <div className="error-message">
+                <p>{error}</p>
+                <button onClick={fetchEmployees} className="retry-btn">
+                  Tentar novamente
+                </button>
+              </div>
+            ) : employees.length === 0 ? (
+              <div className="empty-message">
+                <p>Nenhum funcionário cadastrado ainda.</p>
+              </div>
+            ) : (
+              employees.map((employee) => (
+                <EmployeeCard 
+                  key={employee.id} 
+                  employee={employee} 
+                  onEditClick={handleEditEmployee}
+                  onDeleteClick={handleDeleteEmployee}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>
+
+      {/* Modal de Edição */}
+      <EditEmployeeModal
+        employee={selectedEmployee}
+        isOpen={editModalOpen}
+        onClose={handleCloseEditModal}
+        onSave={handleSaveEmployee}
+      />
     </div>
   );
 };
-
-<script>
-
-
-
-</script>
 
 export default Funcionarios;
 
