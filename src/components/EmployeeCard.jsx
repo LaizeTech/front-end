@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Edit2, Trash2, MoreHorizontal } from 'lucide-react';
+import { Edit2, Trash2, MoreHorizontal, UserCheck } from 'lucide-react';
 import './EmployeeCard.css';
 
-const EmployeeCard = ({ employee, onEditClick, onDeleteClick }) => {
+const EmployeeCard = ({ employee, onEditClick, onDeleteClick, onActivateClick }) => {
   const [showActions, setShowActions] = useState(false);
   const actionsRef = useRef(null);
 
@@ -16,6 +16,13 @@ const EmployeeCard = ({ employee, onEditClick, onDeleteClick }) => {
   const handleDeleteClick = () => {
     if (onDeleteClick) {
       onDeleteClick(employee);
+    }
+    setShowActions(false);
+  };
+
+  const handleActivateClick = () => {
+    if (onActivateClick) {
+      onActivateClick(employee);
     }
     setShowActions(false);
   };
@@ -71,10 +78,17 @@ const EmployeeCard = ({ employee, onEditClick, onDeleteClick }) => {
                 <Edit2 size={14} />
                 Editar
               </button>
-              <button className="dropdown-action delete-action" onClick={handleDeleteClick}>
-                <Trash2 size={14} />
-                Excluir
-              </button>
+              {employee.isActive ? (
+                <button className="dropdown-action delete-action" onClick={handleDeleteClick}>
+                  <Trash2 size={14} />
+                  Desativar
+                </button>
+              ) : (
+                <button className="dropdown-action activate-action" onClick={handleActivateClick}>
+                  <UserCheck size={14} />
+                  Ativar
+                </button>
+              )}
             </div>
           )}
         </div>

@@ -22,6 +22,7 @@ const Funcionarios = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState({ text: '', type: '' }); // success, error, warning
 
   // Função para buscar funcionários
   const fetchEmployees = async () => {
@@ -49,7 +50,8 @@ const Funcionarios = () => {
         email: '', // não vem da API, será preenchido apenas no modal de edição
         role: 'Funcionário', // valor padrão já que não vem da API
         status: employee.statusAtivo ? 'ATIVO' : 'DESATIVO',
-        statusColor: employee.statusAtivo ? 'green' : 'red'
+        statusColor: employee.statusAtivo ? 'green' : 'red',
+        isActive: employee.statusAtivo
       }));
 
       setEmployees(mappedEmployees);
@@ -65,6 +67,15 @@ const Funcionarios = () => {
   useEffect(() => {
     fetchEmployees();
   }, [id_empresa]);
+
+  // Função para mostrar mensagens
+  const showMessage = (text, type = 'info') => {
+    setMessage({ text, type });
+    // Auto-ocultar mensagem após 5 segundos
+    setTimeout(() => {
+      setMessage({ text: '', type: '' });
+    }, 5000);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -99,9 +110,32 @@ const Funcionarios = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validação básica
+    // Validações de campos obrigatórios
+    if (!formData.name.trim()) {
+      showMessage('Por favor, preencha o nome do funcionário', 'error');
+      return;
+    }
+    
+    if (!formData.email.trim()) {
+      showMessage('Por favor, preencha o email do funcionário', 'error');
+      return;
+    }
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showMessage('Por favor, insira um email válido com @', 'error');
+      return;
+    }
+    
+    if (!formData.password) {
+      showMessage('Por favor, preencha a senha', 'error');
+      return;
+    }
+    
+    // Validação de senhas
     if (formData.password !== formData.confirmPassword) {
-      alert('As senhas não coincidem!');
+      showMessage('As senhas não coincidem!', 'error');
       return;
     }
 
@@ -118,7 +152,7 @@ const Funcionarios = () => {
     try {
       const result = await createUser(userData);
       console.log('Usuário criado com sucesso:', result);
-      alert('Funcionário cadastrado com sucesso!');
+      showMessage('Funcionário cadastrado com sucesso!', 'success');
       
       // Limpar formulário após sucesso
       setFormData({
@@ -135,37 +169,76 @@ const Funcionarios = () => {
       // Recarregar lista de funcionários
       await fetchEmployees();
     } catch (error) {
-      alert('Erro ao cadastrar funcionário. Tente novamente.');
+      showMessage('Erro ao cadastrar funcionário. Tente novamente.', 'error');
     }
   };
 
   const handleEditEmployee = (employee) => {
+    console.log('Funcionário selecionado para edição:', employee);
     setSelectedEmployee(employee);
     setEditModalOpen(true);
   };
 
+  // Função para alterar status do funcionário
+  const changeEmployeeStatus = async (employeeId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/usuarios/mudar-status/${employeeId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      // Sempre retornar como texto já que o endpoint só retorna texto
+      return await response.text();
+    } catch (error) {
+      console.error('Erro ao alterar status do funcionário:', error);
+      throw error;
+    }
+  };
+
   const handleDeleteEmployee = (employee) => {
-    if (window.confirm(`Tem certeza que deseja excluir o funcionário ${employee.name}?`)) {
-      console.log('Excluir funcionário:', employee);
-      // Aqui você pode implementar a lógica de exclusão
-      // Por exemplo: chamar API de delete
+    if (window.confirm(`Tem certeza que deseja desativar o funcionário ${employee.name}?`)) {
+      handleChangeStatus(employee);
+    }
+  };
+
+  const handleActivateEmployee = (employee) => {
+    if (window.confirm(`Tem certeza que deseja ativar o funcionário ${employee.name}?`)) {
+      handleChangeStatus(employee);
+    }
+  };
+
+  const handleChangeStatus = async (employee) => {
+    try {
+      await changeEmployeeStatus(employee.id);
+      
+      const newStatus = employee.status === 'ATIVO' ? 'desativado' : 'ativado';
+      showMessage(`Funcionário ${newStatus} com sucesso!`, 'success');
+      
+      // Recarregar lista de funcionários
+      await fetchEmployees();
+    } catch (error) {
+      showMessage('Erro ao alterar status do funcionário. Tente novamente.', 'error');
     }
   };
 
   const handleSaveEmployee = async (updatedEmployee) => {
     try {
-      // Aqui você implementaria a chamada para a API de atualização
-      console.log('Salvar funcionário atualizado:', updatedEmployee);
+      console.log('Funcionário atualizado:', updatedEmployee);
       
-      // Exemplo de como seria a chamada para API:
-      // const response = await updateEmployee(updatedEmployee);
+      // Recarregar lista de funcionários após atualização bem-sucedida
+      await fetchEmployees();
       
-      alert('Funcionário atualizado com sucesso!');
-      // Aqui você atualizaria a lista de funcionários
+      showMessage('Funcionário atualizado com sucesso!', 'success');
       
     } catch (error) {
       console.error('Erro ao atualizar funcionário:', error);
-      alert('Erro ao atualizar funcionário. Tente novamente.');
+      showMessage('Erro ao atualizar funcionário. Tente novamente.', 'error');
       throw error;
     }
   };
@@ -180,6 +253,19 @@ const Funcionarios = () => {
       <div className="page-header">
         <h1 className="page-title">Gestão de funcionários</h1>
       </div>
+
+      {/* Mensagem de feedback */}
+      {message.text && (
+        <div className={`message-alert ${message.type}`}>
+          <p>{message.text}</p>
+          <button 
+            className="message-close" 
+            onClick={() => setMessage({ text: '', type: '' })}
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       <div className="funcionarios-content">
         {/* Registration Form */}
@@ -204,7 +290,7 @@ const Funcionarios = () => {
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email</label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 name="email"
                 value={formData.email}
@@ -303,6 +389,7 @@ const Funcionarios = () => {
                   employee={employee} 
                   onEditClick={handleEditEmployee}
                   onDeleteClick={handleDeleteEmployee}
+                  onActivateClick={handleActivateEmployee}
                 />
               ))
             )}
