@@ -36,16 +36,6 @@ const Sidebar = () => {
         <h2 className="company-name">Laizetech</h2>
       </div>
 
-      <div className="search-container">
-        <div className="search-box">
-          <Search className="search-icon" size={16} />
-          <input 
-            type="text" 
-            placeholder="Search for..." 
-            className="search-input"
-          />
-        </div>
-      </div>
 
       <nav className="sidebar-nav">
         <ul className="nav-list">
@@ -69,12 +59,14 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
+        <Link to="/configuracoes">
         <div className="user-section">
           <div className="user-avatar">
             <User size={16} />
           </div>
           <Link to="/configuracoes" className="user-text">Conta</Link>
         </div>
+        </Link>
         <button className="logout-btn">
           <LogOut size={16}/>
           <Link to="/login" className="logout-btn">Sair</Link>
