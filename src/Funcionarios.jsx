@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { getCompanyId } from './utils/sessionUtils';
 import EmployeeCard from './components/EmployeeCard';
 import EditEmployeeModal from './components/EditEmployeeModal';
 import './Funcionarios.css';
 
 const Funcionarios = () => {
-  const id_empresa = 1; //tenho que colocar session storage
+  const id_empresa = getCompanyId(); // Pegar ID da empresa do sessionStorage
 
   const [formData, setFormData] = useState({
     name: '',
@@ -65,7 +66,9 @@ const Funcionarios = () => {
 
   // Carregar funcionários quando o componente montar
   useEffect(() => {
-    fetchEmployees();
+    if (id_empresa) {
+      fetchEmployees();
+    }
   }, [id_empresa]);
 
   // Função para mostrar mensagens
@@ -247,6 +250,20 @@ const Funcionarios = () => {
     setEditModalOpen(false);
     setSelectedEmployee(null);
   };
+
+  // Verificar se há empresa válida
+  if (!id_empresa) {
+    return (
+      <div className="funcionarios">
+        <div className="page-header">
+          <h1 className="page-title">Gestão de funcionários</h1>
+        </div>
+        <div className="error-message">
+          <p>Erro: Empresa não encontrada. Faça login novamente.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="funcionarios">
