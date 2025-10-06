@@ -153,12 +153,14 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
+        <Link to="/configuracoes">
         <div className="user-section">
           <div className="user-avatar">
             <User size={16} />
           </div>
           <Link to="/configuracoes" className="user-text">Conta</Link>
         </div>
+        </Link>
         <button className="logout-btn">
           <Link to="/login" className="logout-btn">
           <LogOut size={16} />

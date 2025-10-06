@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, X, AlertTriangle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
+import { getUserId, hasFinancialAccess, isUserActive, getCompanyId } from './utils/sessionUtils';
 import './Configuracoes.css';
 
 const Configuracoes = () => {
-  let id = 1; // Simulação de ID de usuário logado
-  const [activeTab, setActiveTab] = useState('profile');
+  const userId = getUserId(); // Pegar ID do usuário do sessionStorage
+  const acessoFinanceiro = hasFinancialAccess();
+  const statusAtivo = isUserActive();
+  const idEmpresa = getCompanyId();
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
@@ -23,26 +26,16 @@ const Configuracoes = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: 'success',
-      message: 'Conta Atualizada! As configurações da conta foram alteradas',
-      icon: CheckCircle
-    },
-    {
-      id: 2,
-      type: 'warning',
-      message: 'Alerta O valor inserido não corresponde ao formato esperado',
-      icon: AlertTriangle
-    },
-    {
-      id: 3,
-      type: 'error',
-      message: 'Erro! Não foi possível salvar as configurações da conta',
-      icon: X
-    }
-  ]);
+  // Estado para mensagens de feedback
+  const [message, setMessage] = useState({ text: '', type: '', show: false });
+
+  // Função para mostrar mensagem
+  const showMessage = (text, type = 'success') => {
+    setMessage({ text, type, show: true });
+    setTimeout(() => {
+      setMessage({ text: '', type: '', show: false });
+    }, 5000);
+  };
 
   // Função para verificar se um campo foi alterado
   const isFieldChanged = (fieldName) => {
@@ -86,7 +79,7 @@ const Configuracoes = () => {
 
   const buscarDadosUsuario = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/pessoas/${id}`);
+      const response = await fetch(`http://localhost:8080/usuarios/${id}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       
@@ -112,8 +105,10 @@ const Configuracoes = () => {
 
   // useEffect para carregar os dados quando o componente montar
   useEffect(() => {
-    buscarDadosUsuario(id);
-  }, [id]);
+    if (userId) {
+      buscarDadosUsuario(userId);
+    }
+  }, [userId]);
 
   // Função para verificar quais campos foram alterados
   const getChangedFields = () => {
@@ -134,7 +129,7 @@ const Configuracoes = () => {
 
   // Função para atualizar apenas a senha
   const atualizarSenha = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${userId}/alterar-senha`;
     
     try {
       const response = await fetch(url, {
@@ -143,11 +138,21 @@ const Configuracoes = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          senha: profileData.password
+          novaSenha: profileData.password,
+          confirmacaoSenha: profileData.confirmPassword
         })
       });
       
-      if (!response.ok) throw new Error('Network response was not ok');
+      console.log('Resposta da API (alterar senha):', response);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Erro na resposta:', errorText);
+        throw new Error('Network response was not ok');
+      }
+      
+      const responseText = await response.text();
+      console.log('Dados da resposta (alterar senha):', responseText);
       
       console.log('Senha atualizada com sucesso usando PATCH:', { senha: profileData.password });
       return { success: true, method: 'PATCH', fields: ['senha'] };
@@ -160,7 +165,7 @@ const Configuracoes = () => {
 
   // Função para atualizar apenas o email
   const atualizarEmail = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${userId}/alterar-email`;
     
     try {
       const response = await fetch(url, {
@@ -169,11 +174,20 @@ const Configuracoes = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: profileData.email
+          novoEmail: profileData.email
         })
       });
       
-      if (!response.ok) throw new Error('Network response was not ok');
+      console.log('Resposta da API (alterar email):', response);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Erro na resposta:', errorText);
+        throw new Error('Network response was not ok');
+      }
+      
+      const responseText = await response.text();
+      console.log('Dados da resposta (alterar email):', responseText);
       
       console.log('Email atualizado com sucesso usando PATCH:', { email: profileData.email });
       return { success: true, method: 'PATCH', fields: ['email'] };
@@ -186,21 +200,50 @@ const Configuracoes = () => {
 
   // Função para atualizar email e senha
   const atualizarEmailSenha = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
-    
+    const url_email = `http://localhost:8080/usuarios/${userId}/alterar-email`;
+    const url_senha = `http://localhost:8080/usuarios/${userId}/alterar-senha`;
+
     try {
-      const response = await fetch(url, {
+      // Primeiro fetch - atualizar email
+      const emailResponse = await fetch(url_email, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: profileData.email,
-          senha: profileData.password
+          novoEmail: profileData.email
         })
       });
       
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!emailResponse.ok) {
+        const errorText = await emailResponse.text();
+        console.log('Erro ao atualizar email:', errorText);
+        throw new Error('Erro ao atualizar email');
+      }
+      
+      const emailResponseText = await emailResponse.text();
+      console.log('Email atualizado com sucesso:', emailResponseText);
+
+      // Segundo fetch - atualizar senha
+      const senhaResponse = await fetch(url_senha, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          novaSenha: profileData.password,
+          confirmacaoSenha: profileData.confirmPassword
+        })
+      });
+      
+      if (!senhaResponse.ok) {
+        const errorText = await senhaResponse.text();
+        console.log('Erro ao atualizar senha:', errorText);
+        throw new Error('Erro ao atualizar senha');
+      }
+      
+      const senhaResponseText = await senhaResponse.text();
+      console.log('Senha atualizada com sucesso:', senhaResponseText);
       
       console.log('Email e senha atualizados com sucesso usando PATCH:', { 
         email: profileData.email, 
@@ -216,7 +259,7 @@ const Configuracoes = () => {
 
   // Função para atualizar todos os dados do usuário
   const atualizarUsuario = async () => {
-    const url = `http://localhost:3000/pessoas/${id}`;
+    const url = `http://localhost:8080/usuarios/${userId}`;
     
     try {
       const response = await fetch(url, {
@@ -227,11 +270,23 @@ const Configuracoes = () => {
         body: JSON.stringify({
           nome: profileData.name,
           email: profileData.email,
-          senha: profileData.password
+          senha: profileData.password,
+          acessoFinanceiro: acessoFinanceiro,
+          statusAtivo: statusAtivo,
+          idEmpresa: idEmpresa,
         })
       });
       
-      if (!response.ok) throw new Error('Network response was not ok');
+      console.log('Resposta da API (atualizar usuário):', response);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Erro na resposta:', errorText);
+        throw new Error('Network response was not ok');
+      }
+      
+      const responseText = await response.text();
+      console.log('Dados da resposta (atualizar usuário):', responseText);
       
       console.log('Usuário atualizado completamente com sucesso usando PUT:', {
         nome: profileData.name,
@@ -278,17 +333,31 @@ const Configuracoes = () => {
     // Verifica se a senha foi alterada (diferente da original)
     const senhaFoiAlterada = profileData.password && profileData.password !== originalData.password;
     
+    // Validação do nome
+    if (profileData.name && profileData.name.trim().length < 2) {
+      showMessage('O nome deve ter pelo menos 2 caracteres.', 'error');
+      return;
+    }
+
+    // Verifica se o nome foi alterado e se todos os campos estão preenchidos
+    if (isFieldChanged('name')) {
+      if (!profileData.email || !profileData.password) {
+        showMessage('Para alterar o nome, é necessário preencher todos os campos (nome, email e senha).', 'error');
+        return;
+      }
+    }
+    
     // Se a senha foi alterada, precisa ter no mínimo 8 caracteres
     if (senhaFoiAlterada && profileData.password.length < 8) {
       console.error('A senha deve ter no mínimo 8 caracteres');
-      alert('A senha deve ter no mínimo 8 caracteres.');
+      showMessage('A senha deve ter no mínimo 8 caracteres.', 'error');
       return;
     }
     
     // Se a senha foi alterada, precisa confirmar a senha
     if (senhaFoiAlterada && profileData.password !== profileData.confirmPassword) {
       console.error('As senhas não coincidem');
-      alert('As senhas não coincidem. Por favor, verifique e tente novamente.');
+      showMessage('As senhas não coincidem. Por favor, verifique e tente novamente.', 'error');
       return;
     }
     
@@ -297,7 +366,7 @@ const Configuracoes = () => {
     
     if (Object.keys(changes).length === 0) {
       console.log('Nenhuma alteração detectada');
-      alert('Nenhuma alteração foi detectada.');
+      showMessage('Nenhuma alteração foi detectada.', 'warning');
       return;
     }
     
@@ -319,6 +388,24 @@ const Configuracoes = () => {
     if (result.success) {
       console.log(`Perfil atualizado com sucesso!`)
       
+      // Feedback de sucesso baseado no que foi alterado
+      const changedFields = Object.keys(changes);
+      let successMessage = 'Perfil atualizado com sucesso!';
+      
+      if (changedFields.length === 1) {
+        if (changedFields.includes('senha')) {
+          successMessage = 'Senha alterada com sucesso!';
+        } else if (changedFields.includes('email')) {
+          successMessage = 'Email alterado com sucesso!';
+        } else if (changedFields.includes('nome')) {
+          successMessage = 'Nome alterado com sucesso!';
+        }
+      } else {
+        successMessage = `${changedFields.length} campos atualizados com sucesso!`;
+      }
+      
+      showMessage(successMessage, 'success');
+      
       // Atualiza os dados originais após sucesso
       setOriginalData({
         name: profileData.name,
@@ -334,26 +421,40 @@ const Configuracoes = () => {
       
       } else {
       console.error('Erro ao atualizar perfil:', result.error);
-      alert('Erro ao atualizar perfil. Tente novamente.');
+      
+      // Mensagem de erro mais específica
+      const changedFields = Object.keys(changes);
+      let errorMessage = 'Erro ao atualizar perfil. Tente novamente.';
+      
+      if (changedFields.length === 1) {
+        if (changedFields.includes('nome')) {
+          errorMessage = 'Erro ao alterar o nome. Verifique se o nome é válido e tente novamente.';
+        } else if (changedFields.includes('email')) {
+          errorMessage = 'Erro ao alterar o email. Verifique se o email é válido e não está em uso.';
+        } else if (changedFields.includes('senha')) {
+          errorMessage = 'Erro ao alterar a senha. Verifique se a senha atende aos requisitos.';
+        }
+      } else {
+        errorMessage = 'Erro ao atualizar os dados. Verifique as informações e tente novamente.';
+      }
+      
+      showMessage(errorMessage, 'error');
     }
   };
 
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
-  };
-
-  const getNotificationClass = (type) => {
-    switch (type) {
-      case 'success':
-        return 'success';
-      case 'warning':
-        return 'warning';
-      case 'error':
-        return 'error';
-      default:
-        return 'info';
-    }
-  };
+  // Verificar se há usuário logado
+  if (!userId) {
+    return (
+      <div className="configuracoes">
+        <div className="page-header">
+          <h1 className="page-title">Configurações de conta</h1>
+        </div>
+        <div className="error-container">
+          <p>Erro: Usuário não encontrado. Faça login novamente.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="configuracoes">
@@ -361,197 +462,146 @@ const Configuracoes = () => {
         <h1 className="page-title">Configurações de conta</h1>
       </div>
 
+      {/* Mensagem de feedback */}
+      {message.show && (
+        <div className={`message-container ${message.type}`}>
+          <div className="message-content">
+            <span className="message-text">{message.text}</span>
+            <button 
+              className="message-close"
+              onClick={() => setMessage({ text: '', type: '', show: false })}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="config-content">
         {/* Profile Section */}
         <div className="profile-section">
-          <div className="section-tabs">
-            <button 
-              className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={() => setActiveTab('profile')}
-            >
-              Edit Profile
-            </button>
-            <button 
-              className={`tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
-              onClick={() => setActiveTab('notifications')}
-            >
-              Notifications
-            </button>
-          </div>
-
-          {activeTab === 'profile' && (
-            <div className="profile-content">
-              {/* Photo Upload Section */}
-              {/* <div className="photo-section">
-                <h3 className="section-subtitle">Editar foto</h3>
-                <div className="photo-upload">
-                  <div className="photo-placeholder">
-                    <Camera size={24} className="camera-icon" />
-                  </div>
-                  <div className="upload-actions">
-                    <button className="upload-btn">Subir foto</button>
-                    <button className="remove-btn">remover</button>
-                  </div>
-                </div>
-                <div className="photo-requirements">
-                  <p className="requirement-title">Requisitos:</p>
-                  <ul className="requirements-list">
-                    <li>1. Min. 400 x 400px</li>
-                    <li>2. Max. 2MB</li>
-                  </ul>
-                </div>
-              </div> */}
-
-              {/* Profile Form */}
-              <div className="form-section">
-                <h3 className="section-subtitle">Detalhes</h3>
-                <form onSubmit={handleSubmit} className="profile-form">
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="name" className="form-label">
-                        Nome {isFieldChanged('name') && <span style={{color: '#e91e63'}}>●</span>}
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={profileData.name}
-                        onChange={handleInputChange}
-                        placeholder="Insira seu nome aqui"
-                        className={`form-input ${isFieldChanged('name') ? 'changed' : ''}`}
-                        title={originalData.name ? `Valor original: ${originalData.name}` : ''}
-                      />
-                    </div>
-                  </div>
-
+          <div className="profile-content">
+            {/* Profile Form */}
+            <div className="form-section">
+              <h3 className="section-subtitle">Detalhes</h3>
+              <form onSubmit={handleSubmit} className="profile-form">
+                <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="email" className="form-label">
-                      Email {isFieldChanged('email') && <span style={{color: '#e91e63'}}>●</span>}
+                    <label htmlFor="name" className="form-label">
+                      Nome {isFieldChanged('name') && <span style={{color: '#e91e63'}}>●</span>}
                     </label>
                     <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={profileData.email}
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={profileData.name}
                       onChange={handleInputChange}
-                      placeholder="exemplo@outlook.com"
-                      className={`form-input ${isFieldChanged('email') ? 'changed' : ''}`}
-                      title={originalData.email ? `Valor original: ${originalData.email}` : ''}
+                      placeholder="Insira seu nome aqui"
+                      className={`form-input ${isFieldChanged('name') ? 'changed' : ''}`}
+                      title={originalData.name ? `Valor original: ${originalData.name}` : ''}
                     />
                   </div>
+                </div>
 
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="password" className="form-label">
-                        Nova senha {isFieldChanged('password') && <span style={{color: '#e91e63'}}>●</span>}
-                      </label>
-                      <div className="password-input-wrapper">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          id="password"
-                          name="password"
-                          value={profileData.password}
-                          onChange={handleInputChange}
-                          placeholder="Insira sua nova senha"
-                          className={`form-input ${isFieldChanged('password') ? 'changed' : ''}`}
-                          title={originalData.password ? 'Senha atual definida (oculta por segurança)' : ''}
-                        />
-                        <button
-                          type="button"
-                          className="password-toggle-btn"
-                          onClick={togglePasswordVisibility}
-                          title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                        >
-                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="confirmPassword" className="form-label">
-                        Confirmar senha 
-                        {isFieldChanged('password') && <span style={{color: '#e91e63'}}> *</span>}
-                        {!isFieldChanged('password') && <span style={{color: '#666', fontSize: '0.8em'}}> (opcional)</span>}
-                      </label>
-                      <div className="password-input-wrapper">
-                        <input
-                          type={showConfirmPassword ? "text" : "password"}
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          value={profileData.confirmPassword}
-                          onChange={handleInputChange}
-                          placeholder={isFieldChanged('password') ? "Confirme sua nova senha" : "Obrigatório caso alterar"}
-                          className="form-input"
-                          disabled={!isFieldChanged('password')}
-                        />
-                        <button
-                          type="button"
-                          className="password-toggle-btn"
-                          onClick={toggleConfirmPasswordVisibility}
-                          title={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
-                        >
-                          {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    Email {isFieldChanged('email') && <span style={{color: '#e91e63'}}>●</span>}
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={profileData.email}
+                    onChange={handleInputChange}
+                    placeholder="exemplo@outlook.com"
+                    className={`form-input ${isFieldChanged('email') ? 'changed' : ''}`}
+                    title={originalData.email ? `Valor original: ${originalData.email}` : ''}
+                  />
+                </div>
 
-                  <button type="submit" className="save-btn">
-                    Salvar
-                  </button>
-                  
-                  {/* Resumo das alterações */}
-                  {Object.keys(getChangedFields()).length > 0 && (
-                    <div className="changes-summary">
-                      <h4>Alterações detectadas:</h4>
-                      <ul>
-                        {Object.entries(getChangedFields()).map(([key, value]) => (
-                          <li key={key}>
-                            <strong>{key === 'nome' ? 'Nome' : key === 'email' ? 'Email' : 'Senha'}:</strong> 
-                            {key === 'senha' ? ' ••••••••' : ` ${value}`}
-                          </li>
-                        ))}
-                      </ul>
-                      <p className="update-method">
-                        {(() => {
-                          // const strategy =
-                          determinarTipoAtualizacao();
-                          // return strategy ? `� ${strategy.description}` : '❌ Erro na determinação da estratégia';
-                        })()}
-                      </p>
-                    </div>
-                  )}
-                </form>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'notifications' && (
-            <div className="notifications-content">
-              <h3 className="section-subtitle">Notificações do Sistema</h3>
-              <div className="notifications-list">
-                {notifications.map((notification) => {
-                  const IconComponent = notification.icon;
-                  return (
-                    <div 
-                      key={notification.id} 
-                      className={`notification-item ${getNotificationClass(notification.type)}`}
-                    >
-                      <div className="notification-content">
-                        <IconComponent size={20} className="notification-icon" />
-                        <span className="notification-message">{notification.message}</span>
-                      </div>
-                      <button 
-                        className="notification-close"
-                        onClick={() => removeNotification(notification.id)}
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="password" className="form-label">
+                      Nova senha {isFieldChanged('password') && <span style={{color: '#e91e63'}}>●</span>}
+                    </label>
+                    <div className="password-input-wrapper">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        value={profileData.password}
+                        onChange={handleInputChange}
+                        placeholder="Insira sua nova senha"
+                        className={`form-input ${isFieldChanged('password') ? 'changed' : ''}`}
+                        title={originalData.password ? 'Senha atual definida (oculta por segurança)' : ''}
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle-btn"
+                        onClick={togglePasswordVisibility}
+                        title={showPassword ? "Ocultar senha" : "Mostrar senha"}
                       >
-                        <X size={16} />
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="confirmPassword" className="form-label">
+                      Confirmar senha 
+                      {isFieldChanged('password') && <span style={{color: '#e91e63'}}> *</span>}
+                      {!isFieldChanged('password') && <span style={{color: '#666', fontSize: '0.8em'}}> (opcional)</span>}
+                    </label>
+                    <div className="password-input-wrapper">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={profileData.confirmPassword}
+                        onChange={handleInputChange}
+                        placeholder={isFieldChanged('password') ? "Confirme sua nova senha" : "Obrigatório caso alterar"}
+                        className="form-input"
+                        disabled={!isFieldChanged('password')}
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle-btn"
+                        onClick={toggleConfirmPasswordVisibility}
+                        title={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                      >
+                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" className="save-btn">
+                  Salvar
+                </button>
+                
+                {/* Resumo das alterações */}
+                {Object.keys(getChangedFields()).length > 0 && (
+                  <div className="changes-summary">
+                    <h4>Alterações detectadas:</h4>
+                    <ul>
+                      {Object.entries(getChangedFields()).map(([key, value]) => (
+                        <li key={key}>
+                          <strong>{key === 'nome' ? 'Nome' : key === 'email' ? 'Email' : 'Senha'}:</strong> 
+                          {key === 'senha' ? ' ••••••••' : ` ${value}`}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="update-method">
+                      {(() => {
+                        // const strategy =
+                        determinarTipoAtualizacao();
+                        // return strategy ? `� ${strategy.description}` : '❌ Erro na determinação da estratégia';
+                      })()}
+                    </p>
+                  </div>
+                )}
+              </form>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
@@ -559,4 +609,3 @@ const Configuracoes = () => {
 };
 
 export default Configuracoes;
-
