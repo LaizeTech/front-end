@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Filter, Search, Edit, X, Trash2 } from 'lucide-react';
+import NovoProdutoModal from './components/NovoProdutoModal';
 import './estoque.css';
 
 const EditProductModal = ({ isOpen, onClose, product, onSave, onDelete }) => {
@@ -208,152 +209,6 @@ const EditProductModal = ({ isOpen, onClose, product, onSave, onDelete }) => {
   );
 };
 
-const AddProductModal = ({ isOpen, onClose, onAdd }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    platform: 'Shopee',
-    quantity: 0
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleAdd = () => {
-    const newProduct = {
-      id: Date.now(),
-      name: formData.name,
-      category: formData.category,
-      price: formData.price,
-      quantity: formData.quantity,
-      status: 'Disponível em estoque',
-      statusColor: formData.quantity > 10 ? 'green' : formData.quantity > 5 ? 'blue' : 'red',
-      store: 'NuvemShop - Loja Física',
-      platforms: [
-        { name: formData.platform, quantity: formData.quantity }
-      ],
-      image: null
-    };
-    
-    onAdd(newProduct);
-    setFormData({
-      name: '',
-      category: '',
-      price: '',
-      platform: 'Shopee',
-      quantity: 0
-    });
-    onClose();
-  };
-
-  const handleExcluir = () => {
-    setFormData({
-      name: '',
-      category: '',
-      price: '',
-      platform: 'Shopee',
-      quantity: 0
-    });
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay">
-      <div className="add-modal-container">
-        <div className="add-modal-header">
-          <h2 className="add-modal-title">Adicionar mais produto</h2>
-          <button className="close-button" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="add-modal-content">
-          <div className="add-form-section">
-            <div className="form-group">
-              <label className="form-label">Nome do Produto</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Insira o nome do produto"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Categoria</label>
-              <select
-                className="form-select"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-              >
-                <option value="">Escolha a categoria</option>
-                <option value="eletronicos">Eletrônicos</option>
-                <option value="roupas">Roupas</option>
-                <option value="casa">Casa e Jardim</option>
-                <option value="esportes">Esportes</option>
-                <option value="livros">Livros</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Preço</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="R$0,00"
-                value={formData.price}
-                onChange={(e) => handleInputChange('price', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="add-platform-section">
-            <div className="platform-header">
-              <span>Plataforma</span>
-              <span>Quantidade de produtos</span>
-            </div>
-            <div className="platform-row">
-              <select
-                className="platform-select"
-                value={formData.platform}
-                onChange={(e) => handleInputChange('platform', e.target.value)}
-              >
-                <option value="Shopee">Shopee</option>
-                <option value="NuvemShop">NuvemShop</option>
-                <option value="Mercado Livre">Mercado Livre</option>
-                <option value="Amazon">Amazon</option>
-              </select>
-              <input
-                type="number"
-                className="platform-quantity-input"
-                value={formData.quantity}
-                onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 0)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="add-modal-footer">
-          <button className="excluir-button" onClick={handleExcluir}>
-            Excluir Produto
-          </button>
-          <button className="adicionar-button" onClick={handleAdd}>
-            Adicionar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const FilterCategoryModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories] = useState([
@@ -477,7 +332,7 @@ const AddCategoryModal = ({ isOpen, onClose, onAdd }) => {
 const Estoque = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isNovoProdutoModalOpen, setIsNovoProdutoModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -660,7 +515,7 @@ const Estoque = () => {
   };
 
   const handleAddProduct = () => {
-    setIsAddModalOpen(true);
+    setIsNovoProdutoModalOpen(true);
   };
 
   const handleFilterProducts = () => {
@@ -710,8 +565,8 @@ const Estoque = () => {
     setSelectedProduct(null);
   };
 
-  const closeAddModal = () => {
-    setIsAddModalOpen(false);
+  const closeNovoProdutoModal = () => {
+    setIsNovoProdutoModalOpen(false);
   };
 
   const closeFilterModal = () => {
@@ -817,9 +672,9 @@ const Estoque = () => {
         onDelete={handleDeleteProduct}
       />
 
-      <AddProductModal
-        isOpen={isAddModalOpen}
-        onClose={closeAddModal}
+      <NovoProdutoModal
+        isOpen={isNovoProdutoModalOpen}
+        onClose={closeNovoProdutoModal}
         onAdd={handleAddNewProduct}
       />
 
