@@ -7,6 +7,7 @@ const Entradas = () => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [noData, setNoData] = useState(false);
 
   useEffect(() => {
     fetchHistoricoCompras();
@@ -15,7 +16,14 @@ const Entradas = () => {
   const fetchHistoricoCompras = async () => {
     try {
       setLoading(true);
+      setNoData(false);
       const response = await fetch('http://localhost:8080/compras/historico-compras');
+      
+      if (response.status === 204) {
+        setEntries([]);
+        setNoData(true);
+        return;
+      }
       
       if (!response.ok) {
         throw new Error(`Erro ${response.status}: ${response.statusText}`);
@@ -35,6 +43,7 @@ const Entradas = () => {
       }));
       
       setEntries(mappedEntries);
+      setNoData(mappedEntries.length === 0);
     } catch (err) {
       console.error('Erro ao buscar histórico de compras:', err);
       setError(err.message);
@@ -81,6 +90,25 @@ const Entradas = () => {
           <button onClick={fetchHistoricoCompras} className="retry-button">
             Tentar novamente
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (noData) {
+    return (
+      <div className="entradas">
+        <div className="page-header">
+          <h1 className="page-title">Histórico de Compras</h1>
+        </div>
+        <div className="no-data-container">
+          <div className="no-data-content">
+            <svg className="no-data-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 11H15M12 8V14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <h2 className="no-data-title">Nenhuma compra registrada</h2>
+            <p className="no-data-message">Não há compras registradas no momento. Quando você realizar uma compra, ela aparecerá aqui.</p>
+          </div>
         </div>
       </div>
     );
