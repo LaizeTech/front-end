@@ -19,7 +19,6 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="metricas-mensais" element={<MetricasMensais />} />
             <Route path="metricas-anuais" element={<MetricasAnuais />} />

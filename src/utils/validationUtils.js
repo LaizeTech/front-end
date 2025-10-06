@@ -48,7 +48,7 @@ export function isValidDate(dateStr) {
 export function isValidURL(url) {
   try {
     new URL(url);
-    return true;
+    return true;d
   } catch {
     return false;
   }
