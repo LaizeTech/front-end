@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import './entradas.css';
 
 const Entradas = () => {
@@ -32,15 +32,20 @@ const Entradas = () => {
       const data = await response.json();
       
       // Mapear os dados do backend para o formato do frontend
-      const mappedEntries = data.map((item, index) => ({
-        id: item.idCompraProduto,
-        nomeProduto: item.nomeProduto,
-        quantidadeProduto: item.quantidadeProduto,
-        nomeCategoria: item.nomeCategoria,
-        dtCompra: formatDate(item.dtCompra),
-        precoCompra: formatPrice(item.precoCompra),
-        fornecedor: item.fornecedor
-      }));
+      const mappedEntries = data.map((item, index) => {
+        const categoryColor = getCategoryColor(item.nomeCategoria);
+        console.log(`Categoria: "${item.nomeCategoria}" -> Cor: ${categoryColor}`);
+        return {
+          id: item.idCompraProduto,
+          nomeProduto: item.nomeProduto,
+          quantidadeProduto: item.quantidadeProduto,
+          nomeCategoria: item.nomeCategoria,
+          categoryColor: categoryColor,
+          dtCompra: formatDate(item.dtCompra),
+          precoCompra: formatPrice(item.precoCompra),
+          fornecedor: item.fornecedor
+        };
+      });
       
       setEntries(mappedEntries);
       setNoData(mappedEntries.length === 0);
@@ -62,6 +67,64 @@ const Entradas = () => {
       style: 'currency',
       currency: 'BRL'
     }).format(price);
+  };
+
+  const getCategoryColor = (category) => {
+    if (!category) return 'red'; // Teste: sempre retorna vermelho
+    
+    console.log('Categoria recebida:', category);
+    
+    // Para teste, vou retornar cores alternadas baseadas no índice
+    const colors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow', 'cyan'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    console.log('Cor escolhida:', randomColor);
+    return randomColor;
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedItems(entries.map(entry => entry.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (id) => {
+    setSelectedItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleExportar = () => {
+    // Implementar lógica para exportar dados selecionados
+    const selectedEntries = entries.filter(entry => selectedItems.includes(entry.id));
+    console.log('Exportar dados selecionados:', selectedEntries);
+    
+    // Exemplo simples de exportação para CSV
+    const csvContent = [
+      ['Nome do Produto', 'Quantidade', 'Categoria', 'Data da Compra', 'Preço de Compra', 'Fornecedor'],
+      ...selectedEntries.map(entry => [
+        entry.nomeProduto,
+        entry.quantidadeProduto,
+        entry.nomeCategoria,
+        entry.dtCompra,
+        entry.precoCompra,
+        entry.fornecedor
+      ])
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `entradas_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const displayEntries = entries;
@@ -117,16 +180,42 @@ const Entradas = () => {
   return (
     <div className="entradas">
       <div className="page-header">
-        <h1 className="page-title">Histórico de Compras</h1>
+        <div className="header-content">
+          <h1 className="page-title">Histórico de Compras</h1>
+          <div className="header-buttons">
+            {selectedItems.length > 0 && (
+              <button onClick={handleExportar} className="action-button export-button">
+                <Download size={16} />
+                Exportar
+              </button>
+            )}
+            <button onClick={fetchHistoricoCompras} className="refresh-button" disabled={loading}>
+              {loading ? 'Atualizando...' : 'Atualizar'}
+            </button>
+          </div>
+        </div>
       </div>
+
+      {selectedItems.length > 0 && (
+        <div className="selected-info-bar">
+          <span>{selectedItems.length} item(s) selecionado(s)</span>
+        </div>
+      )}
 
       <div className="table-container">
         <div className="table-wrapper">
           <table className="entries-table">
             <thead>
               <tr>
-                <th>
-                  Nome do produto
+                <th className="checkbox-column">
+                  <input 
+                    type="checkbox" 
+                    onChange={handleSelectAll} 
+                    checked={selectedItems.length > 0 && selectedItems.length === entries.length} 
+                  />
+                </th>
+                <th className="sortable-header">
+                  Nome do produto <ChevronDown size={16} />
                 </th>
                 <th>Quantidade</th>
                 <th>Categoria</th>
@@ -138,11 +227,29 @@ const Entradas = () => {
             <tbody>
               {displayEntries.map((entry) => (
                 <tr key={entry.id} >
-                  
+                  <td className="checkbox-column">
+                    <input 
+                      type="checkbox" 
+                      checked={selectedItems.includes(entry.id)} 
+                      onChange={() => handleSelectItem(entry.id)} 
+                    />
+                  </td>
                   <td className="product-name">{entry.nomeProduto}</td>
                   <td className="quantity">{entry.quantidadeProduto}</td>
                   <td>
-                    <span className={`category-badge blue`}>
+                    <span 
+                      className={`category-badge ${entry.categoryColor}`}
+                      style={{
+                        backgroundColor: entry.categoryColor === 'blue' ? '#007bff' : 
+                                        entry.categoryColor === 'green' ? '#28a745' : 
+                                        entry.categoryColor === 'orange' ? '#ff9500' : 
+                                        entry.categoryColor === 'purple' ? '#6f42c1' : 
+                                        entry.categoryColor === 'red' ? '#dc3545' : 
+                                        entry.categoryColor === 'yellow' ? '#ffc107' : 
+                                        entry.categoryColor === 'cyan' ? '#17a2b8' : '#6c757d'
+                      }}
+                      title={`Cor: ${entry.categoryColor}`}
+                    >
                       {entry.nomeCategoria}
                     </span>
                   </td>

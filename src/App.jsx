@@ -19,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="metricas-mensais" element={<MetricasMensais />} />
             <Route path="metricas-anuais" element={<MetricasAnuais />} />
