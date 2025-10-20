@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Plus, Download } from 'lucide-react';
+import RegistroSaidaModal from './components/RegistroSaidaModal';
 import './saidas.css';
 
 const Saidas = () => {
@@ -7,6 +8,11 @@ const Saidas = () => {
   const [exits, setExits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChoiceModalOpen, setIsChoiceModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredExits, setFilteredExits] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   const fetchSaidas = async () => {
     try {
@@ -33,7 +39,7 @@ const Saidas = () => {
         quantity: item.quantidade || 0,
         platform: item.plataforma || 'N/A',
         date: formatDate(item.data_venda),
-        status: item.status_produto || 'N/A',
+        status: formatStatusDisplay(item.status_produto),
         statusColor: getStatusColor(item.status_produto),
         price: formatPrice(item.preco_venda),
         supplier: item.fornecedor || 'N/A'
@@ -51,6 +57,18 @@ const Saidas = () => {
   useEffect(() => {
     fetchSaidas();
   }, []);
+
+  // Filtrar dados baseado no termo de pesquisa
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredExits(exits);
+    } else {
+      const filtered = exits.filter(exit =>
+        exit.productName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredExits(filtered);
+    }
+  }, [exits, searchTerm]);
 
   // --- Funções Auxiliares (Helpers) ---
 
@@ -74,12 +92,44 @@ const Saidas = () => {
     }).format(price);
   };
 
+  const formatStatusDisplay = (status) => {
+    if (!status) return 'N/A';
+    const statusStr = String(status).trim().toUpperCase();
+    switch (statusStr) {
+      case 'ATIVO':
+      case 'ACTIVE':
+      case '1':
+      case 'TRUE':
+        return 'ATIVO';
+      case 'DESATIVO':
+      case 'INATIVO':
+      case 'INACTIVE':
+      case '0':
+      case 'FALSE':
+        return 'DESATIVO';
+      default:
+        return 'N/A';
+    }
+  };
+
   const getStatusColor = (status) => {
     if (!status) return 'gray';
-    switch (status.toUpperCase()) {
-      case 'ATIVO': return 'green';
-      case 'DESATIVO': return 'red';
-      default: return 'gray';
+    const statusStr = String(status).trim().toUpperCase();
+    switch (statusStr) {
+      case 'ATIVO':
+      case 'ACTIVE':
+      case '1':
+      case 'TRUE':
+        return 'green';
+      case 'DESATIVO':
+      case 'INATIVO':
+      case 'INACTIVE':
+      case '0':
+      case 'FALSE':
+        return 'red';
+      default: 
+        console.log('Status não reconhecido:', status);
+        return 'gray';
     }
   };
 
@@ -113,6 +163,127 @@ const Saidas = () => {
     );
   };
 
+  const handleInserirSaida = () => {
+    setIsChoiceModalOpen(true);
+  };
+
+  const handleChoiceModalClose = () => {
+    setIsChoiceModalOpen(false);
+  };
+
+  const handleRegistroManual = () => {
+    setIsChoiceModalOpen(false);
+    setIsModalOpen(true);
+  };
+
+  const handleImportarArquivo = () => {
+    setIsChoiceModalOpen(false);
+    // Criar input file para upload
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv,.xlsx,.xls';
+    input.onchange = handleFileUpload;
+    input.click();
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Salvar arquivo localmente
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = file.name;
+      link.click();
+      
+      console.log(`Arquivo ${file.name} foi baixado para a pasta de downloads`);
+      alert(`Arquivo "${file.name}" selecionado e baixado!`);
+    }
+  };
+
+  const handleToggleSearch = () => {
+    setShowSearch(!showSearch);
+    if (showSearch) {
+      setSearchTerm('');
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveSaida = async (produtosSelecionados) => {
+    try {
+      // Implementar lógica para salvar as saídas no backend
+      console.log('Salvando saídas:', produtosSelecionados);
+      
+      // Exemplo de como os dados seriam enviados para o backend
+      for (const produto of produtosSelecionados) {
+        const saidaData = {
+          idProduto: produto.id,
+          quantidade: produto.quantidadeSaida,
+          plataforma: produto.plataforma,
+          precoVenda: parseFloat(produto.precoVenda),
+          dataVenda: new Date().toISOString()
+        };
+        
+        // Fazer a requisição POST para salvar a saída
+        const response = await fetch('http://localhost:8080/saidas', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(saidaData)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Erro ao salvar saída do produto ${produto.nome}`);
+        }
+      }
+      
+      // Recarregar os dados após salvar
+      fetchSaidas();
+      alert('Saídas registradas com sucesso!');
+      
+    } catch (error) {
+      console.error('Erro ao salvar saídas:', error);
+      alert('Erro ao registrar saídas: ' + error.message);
+    }
+  };
+
+  const handleExportar = () => {
+    // Implementar lógica para exportar dados selecionados
+    const selectedExits = exits.filter(exit => selectedItems.includes(exit.id));
+    console.log('Exportar dados selecionados:', selectedExits);
+    
+    // Exemplo simples de exportação para CSV
+    const csvContent = [
+      ['Nome do Produto', 'Quantidade', 'Plataforma', 'Data', 'Status', 'Preço', 'Fornecedor'],
+      ...selectedExits.map(exit => [
+        exit.productName,
+        exit.quantity,
+        exit.platform,
+        exit.date,
+        exit.status,
+        exit.price,
+        exit.supplier
+      ])
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `saidas_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // --- Renderização do Componente ---
 
   if (loading) {
@@ -141,11 +312,37 @@ const Saidas = () => {
       <div className="page-header">
         <div className="header-content">
           <h1 className="page-title">Saídas do Estoque</h1>
-          <button onClick={fetchSaidas} className="refresh-button" disabled={loading}>
-            {loading ? 'Atualizando...' : 'Atualizar'}
-          </button>
+          <div className="header-buttons">
+            {selectedItems.length > 0 && (
+              <button onClick={handleExportar} className="action-button export-button">
+                <Download size={16} />
+                Exportar
+              </button>
+            )}
+            <button onClick={handleInserirSaida} className="action-button insert-button">
+              <Plus size={16} />
+              Inserir Saída
+            </button>
+            <button onClick={fetchSaidas} className="refresh-button" disabled={loading}>
+              {loading ? 'Atualizando...' : 'Atualizar'}
+            </button>
+          </div>
         </div>
       </div>
+
+      {selectedItems.length > 0 && (
+        <div className="selected-info-bar">
+          <span>{selectedItems.length} item(s) selecionado(s)</span>
+        </div>
+      )}
+
+      {filteredExits.length === 0 && searchTerm && (
+        <div className="search-notification">
+          <div className="search-notification-content">
+            <p>Nenhum produto encontrado para "{searchTerm}"</p>
+          </div>
+        </div>
+      )}
 
       {exits.length === 0 ? (
         <div className="empty-container">
@@ -158,9 +355,30 @@ const Saidas = () => {
               <thead>
                 <tr>
                   <th className="checkbox-column">
-                    <input type="checkbox" onChange={handleSelectAll} checked={selectedItems.length > 0 && selectedItems.length === exits.length} />
+                    <input type="checkbox" onChange={handleSelectAll} checked={selectedItems.length > 0 && selectedItems.length === filteredExits.length} />
                   </th>
-                  <th className="sortable-header">Nome do produto <ChevronDown size={16} /></th>
+                  <th className="sortable-header">
+                    <div className="header-with-search">
+                      <span>Nome do produto</span>
+                      <ChevronDown 
+                        size={16} 
+                        className={`search-toggle ${showSearch ? 'active' : ''}`}
+                        onClick={handleToggleSearch}
+                      />
+                    </div>
+                    {showSearch && (
+                      <div className="search-input-container">
+                        <input
+                          type="text"
+                          placeholder="Pesquisar produto..."
+                          value={searchTerm}
+                          onChange={handleSearchChange}
+                          className="product-search-input"
+                          autoFocus
+                        />
+                      </div>
+                    )}
+                  </th>
                   <th>Quantidade</th>
                   <th>Plataforma</th>
                   <th>Data</th>
@@ -170,8 +388,8 @@ const Saidas = () => {
                 </tr>
               </thead>
               <tbody>
-                {exits.map((exit) => (
-                  <tr key={exit.id} className="table-row">
+                {filteredExits.map((exit) => (
+                  <tr key={exit.id}>
                     <td className="checkbox-column">
                       <input type="checkbox" checked={selectedItems.includes(exit.id)} onChange={() => handleSelectItem(exit.id)} />
                     </td>
@@ -186,6 +404,45 @@ const Saidas = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+      
+      <RegistroSaidaModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={handleSaveSaida}
+      />
+
+      {/* Modal de Escolha */}
+      {isChoiceModalOpen && (
+        <div className="modal-overlay">
+          <div className="choice-modal">
+            <div className="modal-header">
+              <h3>Como deseja adicionar a saída?</h3>
+              <button className="close-button" onClick={handleChoiceModalClose}>
+                ×
+              </button>
+            </div>
+            <div className="modal-content">
+              <p>Escolha uma das opções abaixo:</p>
+              <div className="choice-buttons">
+                <button className="choice-btn manual-btn" onClick={handleRegistroManual}>
+                  <div className="btn-icon">📝</div>
+                  <div className="btn-text">
+                    <strong>Registro Manual</strong>
+                    <span>Preencher dados manualmente</span>
+                  </div>
+                </button>
+                <button className="choice-btn import-btn" onClick={handleImportarArquivo}>
+                  <div className="btn-icon">📁</div>
+                  <div className="btn-text">
+                    <strong>Importar Arquivo</strong>
+                    <span>CSV ou Excel (.xlsx, .xls)</span>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

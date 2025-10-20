@@ -308,9 +308,9 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>Alerta Quantidade</h3>
             <span className="card-subtitle">
-              {alertaProdutos === "sem_alertas" 
-                ? "Não existe produtos com alertas de quantidade" 
-                : Array.isArray(alertaProdutos) 
+              {alertaProdutos === "sem_alertas"
+                ? "Não existe produtos com alertas de quantidade"
+                : Array.isArray(alertaProdutos)
                   ? `Produtos com estoque baixo (${alertaProdutos.length} produtos)`
                   : "Carregando..."}
             </span>
@@ -364,9 +364,9 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>Vendas do mês</h3>
             <span className="card-subtitle">
-              {vendasPorPlataforma === "sem_vendas" 
-                ? "Não houve vendas no mês" 
-                : Array.isArray(vendasPorPlataforma) 
+              {vendasPorPlataforma === "sem_vendas"
+                ? "Não houve vendas no mês"
+                : Array.isArray(vendasPorPlataforma)
                   ? `Vendas por plataforma (${vendasPorPlataforma.length} plataformas)`
                   : "Carregando..."}
             </span>
@@ -407,7 +407,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          
+         
           <div className="card-header">
             <h3>Saídas - últimos 3 dias</h3>
           </div>
@@ -427,9 +427,9 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>Recentes Entradas</h3>
             <span className="card-subtitle">
-              {ultimasCompras === "sem_compras" 
-                ? "Não houve compras recentes" 
-                : Array.isArray(ultimasCompras) 
+              {ultimasCompras === "sem_compras"
+                ? "Não houve compras recentes"
+                : Array.isArray(ultimasCompras)
                   ? `Últimas compras realizadas (${ultimasCompras.length} produtos)`
                   : "Carregando..."}
             </span>

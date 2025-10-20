@@ -284,6 +284,8 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
+  flex: 1;
+  min-width: 0;
 }
 
 .category-name,
@@ -291,6 +293,12 @@
   font-weight: 600;
   color: #212529;
   font-size: 12px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.category-name{
+  padding-left: 10px;
 }
 
 .category-quantity,
@@ -460,7 +468,7 @@
   .employees-count {
     font-size: 24px;
   }
-  
+ 
   /* Chatbot button adjustments for mobile */
   .chatbot-button {
     width: 50px;
@@ -486,7 +494,7 @@
   .employees-count {
     font-size: 20px;
   }
-  
+ 
   /* Smaller chatbot button for small screens */
   .chatbot-button {
     width: 42px;
@@ -501,6 +509,11 @@
   font-size: 12px !important;
   font-weight: 600;
   line-height: 1.2;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  width: auto;
 }
 
 .dashboard .products-card .product-details .product-quantity,
