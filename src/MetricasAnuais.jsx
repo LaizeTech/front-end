@@ -24,17 +24,33 @@ const MetricasAnuais = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [showYearDropdown, setShowYearDropdown] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // Hook para buscar os anos disponíveis quando o componente montar
   useEffect(() => {
     const fetchAvailableYears = async () => {
       try {
         const response = await fetch(`${API_URL}/anos-disponiveis`);
-        if (response.ok) {
-          const years = await response.json();
+        if (!response.ok) {
+          throw new Error('Erro ao buscar anos disponíveis');
+        }
+        const years = await response.json();
+        
+        if (years && years.length > 0) {
           setAvailableYears(years);
+          // Se o ano atual não estiver na lista, seleciona o ano mais recente
+          if (!years.includes(selectedYear)) {
+            setSelectedYear(years[years.length - 1]);
+          }
+        } else {
+          // Se não houver anos, usa o ano atual
+          setAvailableYears([new Date().getFullYear()]);
         }
       } catch (error) {
         console.error("Erro ao buscar anos disponíveis:", error);
+        // Em caso de erro, usa o ano atual
+        setAvailableYears([new Date().getFullYear()]);
       }
     };
 
@@ -61,52 +77,71 @@ const MetricasAnuais = () => {
     const plataformaId = 1;
 
     const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
       try {
         // 1. Buscar Receita Total (para o Card)
         const revenueRes = await fetch(`${API_URL}/vendas/total?plataforma=${plataformaId}&ano=${selectedYear}`);
-        if (revenueRes.ok) {
-          const revenueData = await revenueRes.json();
-          setTotalRevenue(revenueData);
+        if (!revenueRes.ok) {
+          throw new Error('Erro ao buscar receita total');
         }
+        const revenueData = await revenueRes.json();
+        setTotalRevenue(revenueData || 0);
 
         // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
         const platformRes = await fetch(`${API_URL}/vendas/por-plataforma?ano=${selectedYear}`);
-        if (platformRes.ok) {
-          const data = await platformRes.json();
-          // Mapear a resposta [["Shopee", 100], ...] para [{ name: "Shopee", value: 100 }, ...]
-          const mappedData = data.map((item) => ({
-            name: item[0],
-            value: item[1]
-          }));
-          setPlatformData(mappedData);
+        if (!platformRes.ok) {
+          throw new Error('Erro ao buscar vendas por plataforma');
         }
+        const platformRawData = await platformRes.json();
+        
+        // Mapear a resposta [["Shopee", 100], ...] para [{ name: "Shopee", value: 100 }, ...]
+        const mappedPlatformData = Array.isArray(platformRawData) && platformRawData.length > 0
+          ? platformRawData.map((item) => ({
+              name: item[0],
+              value: item[1]
+            }))
+          : [];
+        setPlatformData(mappedPlatformData);
 
         // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
         const top5Res = await fetch(`${API_URL}/top5?plataforma=${plataformaId}&ano=${selectedYear}`);
-        if (top5Res.ok) {
-          const data = await top5Res.json();
-          // Mapear [["Produto A", 50], ...] para [{ name: "Produto A", value: 50 }, ...]
-          const mappedData = data.map((item) => ({
-            name: item[0],
-            value: item[1]
-          }));
-          setTop5ProductData(mappedData);
+        if (!top5Res.ok) {
+          throw new Error('Erro ao buscar top 5 produtos');
         }
+        const top5RawData = await top5Res.json();
+        
+        // Mapear [["Produto A", 50], ...] para [{ name: "Produto A", value: 50 }, ...]
+        const mappedTop5Data = Array.isArray(top5RawData) && top5RawData.length > 0
+          ? top5RawData.map((item) => ({
+              name: item[0],
+              value: item[1]
+            }))
+          : [];
+        setTop5ProductData(mappedTop5Data);
 
         // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
         const monthlyRes = await fetch(`${API_URL}/receita/mensal?plataforma=${plataformaId}&ano=${selectedYear}`);
-        if (monthlyRes.ok) {
-          const data = await monthlyRes.json();
-          // Mapear [["2025-10", 15000], ...] para [{ month: "2025-10", value: 15000 }, ...]
-          const mappedData = data.map((item) => ({
-            month: item[0], // Formato "YYYY-MM"
-            value: item[1]
-          }));
-          setMonthlyRevenueData(mappedData);
+        if (!monthlyRes.ok) {
+          throw new Error('Erro ao buscar receita mensal');
         }
+        const monthlyRawData = await monthlyRes.json();
+        
+        // Mapear [["2025-10", 15000], ...] para [{ month: "2025-10", value: 15000 }, ...]
+        const mappedMonthlyData = Array.isArray(monthlyRawData) && monthlyRawData.length > 0
+          ? monthlyRawData.map((item) => ({
+              month: item[0], // Formato "YYYY-MM"
+              value: item[1]
+            }))
+          : [];
+        setMonthlyRevenueData(mappedMonthlyData);
 
       } catch (error) {
         console.error("Erro ao buscar dados da API:", error);
+        setError(error.message || "Erro ao carregar os dados. Tente novamente mais tarde.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -139,18 +174,22 @@ const MetricasAnuais = () => {
           </button>
           {showYearDropdown && (
             <div className="year-dropdown-menu">
-              {availableYears.map((year) => (
-                <button
-                  key={year}
-                  className={`year-option ${year === selectedYear ? 'selected' : ''}`}
-                  onClick={() => {
-                    setSelectedYear(year);
-                    setShowYearDropdown(false);
-                  }}
-                >
-                  {year}
-                </button>
-              ))}
+              {availableYears.length > 0 ? (
+                availableYears.map((year) => (
+                  <button
+                    key={year}
+                    className={`year-option ${year === selectedYear ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSelectedYear(year);
+                      setShowYearDropdown(false);
+                    }}
+                  >
+                    {year}
+                  </button>
+                ))
+              ) : (
+                <div className="no-data-message">Ainda não há anos disponíveis para análise 📅</div>
+              )}
             </div>
           )}
         </div>
@@ -160,77 +199,131 @@ const MetricasAnuais = () => {
         </div>
       </div>
 
-      <div className="annual-content">
-        <div className="revenue-card">
-          <div className="revenue-label">Receita Anual {selectedYear}</div>
-          <div className="revenue-amount">
-            {totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-          </div>
+      {/* Mensagem de loading */}
+      {isLoading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-title">Aguarde um momento...</p>
+          <p className="loading-subtitle">Estamos buscando suas métricas anuais 📊</p>
         </div>
-        <div className="chart-card platform-chart">
-          <h3 className="chart-title">Quantidade de produtos vendidos por plataforma - {selectedYear}</h3>
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={platformData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  dataKey="value"
-                  label={({ name, value }) => `${value}`}
-                >
-                  {platformData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="platform-legend">
-            {platformData.map((item, index) => (
-              <div key={index} className="legend-item">
-                <div
-                  className="legend-color"
-                  style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
-                ></div>
-                <span className="legend-text">{item.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      )}
 
-        <div className="chart-card monthly-chart">
-          <h3 className="chart-title">Top 5 produtos mais vendidos - {selectedYear}</h3>
-          <div className="ranking-list">
-            {top5ProductData.map((product, index) => (
-              <div key={index} className="ranking-item">
-                <div className="ranking-position">{index + 1}</div>
-                <div className="ranking-info">
-                  <span className="ranking-name">{product.name}</span>
-                  <span className="ranking-value">{product.value} vendas</span>
+      {/* Mensagem de erro */}
+      {error && !isLoading && (
+        <div className="error-container">
+          <div className="error-icon">⚠️</div>
+          <p className="error-title">Ops! Algo deu errado</p>
+          <p className="error-message">Não conseguimos carregar os dados no momento. Por favor, verifique sua conexão e tente novamente.</p>
+          <button 
+            className="retry-button"
+            onClick={() => setSelectedYear(selectedYear)}
+          >
+          Tentar novamente
+          </button>
+        </div>
+      )}
+
+      {/* Conteúdo principal - apenas exibir se não estiver carregando e não houver erro */}
+      {!isLoading && !error && (
+        <div className="annual-content">
+          <div className="revenue-card">
+            <div className="revenue-label">Receita Anual {selectedYear}</div>
+            <div className="revenue-amount">
+              {totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </div>
+          </div>
+
+          <div className="chart-card platform-chart">
+            <h3 className="chart-title">Quantidade de produtos vendidos por plataforma - {selectedYear}</h3>
+            <div className="chart-container">
+              {platformData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={platformData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        dataKey="value"
+                        label={({ name, value }) => `${value}`}
+                      >
+                        {platformData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="platform-legend">
+                    {platformData.map((item, index) => (
+                      <div key={index} className="legend-item">
+                        <div
+                          className="legend-color"
+                          style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
+                        ></div>
+                        <span className="legend-text">{item.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="no-data-message">
+                  <div className="no-data-icon">📊</div>
+                  <p>Ainda não temos dados de vendas por plataforma para {selectedYear}</p>
+                  <span className="no-data-hint">Comece a registrar suas vendas para ver os gráficos aqui!</span>
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
+          </div>
+
+          <div className="chart-card monthly-chart">
+            <h3 className="chart-title">Top 5 produtos mais vendidos - {selectedYear}</h3>
+            <div className="ranking-list">
+              {top5ProductData.length > 0 ? (
+                top5ProductData.map((product, index) => (
+                  <div key={index} className="ranking-item">
+                    <div className="ranking-position">{index + 1}</div>
+                    <div className="ranking-info">
+                      <span className="ranking-name">{product.name}</span>
+                      <span className="ranking-value">{product.value} vendas</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-data-message">
+                  <div className="no-data-icon">🏆</div>
+                  <p>Nenhum produto vendido ainda em {selectedYear}</p>
+                  <span className="no-data-hint">Suas primeiras vendas aparecerão aqui em breve!</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="chart-card gross-value-chart">
+            <h3 className="chart-title">Receita Mensal {selectedYear}</h3>
+            <div className="chart-container">
+              {monthlyRevenueData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={monthlyRevenueData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis tickFormatter={(value) => `R$${value / 1000}k`} />
+                    <Tooltip formatter={(value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} />
+                    <Bar dataKey="value" fill="#e91e63" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="no-data-message">
+                  <div className="no-data-icon">💰</div>
+                  <p>Nenhuma receita registrada para {selectedYear}</p>
+                  <span className="no-data-hint">Quando você realizar vendas, o gráfico mensal aparecerá aqui!</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <div className="chart-card gross-value-chart">
-          <h3 className="chart-title">Receita Mensal {selectedYear}</h3>
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={monthlyRevenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                {/* Eixo X agora usa "month" */}
-                <XAxis dataKey="month" />
-                <YAxis tickFormatter={(value) => `R$${value / 1000}k`} />
-                <Tooltip formatter={(value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} />
-                <Bar dataKey="value" fill="#e91e63" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
