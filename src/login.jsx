@@ -11,10 +11,19 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Verificar se o usuário já está logado ao carregar o componente
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    const savedPassword = localStorage.getItem('rememberedPassword');
+    
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (isLoggedIn() && isSessionValid()) {
-      // Se já estiver logado, redirecionar para o dashboard
       navigate('/', { replace: true });
     }
   }, [navigate]);
@@ -42,25 +51,27 @@ const Login = () => {
 
       const data = await response.json();
 
-      // Armazenar dados do usuário no sessionStorage
-      sessionStorage.setItem("user", JSON.stringify(data));
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', password);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedPassword');
+      }
       
-      // Armazenar dados específicos para fácil acesso
+      sessionStorage.setItem("user", JSON.stringify(data));
       sessionStorage.setItem("userId", data.idUsuario);
       sessionStorage.setItem("userName", data.nome);
       sessionStorage.setItem("userEmail", data.email);
       sessionStorage.setItem("acessoFinanceiro", data.acessoFinanceiro);
       sessionStorage.setItem("statusAtivo", data.statusAtivo);
       
-      // Armazenar dados da empresa
       if (data.empresa) {
         sessionStorage.setItem("empresa", JSON.stringify(data.empresa));
         sessionStorage.setItem("empresaId", data.empresa.idEmpresa);
         sessionStorage.setItem("empresaNome", data.empresa.nomeEmpresa);
         sessionStorage.setItem("empresaCnpj", data.empresa.cnpj);
       }
-
-      // Redirecionar para a página que o usuário estava tentando acessar ou para o dashboard
       const from = location.state?.from?.pathname || "/";
       navigate(from, { replace: true });
     } catch (error) {
