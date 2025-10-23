@@ -1,340 +1,17 @@
 import React, { useState } from 'react';
 import { Plus, Filter, Search, Edit, X, Trash2 } from 'lucide-react';
 import NovoProdutoModal from './components/NovoProdutoModal';
+import AdicaoProdutoModal from './components/AdicaoProdutoModal';
 import './estoque.css';
-
-const EditProductModal = ({ isOpen, onClose, product, onSave, onDelete }) => {
-  const [formData, setFormData] = useState({
-    name: product?.name || '',
-    category: product?.category || '',
-    price: product?.price || '',
-    platforms: product?.platforms || [
-      { name: 'Shopee', quantity: 0 }
-    ],
-    image: product?.image || null
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handlePlatformQuantityChange = (index, quantity) => {
-    const updatedPlatforms = [...formData.platforms];
-    updatedPlatforms[index].quantity = quantity;
-    setFormData(prev => ({
-      ...prev,
-      platforms: updatedPlatforms
-    }));
-  };
-
-  const removePlatform = (index) => {
-    const updatedPlatforms = formData.platforms.filter((_, i) => i !== index);
-    setFormData(prev => ({
-      ...prev,
-      platforms: updatedPlatforms
-    }));
-  };
-
-  const addPlatform = () => {
-    setFormData(prev => ({
-      ...prev,
-      platforms: [...prev.platforms, { name: '', quantity: 0 }]
-    }));
-  };
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData(prev => ({
-          ...prev,
-          image: e.target.result
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = () => {
-    onSave(formData);
-    onClose();
-  };
-
-  const handleDelete = () => {
-    onDelete(product?.id);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <div className="modal-header">
-          <h2 className="modal-title">Editar Produto</h2>
-          <button className="close-button" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="modal-content">
-          <div className="form-section">
-            <div className="form-group">
-              <label className="form-label">Nome do Produto</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Insira o nome do produto"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Categoria</label>
-              <select
-                className="form-select"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-              >
-                <option value="">Escolha a categoria</option>
-                <option value="eletronicos">Eletrônicos</option>
-                <option value="roupas">Roupas</option>
-                <option value="casa">Casa e Jardim</option>
-                <option value="esportes">Esportes</option>
-                <option value="livros">Livros</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Preço</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="R$0,00"
-                value={formData.price}
-                onChange={(e) => handleInputChange('price', e.target.value)}
-              />
-            </div>
-
-            <div className="platforms-section">
-              <label className="form-label">Plataformas</label>
-              <div className="platforms-table">
-                <div className="table-header">
-                  <span>Plataforma</span>
-                  <span>Quantidade de produtos</span>
-                  <span>Excluir plataforma</span>
-                </div>
-                
-                {formData.platforms.map((platform, index) => (
-                  <div key={index} className="table-row">
-                    <input
-                      type="text"
-                      className="platform-input"
-                      placeholder="Nome da plataforma"
-                      value={platform.name}
-                      onChange={(e) => {
-                        const updatedPlatforms = [...formData.platforms];
-                        updatedPlatforms[index].name = e.target.value;
-                        setFormData(prev => ({
-                          ...prev,
-                          platforms: updatedPlatforms
-                        }));
-                      }}
-                    />
-                    <input
-                      type="number"
-                      className="quantity-input"
-                      value={platform.quantity}
-                      onChange={(e) => handlePlatformQuantityChange(index, parseInt(e.target.value) || 0)}
-                    />
-                    <button
-                      className="remove-platform-btn"
-                      onClick={() => removePlatform(index)}
-                    >
-                      <X size={16} color="#dc3545" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              
-              <button className="add-platform-btn" onClick={addPlatform}>
-                <Plus size={16} />
-                Adicionar Plataforma
-              </button>
-            </div>
-          </div>
-
-          <div className="image-section">
-            <div className="image-preview">
-              {formData.image ? (
-                <img src={formData.image} alt="Preview" className="preview-image" />
-              ) : (
-                <div className="image-placeholder">
-                  <X size={40} color="#ccc" />
-                </div>
-              )}
-            </div>
-            
-            <div className="image-upload">
-              <label className="upload-button">
-                <Plus size={16} />
-                Adicionar Imagem
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="modal-footer">
-          <button className="delete-button" onClick={handleDelete}>
-            <Trash2 size={16} />
-            Excluir Produto
-          </button>
-          <button className="save-button" onClick={handleSave}>
-            Salvar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const FilterCategoryModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [categories] = useState([
-    'Gloss',
-    'Boca',
-    'Skincare',
-    'RubyRose',
-    'Batom',
-    'Rosto',
-    'Paletas',
-    'Corretivo'
-  ]);
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(category)) {
-        return prev.filter(c => c !== category);
-      } else {
-        return [...prev, category];
-      }
-    });
-  };
-
-  const handleFilter = () => {
-    onFilter(selectedCategories);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay">
-      <div className="filter-modal-container">
-        <div className="filter-modal-header">
-          <h2 className="filter-modal-title">Filtrar categoria:</h2>
-          <button className="close-button" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="filter-modal-content">
-          <button className="add-category-btn" onClick={onAddCategory}>
-            Adicionar categoria +
-          </button>
-
-          <div className="categories-list">
-            {categories.map((category, index) => (
-              <label key={index} className="category-item">
-                <input
-                  type="checkbox"
-                  className="category-checkbox"
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => handleCategoryChange(category)}
-                />
-                <span className="category-name">{category}</span>
-              </label>
-            ))}
-          </div>
-
-          <button className="buscar-button" onClick={handleFilter}>
-            Buscar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const AddCategoryModal = ({ isOpen, onClose, onAdd }) => {
-  const [categoryName, setCategoryName] = useState('');
-
-  const handleAdd = () => {
-    if (categoryName.trim()) {
-      onAdd(categoryName.trim());
-      setCategoryName('');
-      onClose();
-    }
-  };
-
-  const handleVoltar = () => {
-    setCategoryName('');
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal-overlay">
-      <div className="add-category-modal-container">
-        <div className="add-category-modal-header">
-          <h2 className="add-category-modal-title">Filtrar categoria:</h2>
-          <button className="close-button" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="add-category-modal-content">
-          <label className="add-category-label">Adicionar categoria</label>
-          <input
-            type="text"
-            className="add-category-input"
-            placeholder="Categoria"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-          />
-
-          <div className="add-category-modal-footer">
-            <button className="voltar-button" onClick={handleVoltar}>
-              Voltar
-            </button>
-            <button className="adicionar-categoria-button" onClick={handleAdd}>
-              Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import EditProductModal from './components/EditProductModal';
+import FilterFlowModal from './components/FilterFlowModal';
 
 const Estoque = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isNovoProdutoModalOpen, setIsNovoProdutoModalOpen] = useState(false);
+  const [isAdicionarProdutoModalOpen, setIsAdicionarProdutoModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [products, setProducts] = useState([
@@ -518,13 +195,13 @@ const Estoque = () => {
     setIsNovoProdutoModalOpen(true);
   };
 
-  const handleFilterProducts = () => {
-    setIsFilterModalOpen(true);
+  const handleAdicionarMaisProduto = (product = null) => {
+    setSelectedProduct(product);
+    setIsAdicionarProdutoModalOpen(true);
   };
 
-  const handleAddCategory = () => {
-    setIsFilterModalOpen(false);
-    setIsAddCategoryModalOpen(true);
+  const handleFilterProducts = () => {
+    setIsFilterModalOpen(true);
   };
 
   const handleSaveProduct = (updatedProduct) => {
@@ -550,31 +227,37 @@ const Estoque = () => {
     console.log('Novo produto adicionado:', newProduct);
   };
 
+  const handleAddMaisProduct = (newProduct) => {
+    setProducts(prevProducts => [...prevProducts, newProduct]);
+    console.log('Mais produto adicionado:', newProduct);
+  };
+
   const handleFilterByCategories = (categories) => {
     console.log('Filtrar por categorias:', categories);
     // Implementar lógica de filtro aqui
   };
-
+  
   const handleAddNewCategory = (categoryName) => {
     console.log('Nova categoria adicionada:', categoryName);
     // Implementar lógica para adicionar nova categoria
   };
-
+  
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedProduct(null);
   };
-
+  
   const closeNovoProdutoModal = () => {
     setIsNovoProdutoModalOpen(false);
   };
-
+  
+  const closeAdicionarProdutoModal = () => {
+    setIsAdicionarProdutoModalOpen(false);
+    setSelectedProduct(null);
+  };
+  
   const closeFilterModal = () => {
     setIsFilterModalOpen(false);
-  };
-
-  const closeAddCategoryModal = () => {
-    setIsAddCategoryModalOpen(false);
   };
 
   // Ordena os produtos: vermelho primeiro, depois amarelo, depois verde
@@ -644,7 +327,7 @@ const Estoque = () => {
                 <div className="product-actions">
                   <button 
                     className="add-product-link"
-                    onClick={handleAddProduct}
+                    onClick={() => handleAdicionarMaisProduto(product)}
                   >
                     <Plus size={14} />
                     Adicionar produto
@@ -656,7 +339,7 @@ const Estoque = () => {
                     <Edit size={14} />
                     Editar Produto
                   </button>
-                  <span className="characteristics-link">Características</span>
+
                 </div>
               </div>
             </div>
@@ -678,17 +361,18 @@ const Estoque = () => {
         onAdd={handleAddNewProduct}
       />
 
-      <FilterCategoryModal
+      <AdicaoProdutoModal
+        isOpen={isAdicionarProdutoModalOpen}
+        onClose={closeAdicionarProdutoModal}
+        onAdd={handleAddMaisProduct}
+        selectedProduct={selectedProduct}
+      />
+
+      <FilterFlowModal
         isOpen={isFilterModalOpen}
         onClose={closeFilterModal}
         onFilter={handleFilterByCategories}
-        onAddCategory={handleAddCategory}
-      />
-
-      <AddCategoryModal
-        isOpen={isAddCategoryModalOpen}
-        onClose={closeAddCategoryModal}
-        onAdd={handleAddNewCategory}
+        onAddCategory={handleAddNewCategory}
       />
     </div>
   );
