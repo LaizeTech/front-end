@@ -20,50 +20,69 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const menuItems = [
+  // Verificar o acesso financeiro do usuário
+  const acessoFinanceiro = sessionStorage.getItem('acessoFinanceiro') === 'true';
+
+  // Todos os itens do menu
+  const allMenuItems = [
     { 
       path: '/dashboard', 
       icon: Home, 
       label: 'Início',
-      keywords: ['dashboard', 'home', 'resumo', 'visão geral', 'principal', 'estatísticas', 'gráficos', 'indicadores']
+      keywords: ['dashboard', 'home', 'resumo', 'visão geral', 'principal', 'estatísticas', 'gráficos', 'indicadores'],
+      requiresFinancialAccess: true
     },
     { 
       path: '/estoque', 
       icon: Package, 
       label: 'Estoque',
-      keywords: ['estoque', 'produtos', 'inventário', 'mercadorias', 'itens', 'quantidade', 'disponível', 'armazém']
+      keywords: ['estoque', 'produtos', 'inventário', 'mercadorias', 'itens', 'quantidade', 'disponível', 'armazém'],
+      requiresFinancialAccess: false
     },
     { 
       path: '/metricas-mensais', 
       icon: BarChart3, 
       label: 'Métricas Mensais',
-      keywords: ['métricas', 'mensais', 'relatórios', 'análise', 'desempenho', 'vendas', 'faturamento', 'mês']
+      keywords: ['métricas', 'mensais', 'relatórios', 'análise', 'desempenho', 'vendas', 'faturamento', 'mês'],
+      requiresFinancialAccess: true
     },
     { 
       path: '/metricas-anuais', 
       icon: BarChart3, 
       label: 'Métricas Anuais',
-      keywords: ['métricas', 'anuais', 'relatórios', 'análise', 'desempenho', 'vendas', 'faturamento', 'ano', 'anual']
+      keywords: ['métricas', 'anuais', 'relatórios', 'análise', 'desempenho', 'vendas', 'faturamento', 'ano', 'anual'],
+      requiresFinancialAccess: true
     },
     { 
       path: '/funcionarios', 
       icon: Users, 
       label: 'Funcionários',
-      keywords: ['funcionários', 'colaboradores', 'equipe', 'pessoal', 'usuários', 'perfil', 'cadastro', 'rh']
+      keywords: ['funcionários', 'colaboradores', 'equipe', 'pessoal', 'usuários', 'perfil', 'cadastro', 'rh'],
+      requiresFinancialAccess: true
     },
     { 
       path: '/entradas', 
       icon: ArrowUpCircle, 
       label: 'Entradas',
-      keywords: ['entradas', 'recebimento', 'compras', 'aquisições', 'fornecedores', 'chegada', 'input']
+      keywords: ['entradas', 'recebimento', 'compras', 'aquisições', 'fornecedores', 'chegada', 'input'],
+      requiresFinancialAccess: false
     },
     { 
       path: '/saidas', 
       icon: ArrowDownCircle, 
       label: 'Saídas',
-      keywords: ['saídas', 'vendas', 'expedição', 'despacho', 'entrega', 'clientes', 'output', 'baixa']
+      keywords: ['saídas', 'vendas', 'expedição', 'despacho', 'entrega', 'clientes', 'output', 'baixa'],
+      requiresFinancialAccess: false
     },
   ];
+
+  // Filtrar itens do menu baseado no acesso financeiro
+  const menuItems = allMenuItems.filter(item => {
+    // Se tiver acesso financeiro, mostra tudo
+    if (acessoFinanceiro) return true;
+    // Se não tiver, mostra apenas os que não requerem acesso financeiro
+    return !item.requiresFinancialAccess;
+  });
 
   // Filtrar itens do menu baseado no termo de pesquisa (label + keywords)
   const filteredMenuItems = menuItems.filter(item => {
