@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ImagePlaceholder from './components/Imageplaceholder';
+import { isLoggedIn, isSessionValid } from './utils/sessionUtils';
 import './login.css';
 
 const Login = () => {
@@ -8,6 +9,15 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Verificar se o usuário já está logado ao carregar o componente
+  useEffect(() => {
+    if (isLoggedIn() && isSessionValid()) {
+      // Se já estiver logado, redirecionar para o dashboard
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +60,9 @@ const Login = () => {
         sessionStorage.setItem("empresaCnpj", data.empresa.cnpj);
       }
 
-      navigate("/");
+      // Redirecionar para a página que o usuário estava tentando acessar ou para o dashboard
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
     } catch (error) {
       console.error("Erro no login:", error);
       alert("Erro ao conectar com o servidor.");
