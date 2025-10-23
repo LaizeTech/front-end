@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import Login from './login';
 import Dashboard from './dashboard';
 import Estoque from './estoque';
@@ -18,7 +19,11 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }>
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="metricas-mensais" element={<MetricasMensais />} />
@@ -28,8 +33,6 @@ function App() {
             <Route path="funcionarios" element={<Funcionarios />} />
             <Route path="entradas" element={<Entradas />} />
             <Route path="saidas" element={<Saidas />} />
-            <Route path="metricas-mensais" element={<MetricasMensais />} />
-            <Route path="metricas-anuais" element={<MetricasAnuais />} />
           </Route>
         </Routes>
       </div>
