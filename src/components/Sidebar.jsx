@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Package, 
@@ -12,10 +12,12 @@ import {
   User,
   LogOut
 } from 'lucide-react';
+import { logout } from '../utils/sessionUtils';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   const menuItems = [
@@ -93,6 +95,12 @@ const Sidebar = () => {
     return matchingKeyword;
   };
 
+  // Função para fazer logout
+  const handleLogout = () => {
+    logout(); // Limpa o sessionStorage
+    navigate('/login', { replace: true }); // Redireciona para login
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -161,11 +169,9 @@ const Sidebar = () => {
           <Link to="/configuracoes" className="user-text">Conta</Link>
         </div>
         </Link>
-        <button className="logout-btn">
-          <Link to="/login" className="logout-btn">
+        <button className="logout-btn" onClick={handleLogout}>
           <LogOut size={16} />
           <span>Sair</span>
-          </Link>
         </button>
       </div>
     </div>
