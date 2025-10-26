@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import './NovoProdutoModal.css';
 
-const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState({
     name: '',
     category: '',
     price: '',
-    platforms: [
-      { name: 'Shopee', quantity: 0 }
-    ],
+    tempPlatform: { name: '', quantity: 0 },
+    platforms: [],
     characteristics: [
       { name: '', quantity: 0 }
     ],
@@ -34,9 +33,10 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
   };
 
   const addPlatform = () => {
+    const newPlatform = { name: '', quantity: 0 };
     setFormData(prev => ({
       ...prev,
-      platforms: [...prev.platforms, { name: '', quantity: 0 }]
+      platforms: [...prev.platforms, newPlatform],
     }));
   };
 
@@ -71,9 +71,14 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
   };
 
   const handleNext = () => {
-    if (currentStep === 1) {
-      setCurrentStep(2);
+    const { name, category, price } = formData;
+    
+    if (!name.trim() || !category.trim() || !price.trim()) {
+      alert("Por favor, preencha todos os campos obrigatórios antes de continuar.");
+      return;
     }
+
+    setCurrentStep(2);
   };
 
   const handleBack = () => {
@@ -82,23 +87,59 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
     }
   };
 
+  const cadastrarProduto = async (produtoData, imagemFile) => {
+    const formData = new FormData();
+
+    // Adiciona o objeto do produto como JSON
+    formData.append(
+      "produto",
+      new Blob([JSON.stringify(produtoData)], { type: "application/json" })
+    );
+
+    // Adiciona o arquivo de imagem, se existir
+    if (imagemFile) {
+      formData.append("imagem", imagemFile);
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/produtos/cadastro", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Erro ao cadastrar produto");
+
+      const data = await response.json();
+      console.log("Produto cadastrado:", data);
+      alert("✅ Produto cadastrado com sucesso!");
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("❌ Erro ao cadastrar produto");
+    }
+  };
+
   const handleSubmit = () => {
-    const newProduct = {
-      id: Date.now(),
-      name: formData.name,
-      category: formData.category,
-      price: formData.price,
-      quantity: formData.platforms.reduce((total, platform) => total + platform.quantity, 0),
-      status: 'Disponível em estoque',
-      statusColor: formData.platforms.reduce((total, platform) => total + platform.quantity, 0) > 10 ? 'green' : 
-                   formData.platforms.reduce((total, platform) => total + platform.quantity, 0) > 5 ? 'blue' : 'red',
-      store: 'NuvemShop - Loja Física',
-      platforms: formData.platforms,
-      characteristics: formData.characteristics,
-      image: formData.image
+    const produtoData = {
+      nomeProduto: formData.name,
+      categoria: formData.category,
+      preco: formData.price,
+      plataformas: formData.platforms,
+      caracteristicas: formData.characteristics,
     };
-    
-    onAdd(newProduct);
+
+    // Extrai a imagem em base64 e transforma em arquivo (caso precise)
+    let imagemFile = null;
+    if (formData.image) {
+      const arr = formData.image.split(",");
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) u8arr[n] = bstr.charCodeAt(n);
+      imagemFile = new File([u8arr], "imagem-produto.png", { type: mime });
+    }
+
+    cadastrarProduto(produtoData, imagemFile);
     handleClose();
   };
 
@@ -117,6 +158,18 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
     });
     setCurrentStep(1);
     onClose();
+  };
+
+  const handlePriceChange = (value) => {
+    const numericValue = value.replace(/\D/g, ""); // remove tudo que não é número
+    const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+    setFormData(prev => ({
+      ...prev,
+      price: formattedValue,
+    }));
   };
 
   if (!isOpen) return null;
@@ -157,11 +210,8 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                     onChange={(e) => handleInputChange('category', e.target.value)}
                   >
                     <option value="">Escolha a categoria</option>
-                    <option value="eletronicos">Eletrônicos</option>
-                    <option value="roupas">Roupas</option>
-                    <option value="casa">Casa e Jardim</option>
-                    <option value="esportes">Esportes</option>
-                    <option value="livros">Livros</option>
+                    <option value="1">Maquiagem</option>
+                    <option value="2">Skincare</option>
                   </select>
                 </div>
 
@@ -170,9 +220,9 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                   <input
                     type="text"
                     className="novo-produto-form-input"
-                    placeholder="R$0,00"
+                    placeholder="R$ 0,00"
                     value={formData.price}
-                    onChange={(e) => handleInputChange('price', e.target.value)}
+                    onChange={(e) => handlePriceChange(e.target.value)}
                   />
                 </div>
               </div>
@@ -181,32 +231,69 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                 <label className="novo-produto-form-label">Selecione a plataforma de venda</label>
                 <select
                   className="novo-produto-platform-select"
-                  value={formData.platforms[0]?.name || ''}
-                  onChange={(e) => {
-                    const updatedPlatforms = [...formData.platforms];
-                    updatedPlatforms[0].name = e.target.value;
-                    setFormData(prev => ({
+                  value={formData.tempPlatform?.name || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
                       ...prev,
-                      platforms: updatedPlatforms
+                      tempPlatform: {
+                        ...prev.tempPlatform,
+                        name: e.target.value,
+                      },
+                    }))
+                  }
+                >
+                  <option value="">Escolha a plataforma</option>
+                  <option value="Shopee">Shopee</option>
+                  <option value="NuvemShop">NuvemShop</option>
+                </select>
+
+                <label className="novo-produto-form-label">
+                  Quantidade de produtos na plataforma
+                </label>
+                <input
+                  type="number"
+                  className="novo-produto-quantity-input" 
+                  placeholder='0'
+                  value={formData.tempPlatform?.quantity || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      tempPlatform: {
+                        ...prev.tempPlatform,
+                        quantity: parseInt(e.target.value) || 0,
+                      },
+                    }))
+                  }
+                />
+
+                <button
+                  className="novo-produto-add-platform-btn"
+                  onClick={() => {
+                    if (
+                      !formData.tempPlatform?.name ||
+                      formData.tempPlatform.quantity <= 0
+                    ) {
+                      alert("Selecione a plataforma e informe uma quantidade válida.");
+                      return;
+                    }
+
+                    // Verifica se a plataforma já existe na lista
+                    const exists = formData.platforms.some(
+                      (p) => p.name === formData.tempPlatform.name
+                    );
+
+                    if (exists) {
+                      alert("Essa plataforma já foi adicionada.");
+                      return;
+                    }
+
+                    setFormData((prev) => ({
+                      ...prev,
+                      platforms: [...prev.platforms, prev.tempPlatform],
+                      tempPlatform: { name: "", quantity: 0 }, // limpa os inputs
                     }));
                   }}
                 >
-                  <option value="">Escolha a categoria</option>
-                  <option value="Shopee">Shopee</option>
-                  <option value="NuvemShop">NuvemShop</option>
-                  <option value="Mercado Livre">Mercado Livre</option>
-                  <option value="Amazon">Amazon</option>
-                </select>
-
-                <label className="novo-produto-form-label">Quantidade de produtos na plataforma</label>
-                <input
-                  type="number"
-                  className="novo-produto-quantity-input"
-                  value={formData.platforms[0]?.quantity || 0}
-                  onChange={(e) => handlePlatformQuantityChange(0, parseInt(e.target.value) || 0)}
-                />
-
-                <button className="novo-produto-add-platform-btn" onClick={addPlatform}>
                   Adicionar quantidade por plataforma
                 </button>
 
@@ -215,12 +302,20 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                     <span>Plataforma</span>
                     <span>Qtd. de Produtos</span>
                   </div>
-                  {formData.platforms.map((platform, index) => (
-                    <div key={index} className="novo-produto-platform-row">
-                      <span>{platform.name || 'Shopee'}</span>
-                      <span>{platform.quantity}</span>
+
+                  {formData.platforms.length === 0 ? (
+                    <div className="novo-produto-platform-row">
+                      <span>Nenhuma plataforma adicionada</span>
+                      <span>-</span>
                     </div>
-                  ))}
+                  ) : (
+                    formData.platforms.map((platform, index) => (
+                      <div key={index} className="novo-produto-platform-row">
+                        <span>{platform.name}</span>
+                        <span>{platform.quantity}</span>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </>
@@ -231,34 +326,99 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                 <label className="novo-produto-form-label">Selecione a plataforma de venda</label>
                 <select
                   className="novo-produto-platform-select"
-                  value=""
-                  onChange={() => {}}
+                  value={formData.tempCharacteristic?.platform || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      tempCharacteristic: {
+                        ...prev.tempCharacteristic,
+                        platform: e.target.value,
+                      },
+                    }))
+                  }
                 >
-                  <option value="">Escolha a categoria</option>
-                  <option value="Shopee">Shopee</option>
-                  <option value="NuvemShop">NuvemShop</option>
-                  <option value="Mercado Livre">Mercado Livre</option>
-                  <option value="Amazon">Amazon</option>
+                  <option value="">Escolha a plataforma</option>
+                  {formData.platforms.map((p, i) => (
+                    <option key={i} value={p.name}>
+                      {p.name}
+                    </option>
+                  ))}
                 </select>
 
                 <label className="novo-produto-form-label">Característica</label>
                 <input
                   type="text"
                   className="novo-produto-form-input"
-                  placeholder="Característica do produto"
-                  value={formData.characteristics[0]?.name || ''}
-                  onChange={(e) => handleCharacteristicChange(0, 'name', e.target.value)}
+                  placeholder="Característica do produto (ex: cor, tamanho)"
+                  value={formData.tempCharacteristic?.name || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      tempCharacteristic: {
+                        ...prev.tempCharacteristic,
+                        name: e.target.value,
+                      },
+                    }))
+                  }
                 />
 
-                <label className="novo-produto-form-label">Quantidade de itens pro característica</label>
+                <label className="novo-produto-form-label">
+                  Quantidade de itens por característica
+                </label>
                 <input
                   type="number"
                   className="novo-produto-quantity-input"
-                  value={formData.characteristics[0]?.quantity || 0}
-                  onChange={(e) => handleCharacteristicChange(0, 'quantity', parseInt(e.target.value) || 0)}
+                  placeholder="0"
+                  value={formData.tempCharacteristic?.quantity || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      tempCharacteristic: {
+                        ...prev.tempCharacteristic,
+                        quantity: parseInt(e.target.value) || 0,
+                      },
+                    }))
+                  }
                 />
 
-                <button className="novo-produto-add-characteristic-btn" onClick={addCharacteristic}>
+                <button
+                  className="novo-produto-add-characteristic-btn"
+                  onClick={() => {
+                    const { tempCharacteristic, platforms, characteristics } = formData;
+                    if (
+                      !tempCharacteristic?.platform ||
+                      !tempCharacteristic?.name ||
+                      tempCharacteristic.quantity <= 0
+                    ) {
+                      alert("Preencha todos os campos antes de adicionar.");
+                      return;
+                    }
+
+                    // Pega a plataforma correspondente
+                    const platformData = platforms.find(
+                      (p) => p.name === tempCharacteristic.platform
+                    );
+
+                    // Soma total já cadastrada para essa plataforma
+                    const usedQuantity = characteristics
+                      .filter((c) => c.platform === tempCharacteristic.platform)
+                      .reduce((acc, c) => acc + c.quantity, 0);
+
+                    // Valida se ainda cabe
+                    if (usedQuantity + tempCharacteristic.quantity > platformData.quantity) {
+                      alert(
+                        `A soma das características (${usedQuantity + tempCharacteristic.quantity}) ultrapassa a quantidade total (${platformData.quantity}) da plataforma ${platformData.name}.`
+                      );
+                      return;
+                    }
+
+                    setFormData((prev) => ({
+                      ...prev,
+                      characteristics: [...prev.characteristics, tempCharacteristic],
+                      tempCharacteristic: { platform: "", name: "", quantity: 0 },
+                    }));
+                  }}
+                >
                   Adicionar quantidade por característica
                 </button>
               </div>
@@ -266,14 +426,18 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
               <div className="novo-produto-image-section">
                 <div className="novo-produto-image-preview">
                   {formData.image ? (
-                    <img src={formData.image} alt="Preview" className="novo-produto-preview-image" />
+                    <img
+                      src={formData.image}
+                      alt="Preview"
+                      className="novo-produto-preview-image"
+                    />
                   ) : (
                     <div className="novo-produto-image-placeholder">
                       <X size={40} color="#ccc" />
                     </div>
                   )}
                 </div>
-                
+
                 <div className="novo-produto-image-upload">
                   <label className="novo-produto-upload-button">
                     <Plus size={16} />
@@ -282,7 +446,7 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                     />
                   </label>
                 </div>
@@ -292,18 +456,38 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                     <span>Plataforma</span>
                     <span>Qtd. de Produtos</span>
                   </div>
-                  <div className="novo-produto-characteristics-content">
-                    <div className="novo-produto-characteristics-item">
-                      <span>Característica</span>
-                      <span>Quantidade</span>
-                    </div>
-                    {formData.characteristics.map((characteristic, index) => (
-                      <div key={index} className="novo-produto-characteristics-item">
-                        <span>{characteristic.name || 'Vermelho'}</span>
-                        <span>{characteristic.quantity}</span>
+
+                  {formData.platforms.map((p, i) => {
+                    const platformChars = formData.characteristics.filter(
+                      (c) => c.platform === p.name
+                    );
+                    const totalUsed = platformChars.reduce((acc, c) => acc + c.quantity, 0);
+
+                    return (
+                      <div key={i} className="novo-produto-characteristics-content">
+                        <div className="novo-produto-characteristics-item platform-summary">
+                          <span>{p.name}</span>
+                          <span>
+                            {totalUsed}/{p.quantity}
+                          </span>
+                        </div>
+
+                        {platformChars.length > 0 ? (
+                          platformChars.map((c, idx) => (
+                            <div key={idx} className="novo-produto-characteristics-item">
+                              <span>{c.name}</span>
+                              <span>{c.quantity}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="novo-produto-characteristics-item empty">
+                            <span>Nenhuma característica</span>
+                            <span>-</span>
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </>

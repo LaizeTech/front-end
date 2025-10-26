@@ -367,6 +367,21 @@
   color: white;
 }
 
+.novo-produto-form-input,
+.novo-produto-form-select,
+.novo-produto-platform-select,
+.novo-produto-quantity-input {
+  padding: 12px 16px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f8f9fa;
+  outline: none;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: #212529;
+}
+
 /* Responsive - Novo Produto */
 @media (max-width: 768px) {
   .novo-produto-modal-overlay {
