@@ -180,14 +180,13 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
-        <Link to="/configuracoes">
-        <div className="user-section">
+        <Link to="/configuracoes" className="user-section">
           <div className="user-avatar">
             <User size={16} />
           </div>
-          <Link to="/configuracoes" className="user-text">Conta</Link>
-        </div>
+          <span className="user-text">Conta</span>
         </Link>
+
         <button className="logout-btn" onClick={handleLogout}>
           <LogOut size={16} />
           <span>Sair</span>
