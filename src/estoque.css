@@ -138,6 +138,8 @@
   font-weight: 600;
   color: #212529;
   margin: 0 0 16px 0;
+  white-space: normal; /* CORREÇÃO: Permite que o texto quebre a linha */
+  word-break: break-word; /* CORREÇÃO: Garante que palavras longas quebrem */
 }
 
 .product-details {
