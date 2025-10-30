@@ -1,0 +1,388 @@
+/* CSS Global para Acessibilidade */
+
+:root {
+  --accessibility-font-size: 1rem;
+  --accessibility-font-weight: normal;
+}
+
+/* Aplicar configurações de acessibilidade globalmente */
+* {
+  font-size: var(--accessibility-font-size) !important;
+  font-weight: var(--accessibility-font-weight) !important;
+}
+
+/* Exceções para elementos que não devem ser afetados */
+.accessibility-controls *,
+.accessibility-panel *,
+.accessibility-toggle *,
+svg,
+.icon,
+[class*="icon-"],
+input[type="checkbox"],
+input[type="radio"] {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* Classes para diferentes tamanhos de fonte */
+.font-small * {
+  font-size: 0.875rem !important;
+}
+
+.font-normal * {
+  font-size: 1rem !important;
+}
+
+.font-large * {
+  font-size: 1.125rem !important;
+}
+
+.font-extra-large * {
+  font-size: 1.25rem !important;
+}
+
+/* Aplicar negrito quando ativado */
+.font-bold * {
+  font-weight: bold !important;
+}
+
+/* Exceções para elementos específicos que precisam manter seu tamanho */
+.font-small .accessibility-controls *,
+.font-large .accessibility-controls *,
+.font-extra-large .accessibility-controls *,
+.font-bold .accessibility-controls * {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* Ajustes específicos para títulos */
+.font-small h1 { font-size: 1.75rem !important; }
+.font-small h2 { font-size: 1.5rem !important; }
+.font-small h3 { font-size: 1.25rem !important; }
+.font-small h4 { font-size: 1.125rem !important; }
+.font-small h5 { font-size: 1rem !important; }
+.font-small h6 { font-size: 0.875rem !important; }
+
+.font-normal h1 { font-size: 2rem !important; }
+.font-normal h2 { font-size: 1.75rem !important; }
+.font-normal h3 { font-size: 1.5rem !important; }
+.font-normal h4 { font-size: 1.25rem !important; }
+.font-normal h5 { font-size: 1.125rem !important; }
+.font-normal h6 { font-size: 1rem !important; }
+
+.font-large h1 { font-size: 2.25rem !important; }
+.font-large h2 { font-size: 2rem !important; }
+.font-large h3 { font-size: 1.75rem !important; }
+.font-large h4 { font-size: 1.5rem !important; }
+.font-large h5 { font-size: 1.25rem !important; }
+.font-large h6 { font-size: 1.125rem !important; }
+
+.font-extra-large h1 { font-size: 2.5rem !important; }
+.font-extra-large h2 { font-size: 2.25rem !important; }
+.font-extra-large h3 { font-size: 2rem !important; }
+.font-extra-large h4 { font-size: 1.75rem !important; }
+.font-extra-large h5 { font-size: 1.5rem !important; }
+.font-extra-large h6 { font-size: 1.25rem !important; }
+
+/* Alto contraste */
+.accessibility-high-contrast {
+  filter: contrast(150%) brightness(1.2);
+}
+
+.accessibility-high-contrast * {
+  border-color: #000 !important;
+}
+
+.accessibility-high-contrast a {
+  color: #0000FF !important;
+  text-decoration: underline !important;
+}
+
+.accessibility-high-contrast button {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.accessibility-high-contrast .login-button,
+.accessibility-high-contrast .accessibility-toggle {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* Movimento reduzido */
+.accessibility-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Melhorias de foco para acessibilidade */
+*:focus {
+  outline: 2px solid #e91e63 !important;
+  outline-offset: 2px !important;
+}
+
+/* Ajustes para elementos de formulário */
+.font-large input,
+.font-large textarea,
+.font-large select,
+.font-large button {
+  padding: 14px 18px !important;
+  line-height: 1.4 !important;
+}
+
+.font-extra-large input,
+.font-extra-large textarea,
+.font-extra-large select,
+.font-extra-large button {
+  padding: 16px 20px !important;
+  line-height: 1.5 !important;
+}
+
+/* Ajustes para espaçamento com fontes maiores */
+.font-large * {
+  line-height: 1.6 !important;
+}
+
+.font-extra-large * {
+  line-height: 1.7 !important;
+}
+
+/* Ajustes específicos para o login */
+.font-large .login-title {
+  font-size: 2.25rem !important;
+  margin-bottom: 36px !important;
+}
+
+.font-extra-large .login-title {
+  font-size: 2.5rem !important;
+  margin-bottom: 40px !important;
+}
+
+/* Ajustes para alertas */
+.font-large .alert {
+  padding: 18px !important;
+}
+
+.font-extra-large .alert {
+  padding: 20px !important;
+}
+
+/* Responsivo para acessibilidade */
+@media (max-width: 768px) {
+  .font-large h1 { font-size: 2rem !important; }
+  .font-extra-large h1 { font-size: 2.25rem !important; }
+  
+  .font-large .login-title {
+    font-size: 2rem !important;
+  }
+  
+  .font-extra-large .login-title {
+    font-size: 2.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .font-large h1 { font-size: 1.75rem !important; }
+  .font-extra-large h1 { font-size: 2rem !important; }
+  
+  .font-large .login-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .font-extra-large .login-title {
+    font-size: 2rem !important;
+  }
+}
+
+/* Melhorias específicas para componentes do LaizeTech */
+
+/* Dashboard */
+.font-large .dashboard-card,
+.font-extra-large .dashboard-card {
+  padding: 24px !important;
+}
+
+.font-large .dashboard-card h3,
+.font-extra-large .dashboard-card h3 {
+  margin-bottom: 16px !important;
+}
+
+/* Sidebar */
+.font-large .sidebar-item,
+.font-extra-large .sidebar-item {
+  padding: 14px 20px !important;
+  line-height: 1.5 !important;
+}
+
+/* Tabelas */
+.font-large table th,
+.font-large table td,
+.font-extra-large table th,
+.font-extra-large table td {
+  padding: 14px 16px !important;
+}
+
+/* Modais */
+.font-large .modal-content,
+.font-extra-large .modal-content {
+  padding: 24px !important;
+}
+
+.font-large .modal-header h2,
+.font-extra-large .modal-header h2 {
+  margin-bottom: 20px !important;
+}
+
+/* Botões */
+.font-large button,
+.font-extra-large button {
+  padding: 12px 20px !important;
+  min-height: 44px !important;
+}
+
+/* Cards de produto */
+.font-large .product-card,
+.font-extra-large .product-card {
+  padding: 20px !important;
+}
+
+/* Formulários */
+.font-large .form-group,
+.font-extra-large .form-group {
+  margin-bottom: 20px !important;
+}
+
+.font-large .form-label,
+.font-extra-large .form-label {
+  margin-bottom: 8px !important;
+}
+
+/* Melhorias para alto contraste */
+.accessibility-high-contrast .sidebar {
+  background: #000 !important;
+  border-right: 3px solid #fff !important;
+}
+
+.accessibility-high-contrast .sidebar-item {
+  color: #fff !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+.accessibility-high-contrast .sidebar-item:hover,
+.accessibility-high-contrast .sidebar-item.active {
+  background: #333 !important;
+  color: #fff !important;
+}
+
+.accessibility-high-contrast .dashboard-card {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+.accessibility-high-contrast .modal-overlay {
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.accessibility-high-contrast .modal-content {
+  background: #fff !important;
+  border: 3px solid #000 !important;
+  color: #000 !important;
+}
+
+.accessibility-high-contrast input,
+.accessibility-high-contrast textarea,
+.accessibility-high-contrast select {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+.accessibility-high-contrast input:focus,
+.accessibility-high-contrast textarea:focus,
+.accessibility-high-contrast select:focus {
+  outline: 3px solid #0000FF !important;
+  outline-offset: 2px !important;
+}
+
+/* Ajustes para elementos específicos do projeto */
+.font-bold .sidebar-item {
+  font-weight: bold !important;
+}
+
+.font-bold .dashboard-card h3,
+.font-bold .modal-header h2,
+.font-bold .form-label {
+  font-weight: bold !important;
+}
+
+/* Garantir que ícones não sejam afetados pelo tamanho da fonte */
+.sidebar-icon,
+.dashboard-icon,
+.button-icon,
+[class*="lucide"] {
+  font-size: inherit !important;
+  width: 1.2em !important;
+  height: 1.2em !important;
+}
+
+/* Ajustes para gráficos e visualizações */
+.font-large .recharts-wrapper,
+.font-extra-large .recharts-wrapper {
+  font-size: 0.875rem !important;
+}
+
+/* Melhorar legibilidade de textos pequenos */
+.font-large .text-sm,
+.font-extra-large .text-sm {
+  font-size: 1rem !important;
+}
+
+.font-large .text-xs,
+.font-extra-large .text-xs {
+  font-size: 0.875rem !important;
+}
+
+/* Ajustes para notificações e alertas */
+.font-large .notification,
+.font-large .toast,
+.font-extra-large .notification,
+.font-extra-large .toast {
+  padding: 16px 20px !important;
+}
+
+/* Melhorar espaçamento em listas */
+.font-large .list-item,
+.font-extra-large .list-item {
+  padding: 12px 0 !important;
+  line-height: 1.6 !important;
+}
+
+/* Ajustes para badges e tags */
+.font-large .badge,
+.font-large .tag,
+.font-extra-large .badge,
+.font-extra-large .tag {
+  padding: 6px 12px !important;
+  font-size: 0.875rem !important;
+}
+
+/* Garantir que elementos críticos mantenham visibilidade */
+.accessibility-high-contrast .status-active {
+  background: #008000 !important;
+  color: #fff !important;
+}
+
+.accessibility-high-contrast .status-inactive {
+  background: #ff0000 !important;
+  color: #fff !important;
+}
+
+.accessibility-high-contrast .status-warning {
+  background: #ffff00 !important;
+  color: #000 !important;
+}
