@@ -19,6 +19,21 @@ const Estoque = () => {
     const [activeFilters, setActiveFilters] = useState([]); // NOVO: Armazena os IDs das categorias selecionadas
     const API_URL = "http://localhost:8080"; // URL base da API
 
+    // Função para buscar o caminho da imagem de um produto específico
+    const fetchImagePath = async (productId) => {
+        try {
+            const response = await fetch(`${API_URL}/produtos/${productId}/imagePath`); // Endpoint criado no ProdutoJpaController
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar caminho da imagem: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.caminhoImagem; // Assumindo que o backend retorna um objeto { caminhoImagem: "..." }
+        } catch (error) {
+            console.error(`Erro ao buscar caminho da imagem para o produto ${productId}:`, error);
+            return null;
+        }
+    };
+
     const getStatusColor = (quantidade) => {
         if (quantidade < 5) return 'red';
         if (quantidade < 15) return 'yellow';
@@ -66,7 +81,9 @@ const Estoque = () => {
                     status: getStatusText(p.quantidadeProduto),
                     statusColor: getStatusColor(p.quantidadeProduto),
                     store: p.categoria?.nomeCategoria || 'N/A',
-                    platforms: p.plataformas || [], 
+                    platforms: p.plataformas || [],
+                    // Adicionando o caminho da imagem para uso posterior
+                    imagePath: p.caminhoImagem || null,
                 };
             });
             setProdutos(mappedData);
@@ -132,8 +149,27 @@ const Estoque = () => {
         handleRecarregarProdutos();
     };
 
-    const handleAddNewProduct = (newProduct) => {
-        handleRecarregarProdutos();
+    const handleAddNewProduct = async (newProduct) => {
+        // Mapeia o novo produto para o formato esperado pela lista de produtos
+        const mappedProduct = {
+            id: newProduct.idProduto,
+            name: newProduct.nomeProduto,
+            quantity: newProduct.quantidadeProduto,
+            status: getStatusText(newProduct.quantidadeProduto),
+            statusColor: getStatusColor(newProduct.quantidadeProduto),
+            store: newProduct.categoria?.nomeCategoria || 'N/A',
+            platforms: newProduct.plataformas || [],
+            imagePath: newProduct.caminhoImagem || null,
+        };
+
+        // Lógica de Fallback: Se o caminho da imagem não veio no objeto de retorno, busca separadamente
+        if (!mappedProduct.imagePath && mappedProduct.id) {
+            const fetchedImagePath = await fetchImagePath(mappedProduct.id);
+            mappedProduct.imagePath = fetchedImagePath;
+        }
+
+        // Adiciona o novo produto ao início da lista (ou onde for mais apropriado)
+        setProdutos(prevProdutos => [mappedProduct, ...prevProdutos]);
     };
 
     const handleAddMaisProduct = () => {
@@ -204,7 +240,15 @@ const Estoque = () => {
                     sortedProducts.map((product) => (
                         <div key={product.id} className="product-card">
                             <div className="product-image">
-                                {/* Placeholder for product image */}
+                                {product.imagePath ? (
+                                    <img 
+                                        src={`http://localhost:8080/uploads/imagens/${product.imagePath}`} 
+                                        alt={product.name} 
+                                        className="product-img" 
+                                    />
+                                ) : (
+                                    <div className="image-placeholder">Sem Imagem</div>
+                                )}
                             </div>
                             <div className="product-info">
                                 <h3 className="product-name">{product.name}</h3>
@@ -222,6 +266,13 @@ const Estoque = () => {
                                     </div>
                                     <div className="store-info">
                                         <span className="store-name">{product.store}</span>
+                                    </div>
+                                    <div className="platform-info">
+                                        <span className="platform-list">
+                                            {product.platforms && product.platforms.length > 0
+                                                ? product.platforms.map(p => p.nomePlataforma).join(', ')
+                                                : 'N/A'}
+                                        </span>
                                     </div>
                                     <div className="product-actions">
                                         <button className="add-product-link" onClick={() => handleAdicionarMaisProduto(product)} >

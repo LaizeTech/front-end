@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import './NovoProdutoModal.css';
 
-  const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState({
+const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
     name: '',
     category: '',
+    idCategoria: '',
     price: '',
     tempPlatform: { name: '', quantity: 0 },
+    tempCharacteristic: { platform: '', name: '', quantity: 0 },
     platforms: [],
-    characteristics: [
-      { name: '', quantity: 0 }
-    ],
+    characteristics: [],
     image: null
   });
 
@@ -23,41 +23,8 @@ import './NovoProdutoModal.css';
     }));
   };
 
-  const handlePlatformQuantityChange = (index, quantity) => {
-    const updatedPlatforms = [...formData.platforms];
-    updatedPlatforms[index].quantity = quantity;
-    setFormData(prev => ({
-      ...prev,
-      platforms: updatedPlatforms
-    }));
-  };
-
-  const addPlatform = () => {
-    const newPlatform = { name: '', quantity: 0 };
-    setFormData(prev => ({
-      ...prev,
-      platforms: [...prev.platforms, newPlatform],
-    }));
-  };
-
-  const handleCharacteristicChange = (index, field, value) => {
-    const updatedCharacteristics = [...formData.characteristics];
-    updatedCharacteristics[index][field] = value;
-    setFormData(prev => ({
-      ...prev,
-      characteristics: updatedCharacteristics
-    }));
-  };
-
-  const addCharacteristic = () => {
-    setFormData(prev => ({
-      ...prev,
-      characteristics: [...prev.characteristics, { name: '', quantity: 0 }]
-    }));
-  };
-
   const handleImageUpload = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -72,39 +39,26 @@ import './NovoProdutoModal.css';
 
   const handleNext = () => {
     const { name, category, price } = formData;
-    
     if (!name.trim() || !category.trim() || !price.trim()) {
       alert("Por favor, preencha todos os campos obrigatórios antes de continuar.");
       return;
     }
-
     setCurrentStep(2);
   };
 
   const handleBack = () => {
-    if (currentStep === 2) {
-      setCurrentStep(1);
-    }
+    if (currentStep === 2) setCurrentStep(1);
   };
 
   const cadastrarProduto = async (produtoData, imagemFile) => {
-    const formData = new FormData();
-
-    // Adiciona o objeto do produto como JSON
-    formData.append(
-      "produto",
-      new Blob([JSON.stringify(produtoData)], { type: "application/json" })
-    );
-
-    // Adiciona o arquivo de imagem, se existir
-    if (imagemFile) {
-      formData.append("imagem", imagemFile);
-    }
+    const fd = new FormData();
+    fd.append("produto", new Blob([JSON.stringify(produtoData)], { type: "application/json" }));
+    if (imagemFile) fd.append("imagem", imagemFile);
 
     try {
       const response = await fetch("http://localhost:8080/produtos/cadastro", {
         method: "POST",
-        body: formData,
+        body: fd,
       });
 
       if (!response.ok) throw new Error("Erro ao cadastrar produto");
@@ -112,26 +66,62 @@ import './NovoProdutoModal.css';
       const data = await response.json();
       console.log("Produto cadastrado:", data);
       alert("✅ Produto cadastrado com sucesso!");
+
+      if (onAdd) {
+        const mappedProduct = {
+          id: data.idProduto,
+          name: data.nomeProduto,
+          quantity: data.quantidadeProduto,
+          status: 'DISPONÍVEL EM ESTOQUE',
+          statusColor: 'green',
+          store: data.categoria?.nomeCategoria || 'N/A',
+          platforms: [],
+          imagePath: data.caminhoImagem || null,
+        };
+        onAdd(mappedProduct);
+      }
+
+      return data;
     } catch (error) {
       console.error("Erro:", error);
       alert("❌ Erro ao cadastrar produto");
+      throw error;
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // 1) Soma das quantidades por plataforma
+    const totalQuantity = formData.platforms.reduce(
+      (sum, p) => sum + (parseInt(p.quantity, 10) || 0), 0
+    );
+
+    // 2) Converte preço "R$ 1.234,56" -> 1234.56
+    const parsedPrice = parseFloat(
+      String(formData.price).replace(/[R$\s.]/g, '').replace(',', '.')
+    ) || 0.0;
+
+    // 3) Monta o objeto esperado pelo backend
     const produtoData = {
+      idCategoria: parseInt(formData.category || formData.idCategoria, 10),
       nomeProduto: formData.name,
-      categoria: formData.category,
-      preco: formData.price,
+      quantidadeProduto: totalQuantity,
+      precoProduto: parsedPrice,
+      statusAtivo: true,
+      caminhoImagem: null
+    };
+
+    // Campos extras (se o backend aceitar)
+    const produtoRequestData = {
+      ...produtoData,
       plataformas: formData.platforms,
       caracteristicas: formData.characteristics,
     };
 
-    // Extrai a imagem em base64 e transforma em arquivo (caso precise)
+    // Converte base64 -> File (se houver)
     let imagemFile = null;
     if (formData.image) {
       const arr = formData.image.split(",");
-      const mime = arr[0].match(/:(.*?);/)[1];
+      const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
       const bstr = atob(arr[1]);
       let n = bstr.length;
       const u8arr = new Uint8Array(n);
@@ -139,21 +129,24 @@ import './NovoProdutoModal.css';
       imagemFile = new File([u8arr], "imagem-produto.png", { type: mime });
     }
 
-    cadastrarProduto(produtoData, imagemFile);
-    handleClose();
+    try {
+      await cadastrarProduto(produtoRequestData, imagemFile);
+      handleClose();
+    } catch (error) {
+      console.error("Falha no envio do formulário:", error);
+    }
   };
 
   const handleClose = () => {
     setFormData({
       name: '',
       category: '',
+      idCategoria: '',
       price: '',
-      platforms: [
-        { name: 'Shopee', quantity: 0 }
-      ],
-      characteristics: [
-        { name: '', quantity: 0 }
-      ],
+      tempPlatform: { name: '', quantity: 0 },
+      tempCharacteristic: { platform: '', name: '', quantity: 0 },
+      platforms: [],
+      characteristics: [],
       image: null
     });
     setCurrentStep(1);
@@ -161,7 +154,7 @@ import './NovoProdutoModal.css';
   };
 
   const handlePriceChange = (value) => {
-    const numericValue = value.replace(/\D/g, ""); // remove tudo que não é número
+    const numericValue = value.replace(/\D/g, "");
     const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -188,7 +181,6 @@ import './NovoProdutoModal.css';
 
         <div className="novo-produto-modal-content">
           {currentStep === 1 ? (
-            // Primeira parte do modal
             <>
               <div className="novo-produto-form-section">
                 <div className="novo-produto-form-group">
@@ -207,7 +199,10 @@ import './NovoProdutoModal.css';
                   <select
                     className="novo-produto-form-select"
                     value={formData.category}
-                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    onChange={(e) => {
+                      handleInputChange('category', e.target.value);
+                      handleInputChange('idCategoria', e.target.value);
+                    }}
                   >
                     <option value="">Escolha a categoria</option>
                     <option value="1">Maquiagem</option>
@@ -252,7 +247,7 @@ import './NovoProdutoModal.css';
                 </label>
                 <input
                   type="number"
-                  className="novo-produto-quantity-input" 
+                  className="novo-produto-quantity-input"
                   placeholder='0'
                   value={formData.tempPlatform?.quantity || ""}
                   onChange={(e) =>
@@ -260,7 +255,7 @@ import './NovoProdutoModal.css';
                       ...prev,
                       tempPlatform: {
                         ...prev.tempPlatform,
-                        quantity: parseInt(e.target.value) || 0,
+                        quantity: parseInt(e.target.value, 10) || 0,
                       },
                     }))
                   }
@@ -269,19 +264,14 @@ import './NovoProdutoModal.css';
                 <button
                   className="novo-produto-add-platform-btn"
                   onClick={() => {
-                    if (
-                      !formData.tempPlatform?.name ||
-                      formData.tempPlatform.quantity <= 0
-                    ) {
+                    if (!formData.tempPlatform?.name || formData.tempPlatform.quantity <= 0) {
                       alert("Selecione a plataforma e informe uma quantidade válida.");
                       return;
                     }
 
-                    // Verifica se a plataforma já existe na lista
                     const exists = formData.platforms.some(
                       (p) => p.name === formData.tempPlatform.name
                     );
-
                     if (exists) {
                       alert("Essa plataforma já foi adicionada.");
                       return;
@@ -290,7 +280,7 @@ import './NovoProdutoModal.css';
                     setFormData((prev) => ({
                       ...prev,
                       platforms: [...prev.platforms, prev.tempPlatform],
-                      tempPlatform: { name: "", quantity: 0 }, // limpa os inputs
+                      tempPlatform: { name: "", quantity: 0 },
                     }));
                   }}
                 >
@@ -320,7 +310,6 @@ import './NovoProdutoModal.css';
               </div>
             </>
           ) : (
-            // Segunda parte do modal
             <>
               <div className="novo-produto-characteristics-section">
                 <label className="novo-produto-form-label">Selecione a plataforma de venda</label>
@@ -375,7 +364,7 @@ import './NovoProdutoModal.css';
                       ...prev,
                       tempCharacteristic: {
                         ...prev.tempCharacteristic,
-                        quantity: parseInt(e.target.value) || 0,
+                        quantity: parseInt(e.target.value, 10) || 0,
                       },
                     }))
                   }
@@ -394,17 +383,18 @@ import './NovoProdutoModal.css';
                       return;
                     }
 
-                    // Pega a plataforma correspondente
                     const platformData = platforms.find(
                       (p) => p.name === tempCharacteristic.platform
                     );
+                    if (!platformData) {
+                      alert("Plataforma inválida.");
+                      return;
+                    }
 
-                    // Soma total já cadastrada para essa plataforma
                     const usedQuantity = characteristics
                       .filter((c) => c.platform === tempCharacteristic.platform)
                       .reduce((acc, c) => acc + c.quantity, 0);
 
-                    // Valida se ainda cabe
                     if (usedQuantity + tempCharacteristic.quantity > platformData.quantity) {
                       alert(
                         `A soma das características (${usedQuantity + tempCharacteristic.quantity}) ultrapassa a quantidade total (${platformData.quantity}) da plataforma ${platformData.name}.`
