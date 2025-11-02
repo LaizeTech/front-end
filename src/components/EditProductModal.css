@@ -104,6 +104,24 @@
   cursor: pointer;
 }
 
+.form-input,
+.form-select,
+.quantity-input,
+.platform-input {
+    color: #333 !important; /* Cor escura para o texto */
+    background-color: #fff; /* Fundo branco */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-select option {
+    color: #333;
+    background-color: #fff;
+}
+
 /* Platforms Section */
 .platforms-section {
   display: flex;
