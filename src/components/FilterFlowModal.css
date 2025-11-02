@@ -127,7 +127,7 @@
 
 .category-name {
   font-size: 14px;
-  color: #495057;
+  color: #212529; /* Corrigido para garantir visibilidade */
   font-weight: 500;
 }
 
@@ -168,6 +168,7 @@
 .add-category-input {
   padding: 12px 16px;
   border: 1px solid #ced4da;
+  color: #495057;
   border-radius: 8px;
   font-size: 14px;
   background-color: #f8f9fa;

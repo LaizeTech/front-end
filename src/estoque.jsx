@@ -16,7 +16,8 @@ const Estoque = () => {
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const API_URL = "http://localhost:8080/produtos";
+    const [activeFilters, setActiveFilters] = useState([]); // NOVO: Armazena os IDs das categorias selecionadas
+    const API_URL = "http://localhost:8080"; // URL base da API
 
     const getStatusColor = (quantidade) => {
         if (quantidade < 5) return 'red';
@@ -31,10 +32,22 @@ const Estoque = () => {
         return 'DISPONÍVEL EM ESTOQUE';
     };
 
-    const fetchProdutos = async () => {
+    // FUNÇÃO MODIFICADA: Agora aceita um array de IDs de categorias para filtrar
+    const fetchProdutos = async (categoryIds = activeFilters) => {
         setLoading(true);
+        let url = `${API_URL}/produtos`;
+        
+        if (categoryIds.length > 0) {
+            // Converte o array de IDs para uma string separada por vírgulas para o backend
+            const categoryQuery = categoryIds.join(',');
+            url = `${API_URL}/produtos?categorias=${categoryQuery}`;
+        } else {
+            // Se não houver filtros ativos, garante que a URL base seja usada
+            url = `${API_URL}/produtos`;
+        }
+
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(url);
             if (response.status === 204) {
                 setProdutos([]);
                 return;
@@ -68,8 +81,23 @@ const Estoque = () => {
         fetchProdutos();
     }, []);
 
+    // FUNÇÃO MODIFICADA: Recarrega os produtos mantendo os filtros ativos
     const handleRecarregarProdutos = () => {
-        fetchProdutos();
+        fetchProdutos(activeFilters);
+    };
+
+    // NOVO: Função chamada pelo modal para aplicar o filtro
+    const handleFilterByCategories = (categoryIds) => {
+        setActiveFilters(categoryIds); // Salva os filtros ativos
+        fetchProdutos(categoryIds); // Busca os produtos com os filtros
+        setIsFilterModalOpen(false); // Fecha o modal após a filtragem
+    };
+
+    // NOVO: Função chamada pelo modal após o cadastro de uma nova categoria
+    const handleAddNewCategory = (categoryName) => {
+        console.log('Nova categoria adicionada:', categoryName);
+        // O modal já recarrega a lista de categorias internamente.
+        // Aqui, você pode adicionar uma notificação de sucesso se desejar.
     };
 
     const filteredProducts = produtos.filter(produto =>
@@ -110,14 +138,6 @@ const Estoque = () => {
 
     const handleAddMaisProduct = () => {
         handleRecarregarProdutos();
-    };
-
-    const handleFilterByCategories = (categories) => {
-        console.log('Filtrar por categorias:', categories);
-    };
-
-    const handleAddNewCategory = (categoryName) => {
-        console.log('Nova categoria adicionada:', categoryName);
     };
 
     const closeEditModal = () => {
@@ -225,7 +245,13 @@ const Estoque = () => {
                 onAdd={handleAddMaisProduct}
                 selectedProduct={selectedProduct}
             />
-            <FilterFlowModal isOpen={isFilterModalOpen} onClose={closeFilterModal} onFilter={handleFilterByCategories} onAddCategory={handleAddNewCategory} />
+            {/* O modal de filtro agora usa as novas funções de callback */}
+            <FilterFlowModal 
+                isOpen={isFilterModalOpen} 
+                onClose={closeFilterModal} 
+                onFilter={handleFilterByCategories} 
+                onAddCategory={handleAddNewCategory} 
+            />
         </div>
     );
 };

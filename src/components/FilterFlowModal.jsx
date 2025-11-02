@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import './FilterFlowModal.css';
 
@@ -7,19 +7,31 @@ const FilterFlowModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
   const [currentView, setCurrentView] = useState('filter');
   const [categoryName, setCategoryName] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [categories] = useState([
-    'Gloss',
-    'Boca',
-    'Skincare',
-    'RubyRose',
-    'Batom',
-    'Rosto',
-    'Paletas',
-    'Corretivo'
-  ]);
+  const [categories, setCategories] = useState([]);
+  const API_URL = "http://localhost:8080";
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/categorias`);
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar categorias: ${response.status}`);
+      }
+      const data = await response.json();
+      // Assumindo que o backend retorna um array de objetos { idCategoria: number, nomeCategoria: string } - Usando camelCase para Kotlin/Spring Boot
+      setCategories(data);
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen]);
 
   // Resetar o estado ao fechar o modal
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) {
       setCurrentView('filter');
       setCategoryName('');
@@ -30,16 +42,18 @@ const FilterFlowModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
   // --- Lógica do Filtro (View: 'filter') ---
 
   const handleCategoryChange = (category) => {
+    // category é o objeto { id_categoria, nome_categoria }
     setSelectedCategories(prev => {
-      if (prev.includes(category)) {
-        return prev.filter(c => c !== category);
+      if (prev.includes(category.idCategoria)) {
+        return prev.filter(id => id !== category.idCategoria);
       } else {
-        return [...prev, category];
+        return [...prev, category.idCategoria];
       }
     });
   };
 
   const handleFilter = () => {
+    // onFilter espera um array de IDs de categorias
     onFilter(selectedCategories);
     onClose();
   };
@@ -50,11 +64,34 @@ const FilterFlowModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
 
   // --- Lógica da Adição de Categoria (View: 'addCategory') ---
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (categoryName.trim()) {
-      onAddCategory(categoryName.trim());
-      setCategoryName('');
-      setCurrentView('filter'); // Volta para a tela de filtro após adicionar
+      try {
+        const response = await fetch(`${API_URL}/categorias`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // Assumindo que o backend espera um objeto com o nome da categoria
+          body: JSON.stringify({ nomeCategoria: categoryName.trim() }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro ao cadastrar categoria: ${response.status}`);
+        }
+
+        // Se o cadastro for bem-sucedido, recarrega a lista de categorias
+        await fetchCategories();
+        
+        // Notifica o componente pai (Estoque.jsx) sobre o sucesso
+        onAddCategory(categoryName.trim()); 
+
+        setCategoryName('');
+        setCurrentView('filter'); // Volta para a tela de filtro após adicionar
+      } catch (error) {
+        console.error("Erro ao adicionar categoria:", error);
+        // Opcional: Adicionar feedback de erro para o usuário
+      }
     }
   };
 
@@ -81,15 +118,15 @@ const FilterFlowModal = ({ isOpen, onClose, onFilter, onAddCategory }) => {
         </button>
 
         <div className="categories-list">
-          {categories.map((category, index) => (
-            <label key={index} className="category-item">
+          {categories.map((category) => (
+            <label key={category.idCategoria} className="category-item">
               <input
                 type="checkbox"
                 className="category-checkbox"
-                checked={selectedCategories.includes(category)}
+                checked={selectedCategories.includes(category.idCategoria)}
                 onChange={() => handleCategoryChange(category)}
               />
-              <span className="category-name">{category}</span>
+              <span className="category-name">{category.nomeCategoria}</span>
             </label>
           ))}
         </div>
