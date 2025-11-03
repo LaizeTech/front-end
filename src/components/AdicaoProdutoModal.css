@@ -1,0 +1,258 @@
+.adicionar-produto-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Modal Container - Adicionar Produto */
+.adicionar-produto-modal-container {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Modal Header - Adicionar Produto */
+.adicionar-produto-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.adicionar-produto-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+}
+
+.adicionar-produto-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  color: #6c757d;
+}
+
+.adicionar-produto-close-button:hover {
+  background-color: #f8f9fa;
+}
+
+.adicionar-produto-modal-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding: 32px;
+}
+
+.adicionar-produto-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.adicionar-produto-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adicionar-produto-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Input de Nome do Produto */
+.adicionar-produto-form-input {
+  padding: 12px 16px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white; /* Alterado para branco */
+  color: black; /* Alterado para preto */
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.adicionar-produto-form-input:focus,
+.adicionar-produto-form-select:focus {
+  border-color: #e91e63;
+  background-color: white;
+  color: #212529;
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.adicionar-produto-form-select {
+  cursor: pointer;
+}
+
+/* Platform Section - Adicionar Produto */
+.adicionar-produto-platform-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Platform Summary - Adicionar Produto */
+.adicionar-produto-platform-summary {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+}
+
+.adicionar-produto-platform-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 12px 16px;
+  background-color: #e9ecef;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+}
+
+.adicionar-produto-platform-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 12px 16px;
+  background-color: white;
+  border-top: 1px solid #e9ecef;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Novo estilo para o input de quantidade (dentro da linha da plataforma) */
+.adicionar-produto-platform-row input[type="number"] {
+  width: 80px; /* Ajuste a largura conforme necessário */
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  text-align: right;
+  background-color: white; /* Alterado para branco */
+  color: black; /* Alterado para preto */
+}
+
+/* Modal Footer - Adicionar Produto */
+.adicionar-produto-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  gap: 12px;
+}
+
+.adicionar-produto-excluir-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: white;
+  color: #e91e63;
+  border: 1px solid #e91e63;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adicionar-produto-excluir-button:hover {
+  background-color: #e91e63;
+  color: white;
+}
+
+.adicionar-produto-adicionar-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #e91e63, #ad1457);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adicionar-produto-adicionar-button:hover {
+  background: linear-gradient(135deg, #d81b60, #9c1349);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+/* Responsive - Adicionar Produto */
+@media (max-width: 768px) {
+  .adicionar-produto-modal-overlay {
+    padding: 10px;
+  }
+  
+  .adicionar-produto-modal-container {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .adicionar-produto-modal-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+  
+  .adicionar-produto-modal-header,
+  .adicionar-produto-modal-footer {
+    padding: 20px 24px;
+  }
+  
+  .adicionar-produto-modal-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .adicionar-produto-excluir-button,
+  .adicionar-produto-adicionar-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .adicionar-produto-modal-content {
+    padding: 16px;
+  }
+  
+  .adicionar-produto-modal-header,
+  .adicionar-produto-modal-footer {
+    padding: 16px;
+  }
+  
+  .adicionar-produto-modal-title {
+    font-size: 20px;
+  }
+  
+  .adicionar-produto-platform-header,
+  .adicionar-produto-platform-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    text-align: left;
+  }
+}
