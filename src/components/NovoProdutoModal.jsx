@@ -68,6 +68,7 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
       alert("✅ Produto cadastrado com sucesso!");
 
       if (onAdd) {
+        // Mapeamento corrigido para usar o novo campo de retorno do backend
         const mappedProduct = {
           id: data.idProduto,
           name: data.nomeProduto,
@@ -75,7 +76,8 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
           status: 'DISPONÍVEL EM ESTOQUE',
           statusColor: 'green',
           store: data.categoria?.nomeCategoria || 'N/A',
-          platforms: [],
+          // ✅ CORREÇÃO APLICADA: Usa plataformasDetalhe do backend
+          platforms: data.plataformasDetalhe?.map(p => ({ name: p.nomePlataforma, quantity: p.quantidadeProdutoPlataforma || 0 })) || [],
           imagePath: data.caminhoImagem || null,
         };
         onAdd(mappedProduct);
@@ -220,6 +222,8 @@ const NovoProdutoModal = ({ isOpen, onClose, onAdd }) => {
                     onChange={(e) => handlePriceChange(e.target.value)}
                   />
                 </div>
+                
+                {/* Seção de Imagem do Produto REMOVIDA do Step 1 */}
               </div>
 
               <div className="novo-produto-platform-section">

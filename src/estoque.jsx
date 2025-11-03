@@ -265,13 +265,13 @@ const Estoque = () => {
                                         </span>
                                     </div>
                                     <div className="store-info">
-                                        <span className="store-name">{product.store}</span>
+                                        <span className="store-name">Plataforma de venda:</span>
                                     </div>
-                                    <div className="platform-info">
+                                    <div className="platform-info" style={{ marginTop: '-10px' }}>
                                         <span className="platform-list">
                                             {product.platforms && product.platforms.length > 0
                                                 ? product.platforms.map(p => p.nomePlataforma).join(', ')
-                                                : 'N/A'}
+                                                : 'Nenhuma plataforma'}
                                         </span>
                                     </div>
                                     <div className="product-actions">
