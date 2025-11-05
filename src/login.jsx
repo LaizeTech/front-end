@@ -4,6 +4,83 @@ import ImagePlaceholder from './components/Imageplaceholder';
 import { isLoggedIn, isSessionValid } from './utils/sessionUtils';
 import './login.css';
 
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    const savedPassword = localStorage.getItem('rememberedPassword');
+    
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn() && isSessionValid()) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:8080/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          senha: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        alert(errorMessage);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', password);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedPassword');
+      }
+      
+      sessionStorage.setItem("user", JSON.stringify(data));
+      sessionStorage.setItem("userId", data.idUsuario);
+      sessionStorage.setItem("userName", data.nome);
+      sessionStorage.setItem("userEmail", data.email);
+      sessionStorage.setItem("acessoFinanceiro", data.acessoFinanceiro);
+      sessionStorage.setItem("statusAtivo", data.statusAtivo);
+      
+      if (data.empresa) {
+        sessionStorage.setItem("empresa", JSON.stringify(data.empresa));
+        sessionStorage.setItem("empresaId", data.empresa.idEmpresa);
+        sessionStorage.setItem("empresaNome", data.empresa.nomeEmpresa);
+        sessionStorage.setItem("empresaCnpj", data.empresa.cnpj);
+      }
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error("Erro no login:", error);
+      alert("Erro ao conectar com o servidor.");
+    }
+  };
+
+
   return (
   <div className="min-h-screen relative overflow-hidden bg-stone-50 flex items-center justify-center px-4">
       {/* Soft pink corners with fixed radial gradients at corners */}
