@@ -19,6 +19,7 @@ const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [logoError, setLogoError] = useState(false);
 
   // Verificar o acesso financeiro do usuário
   const acessoFinanceiro = sessionStorage.getItem('acessoFinanceiro') === 'true';
@@ -123,10 +124,18 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <div className="logo">
-          <span className="logo-text">L</span>
+        <div className={`logo ${logoError ? 'logo-fallback' : ''}`}>
+          {!logoError ? (
+            <img
+              src="/laize-logo.png?v=1"
+              alt="Laize Cosméticos"
+              className="logo-img"
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            <span className="logo-text">L</span>
+          )}
         </div>
-        <h2 className="company-name">Laizetech</h2>
       </div>
 
       <div className="search-container">
