@@ -10,8 +10,9 @@
 /* Chatbot Button - canto inferior direito, mais à esquerda */
 .chatbot-button {
   position: fixed;
-  right: 60px;
-  bottom: 24px;
+  /* Fica acima do botão de acessibilidade, alinhado à direita com ele */
+  right: 20px;
+  bottom: 90px; /* acima do botão de acessibilidade com folga */
   width: 60px;
   height: 60px;
   background: linear-gradient(135deg, #e91e63, #ad1457);
@@ -470,12 +471,12 @@
     font-size: 24px;
   }
  
-  /* Chatbot button adjustments for mobile */
   .chatbot-button {
     width: 50px;
     height: 50px;
-    right: 40px;
-    bottom: 16px;
+    right: 10px; /* alinha com acessibilidade no tablet/mobile */
+    bottom: 74px; /* acima do botão de acessibilidade */
+    
   }
 }
 
@@ -500,8 +501,8 @@
   .chatbot-button {
     width: 42px;
     height: 42px;
-    right: 24px;
-    bottom: 8px;
+    right: 10px; /* alinha com acessibilidade no mobile pequeno */
+    bottom: 64px; /* espaço confortável acima do botão de acessibilidade */
   }
 }
 
