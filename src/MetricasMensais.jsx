@@ -204,18 +204,18 @@ const MetricasMensais = () => {
                         <div className="chart-card">
                             <h3 className="chart-title">Top 5 Produtos mais vendidos</h3>
                             <div className="chart-container">
-                                <ResponsiveContainer width="100%" height={260}>
+                                <ResponsiveContainer width="100%" height={320}>
                                     <BarChart data={topProductsData} layout="vertical" margin={{ top: 10, right: 10, left: 5, bottom: 5 }}>
                                         <XAxis type="number" hide />
                                         <YAxis 
                                             dataKey="name" 
                                             type="category" 
-                                            width={100}
+                                            width={120}
                                             tickFormatter={formatYAxisLabel}
                                             interval={0}
-                                            tick={{ fontSize: 11 }}
+                                            tick={{ fontSize: 13 }}
                                         />
-                                        <Bar dataKey="value" fill="#e91e63" barSize={15} />
+                                        <Bar dataKey="value" fill="#e91e63" barSize={20} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
@@ -224,10 +224,10 @@ const MetricasMensais = () => {
                         <div className="chart-card">
                             <h3 className="chart-title">Receita Mensal</h3>
                             <div className="chart-container">
-                                <ResponsiveContainer width="100%" height={250}>
+                                <ResponsiveContainer width="100%" height={320}>
                                     <LineChart data={revenueData}>
-                                        <XAxis dataKey="month" />
-                                        <YAxis />
+                                        <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                                        <YAxis tick={{ fontSize: 12 }} />
                                         <Line type="monotone" dataKey="value" stroke="#e91e63" strokeWidth={3} dot={{ fill: '#e91e63', strokeWidth: 2, r: 6 }}/>
                                     </LineChart>
                                 </ResponsiveContainer>

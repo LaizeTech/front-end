@@ -4,32 +4,15 @@ import { TrendingUp, Package, Users, DollarSign, Bot } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const salesData = [
-    { name: 'Shoope', value: 40 },
-    { name: 'Nuvem Shop', value: 40 },
-    { name: 'Loja Física', value: 40 },
-  ];
-
-  const categoryData = [
-    { name: 'Batom vermelho', quantity: 5, status: 'low' },
-    { name: 'Gloss', quantity: 3, status: 'low' },
-    { name: 'Delineador', quantity: 5, status: 'low' },
-  ];
-
-  const recentProducts = [
-    { name: 'Batom vermelho', quantity: 5 },
-    { name: 'Gloss', quantity: 3 },
-    { name: 'Delineador', quantity: 5 },
-  ];
 
   const [activeEmployees, setActiveEmployees] = useState(0);
-  const [alertaProdutos, setAlertaProdutos] = useState([]); // estado para armazenar alertas de produtos
-  const [vendasPorPlataforma, setVendasPorPlataforma] = useState([]); // estado para armazenar vendas por plataforma
-  const [ultimasCompras, setUltimasCompras] = useState([]); // estado para armazenar últimas compras
-  const [entradasUltimos3Dias, setEntradasUltimos3Dias] = useState(0); // estado para armazenar entradas dos últimos 3 dias
-  const [saidasUltimos3Dias, setSaidasUltimos3Dias] = useState(0); // estado para armazenar saídas dos últimos 3 dias
+  const [alertaProdutos, setAlertaProdutos] = useState([]);
+  const [vendasPorPlataforma, setVendasPorPlataforma] = useState([]);
+  const [ultimasCompras, setUltimasCompras] = useState([]);
+  const [entradasUltimos3Dias, setEntradasUltimos3Dias] = useState(0);
+  const [saidasUltimos3Dias, setSaidasUltimos3Dias] = useState(0);
 
-  const [renda, setrenda] = useState([]); // estado para armazenar renda
+  const [renda, setrenda] = useState([]);
 
   // Função usando then/catch
   function buscarThenCatch() {
@@ -318,10 +301,9 @@ const Dashboard = () => {
           <div className="category-list scrollable-list">
             {alertaProdutos === "sem_alertas" ? (
               <div className="category-item">
-                <div className="category-info">
-                  <div className="category-details">
-                    <span className="category-name">Não existe produtos com alertas de quantidade</span>
-                  </div>
+                <div className="category-icon low-stock"></div>
+                <div className="category-details">
+                  <span className="category-name">Não existe produtos com alertas de quantidade</span>
                 </div>
               </div>
             ) : Array.isArray(alertaProdutos) ? (
@@ -332,27 +314,24 @@ const Dashboard = () => {
                   item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
                   'alert-red'
                 }`}>
-                  <div className="category-info">
-                    <div className={`category-icon ${
-                      item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
-                      item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
-                      item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
-                      'low-stock'
-                    }`}></div>
-                    <div className="category-details">
-                      <span className="category-name">{item.nome_produto}</span>
-                      <span className="category-quantity">Quantidade: {item.quantidade_produto}</span>
-                      <span className="category-store">{item.nivel_alerta}</span>
-                    </div>
+                  <div className={`category-icon ${
+                    item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
+                    item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :
+                    item.nivel_alerta === 'Alerta Violeta' ? 'alert-purple' :
+                    'low-stock'
+                  }`}></div>
+                  <div className="category-details">
+                    <span className="category-name">{item.nome_produto}</span>
+                    <span className="category-quantity">Quantidade: {item.quantidade_produto}</span>
+                    <span className="category-store">{item.nivel_alerta}</span>
                   </div>
                 </div>
               ))
             ) : (
               <div className="category-item">
-                <div className="category-info">
-                  <div className="category-details">
-                    <span className="category-name">Carregando produtos...</span>
-                  </div>
+                <div className="category-icon low-stock"></div>
+                <div className="category-details">
+                  <span className="category-name">Carregando produtos...</span>
                 </div>
               </div>
             )}
@@ -437,6 +416,7 @@ const Dashboard = () => {
           <div className="products-list scrollable-list">
             {ultimasCompras === "sem_compras" ? (
               <div className="product-item">
+                <div className="product-icon"></div>
                 <div className="product-details">
                   <span className="product-name">Não houve compras recentes</span>
                 </div>
@@ -454,6 +434,7 @@ const Dashboard = () => {
               ))
             ) : (
               <div className="product-item">
+                <div className="product-icon"></div>
                 <div className="product-details">
                   <span className="product-name">Carregando compras...</span>
                 </div>

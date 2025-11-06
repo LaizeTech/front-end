@@ -6,20 +6,16 @@ import {
 import { ChevronDown, Plus } from 'lucide-react';
 import './MetricasAnuais.css';
 
-// URL base da sua API Spring Boot (ajuste a porta se necessário)
 const API_URL = 'http://localhost:8080/produtos';
 
-// Cores para o gráfico de pizza, já que o backend não as fornece
 const PIE_COLORS = ['#ff6b35', '#e91e63', '#f8a5c2', '#4caf50', '#2196f3'];
 
 const MetricasAnuais = () => {
-  // Estados para armazenar os dados vindos da API
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [platformData, setPlatformData] = useState([]);
   const [top5ProductData, setTop5ProductData] = useState([]);
   const [monthlyRevenueData, setMonthlyRevenueData] = useState([]);
   
-  // Estados para controle de ano
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [showYearDropdown, setShowYearDropdown] = useState(false);
@@ -27,7 +23,7 @@ const MetricasAnuais = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Hook para buscar os anos disponíveis quando o componente montar
+  // Efeito para buscar os anos disponíveis
   useEffect(() => {
     const fetchAvailableYears = async () => {
       try {
@@ -39,17 +35,16 @@ const MetricasAnuais = () => {
         
         if (years && years.length > 0) {
           setAvailableYears(years);
-          // Se o ano atual não estiver na lista, seleciona o ano mais recente
+          // Define o ano selecionado para o último ano disponível, se o ano atual não estiver na lista
           if (!years.includes(selectedYear)) {
             setSelectedYear(years[years.length - 1]);
           }
         } else {
-          // Se não houver anos, usa o ano atual
+          // Se não houver anos disponíveis, usa o ano atual como padrão
           setAvailableYears([new Date().getFullYear()]);
         }
       } catch (error) {
         console.error("Erro ao buscar anos disponíveis:", error);
-        // Em caso de erro, usa o ano atual
         setAvailableYears([new Date().getFullYear()]);
       }
     };
@@ -57,7 +52,7 @@ const MetricasAnuais = () => {
     fetchAvailableYears();
   }, []);
 
-  // Hook para fechar dropdown quando clicar fora
+  // Efeito para fechar o dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showYearDropdown && !event.target.closest('.year-dropdown-container')) {
@@ -71,67 +66,63 @@ const MetricasAnuais = () => {
     };
   }, [showYearDropdown]);
 
-  // Hook para buscar os dados quando o ano selecionado mudar
+  // Efeito principal para buscar os dados de métricas com base no ano selecionado
   useEffect(() => {
-    // ID da plataforma (hardcoded como 1 para este exemplo)
-    const plataformaId = 1;
-
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
       
       try {
-        // 1. Buscar Receita Total (para o Card)
-        const revenueRes = await fetch(`${API_URL}/vendas/total?plataforma=${plataformaId}&ano=${selectedYear}`);
+
+        // 1. RECEITA TOTAL ANUAL - Não passa 'plataforma' para buscar o total GERAL
+        const revenueRes = await fetch(`${API_URL}/vendas/total?ano=${selectedYear}`);
         if (!revenueRes.ok) {
           throw new Error('Erro ao buscar receita total');
         }
         const revenueData = await revenueRes.json();
         setTotalRevenue(revenueData || 0);
 
-        // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
+        // 2. VENDAS POR PLATAFORMA - Já estava correto (busca GERAL por ano)
         const platformRes = await fetch(`${API_URL}/vendas/por-plataforma?ano=${selectedYear}`);
         if (!platformRes.ok) {
           throw new Error('Erro ao buscar vendas por plataforma');
         }
         const platformRawData = await platformRes.json();
         
-        // Mapear a resposta [["Shopee", 100], ...] para [{ name: "Shopee", value: 100 }, ...]
         const mappedPlatformData = Array.isArray(platformRawData) && platformRawData.length > 0
           ? platformRawData.map((item) => ({
-              name: item[0],
-              value: item[1]
+              name: item[0], // Nome da plataforma
+              value: item[1] // Quantidade vendida
             }))
           : [];
         setPlatformData(mappedPlatformData);
 
-        // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
-        const top5Res = await fetch(`${API_URL}/top5?plataforma=${plataformaId}&ano=${selectedYear}`);
+        // 3. TOP 5 PRODUTOS - Não passa 'plataforma' para buscar o top 5 GERAL
+        const top5Res = await fetch(`${API_URL}/top5?ano=${selectedYear}`);
         if (!top5Res.ok) {
           throw new Error('Erro ao buscar top 5 produtos');
         }
         const top5RawData = await top5Res.json();
         
-        // Mapear [["Produto A", 50], ...] para [{ name: "Produto A", value: 50 }, ...]
         const mappedTop5Data = Array.isArray(top5RawData) && top5RawData.length > 0
           ? top5RawData.map((item) => ({
-              name: item[0],
-              value: item[1]
+              name: item[0], // Nome do produto
+              value: item[1] // Quantidade vendida
             }))
           : [];
         setTop5ProductData(mappedTop5Data);
 
-        // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
-        const monthlyRes = await fetch(`${API_URL}/receita/mensal?plataforma=${plataformaId}&ano=${selectedYear}`);
+        // 4. RECEITA MENSAL - Não passa 'plataforma' para buscar a receita GERAL
+        // O backend foi ajustado para retornar a abreviação do mês (ex: "Jan")
+        const monthlyRes = await fetch(`${API_URL}/receita/mensal?ano=${selectedYear}`);
         if (!monthlyRes.ok) {
           throw new Error('Erro ao buscar receita mensal');
         }
         const monthlyRawData = await monthlyRes.json();
         
-        // Mapear [["2025-10", 15000], ...] para [{ month: "2025-10", value: 15000 }, ...]
         const mappedMonthlyData = Array.isArray(monthlyRawData) && monthlyRawData.length > 0
           ? monthlyRawData.map((item) => ({
-              month: item[0], // Formato "YYYY-MM"
+              month: item[0], // Usa o nome abreviado do mês retornado pelo SQL
               value: item[1]
             }))
           : [];
@@ -216,14 +207,13 @@ const MetricasAnuais = () => {
           <p className="error-message">Não conseguimos carregar os dados no momento. Por favor, verifique sua conexão e tente novamente.</p>
           <button 
             className="retry-button"
-            onClick={() => setSelectedYear(selectedYear)}
+            // Força a recarga redefinindo o ano para o mesmo valor
+            onClick={() => setSelectedYear(selectedYear)} 
           >
           Tentar novamente
           </button>
         </div>
       )}
-
-      {/* Conteúdo principal - apenas exibir se não estiver carregando e não houver erro */}
       {!isLoading && !error && (
         <div className="annual-content">
           <div className="revenue-card">
@@ -307,8 +297,9 @@ const MetricasAnuais = () => {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={monthlyRevenueData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis tickFormatter={(value) => `R$${value / 1000}k`} />
+                    {/* DataKey agora é 'month', que virá formatado do backend (Jan, Fev, etc.) */}
+                    <XAxis dataKey="month" /> 
+                    <YAxis tickFormatter={(value) => `R$${value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} `} />
                     <Tooltip formatter={(value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} />
                     <Bar dataKey="value" fill="#e91e63" />
                   </BarChart>
