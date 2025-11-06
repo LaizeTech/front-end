@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
 import { 
   PieChart, Pie, Cell, BarChart, Bar, 
   XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip 
 } from 'recharts';
 import { ChevronDown, Plus } from 'lucide-react';
+import NovaPlataformaModal from './components/NovaPlataformaModal';
 import './MetricasAnuais.css';
 
 // URL base da sua API Spring Boot (ajuste a porta se necessário)
@@ -13,6 +15,7 @@ const API_URL = 'http://localhost:8080/produtos';
 const PIE_COLORS = ['#ff6b35', '#e91e63', '#f8a5c2', '#4caf50', '#2196f3'];
 
 const MetricasAnuais = () => {
+  
   // Estados para armazenar os dados vindos da API
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [platformData, setPlatformData] = useState([]);
@@ -26,6 +29,9 @@ const MetricasAnuais = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+    // Estado para modal de nova plataforma
+    const [showNovaPlataformaModal, setShowNovaPlataformaModal] = useState(false);
 
   // Hook para buscar os anos disponíveis quando o componente montar
   useEffect(() => {
@@ -157,11 +163,20 @@ const MetricasAnuais = () => {
           <h1 className="page-title">Métricas anuais</h1>
           <p className="page-subtitle">Análise anual geral</p>
         </div>
-        <button className="add-platform-btn">
+        <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
           <Plus size={16} />
           Nova plataforma
         </button>
       </div>
+      <NovaPlataformaModal
+        isOpen={showNovaPlataformaModal}
+        onClose={() => setShowNovaPlataformaModal(false)}
+        onSave={(novaPlataforma) => {
+          // Atualizar a lista de plataformas após adicionar uma nova
+          // TODO: Implementar a lógica de atualização da lista de plataformas
+          setShowNovaPlataformaModal(false);
+        }}
+      />
 
       <div className="year-selector">
         <div className="year-dropdown-container">

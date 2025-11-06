@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Plus, ShoppingBag, Store, ChevronDown } from 'lucide-react';
+import NovaPlataformaModal from './components/NovaPlataformaModal';
 import './MetricasMensais.css';
 
 const MetricasMensais = () => {
+    // Estados para armazenar os dados da API
+    const [plataformas, setPlataformas] = useState([]);
+    const [isLoadingPlataformas, setIsLoadingPlataformas] = useState(false);
     // Estados para armazenar os dados da API
     const [selectedPlatform, setSelectedPlatform] = useState('');
     const [entradasMes, setEntradasMes] = useState({ mes: '', quantidade: 0, valor: 0 });
@@ -13,6 +17,34 @@ const MetricasMensais = () => {
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showAllInactive, setShowAllInactive] = useState(false);
+    const [showNovaPlataformaModal, setShowNovaPlataformaModal] = useState(false);
+
+    // Função para buscar a lista de plataformas
+    const fetchPlataformas = useCallback(async () => {
+        setIsLoadingPlataformas(true);
+        try {
+            const response = await fetch('http://localhost:8080/plataforma');
+            if (response.status === 204) {
+                setPlataformas([]);
+                return;
+            }
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar plataformas: ${response.statusText}`);
+            }
+            const data = await response.json();
+            setPlataformas(data);
+        } catch (error) {
+            console.error("Erro ao buscar plataformas:", error);
+            setPlataformas([]);
+        } finally {
+            setIsLoadingPlataformas(false);
+        }
+    }, []);
+
+    // Hook para buscar plataformas na montagem do componente
+    useEffect(() => {
+        fetchPlataformas();
+    }, [fetchPlataformas]);
 
     // useEffect para buscar dados quando a plataforma mudar
     useEffect(() => {
@@ -123,10 +155,20 @@ const MetricasMensais = () => {
         <div className="metricas-mensais">
             <div className="page-header">
                 <h1 className="page-title">Métricas mensais</h1>
-                <button className="add-platform-btn">
+                <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
                     <Plus size={16} /> Nova plataforma
                 </button>
             </div>
+            <NovaPlataformaModal 
+                isOpen={showNovaPlataformaModal}
+                onClose={() => setShowNovaPlataformaModal(false)}
+                onSave={(novaplataforma) => {
+                    // Atualizar a lista de plataformas após adicionar uma nova
+                    // Chama a função para buscar a lista atualizada
+                    fetchPlataformas();
+                    setShowNovaPlataformaModal(false);
+                }}
+            />
 
             <div className="platform-selector">
                 <div className="selector-container">
@@ -138,8 +180,11 @@ const MetricasMensais = () => {
                                 onChange={handlePlatformChange}
                             >
                                 <option value="" disabled>Selecione a plataforma</option>
-                                <option value="1">Shopee</option>
-                                <option value="2">Nuvemshop</option>
+{plataformas.map((plataforma) => (
+                                        <option key={plataforma.id} value={plataforma.id}>
+                                            {plataforma.nomePlataforma}
+                                        </option>
+                                    ))}
                             </select>
                             <div className="select-arrow">
                                 <ChevronDown size={16} />
