@@ -80,20 +80,25 @@ const MetricasMensais = () => {
                     setTotalRevenue(0);
                 }
 
-                // Fetch Produtos Inativos
-                const inativosRes = await fetch(`http://localhost:8080/produtos/inativos?plataforma=${platformId}`);
-                if (inativosRes.ok) {
-                    const data = await inativosRes.json();
-                    const formattedData = data.map(name => ({ name: name, category: name })); // Ajuste se tiver categoria
-                    setInactiveProducts(formattedData);
-                } else {
-                    setInactiveProducts([]);
-                }
-
             } catch (error) {
                 console.error("Erro ao buscar dados da plataforma:", error);
             } finally {
                 setLoading(false);
+            }
+
+            // Fetch Produtos Inativos (separado)
+            try {
+                const inativosRes = await fetch(`http://localhost:8080/produtos/inativos?plataforma=${platformId}`);
+                if (inativosRes.ok) {
+                    const data = await inativosRes.json();
+                    const formattedData = data.map(name => ({ name: name }));
+                    setInactiveProducts(formattedData);
+                } else {
+                    setInactiveProducts([]);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar produtos inativos:", error);
+                setInactiveProducts([]);
             }
         };
 
@@ -180,11 +185,11 @@ const MetricasMensais = () => {
                                 onChange={handlePlatformChange}
                             >
                                 <option value="" disabled>Selecione a plataforma</option>
-{plataformas.map((plataforma) => (
-                                        <option key={plataforma.id} value={plataforma.id}>
-                                            {plataforma.nomePlataforma}
-                                        </option>
-                                    ))}
+                                {plataformas.map((plataforma) => (
+                                    <option key={plataforma.idPlataforma} value={plataforma.idPlataforma}>
+                                        {plataforma.nomePlataforma}
+                                    </option>
+                                ))}
                             </select>
                             <div className="select-arrow">
                                 <ChevronDown size={16} />
