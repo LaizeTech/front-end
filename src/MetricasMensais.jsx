@@ -53,8 +53,9 @@ const MetricasMensais = () => {
             if (!platformId) return;
 
             setLoading(true);
+
+            // Fetch Top 5 Produtos
             try {
-                // Fetch Top 5 Produtos
                 const top5Res = await fetch(`http://localhost:8080/produtos/top5?plataforma=${platformId}`);
                 if (top5Res.ok) {
                     const data = await top5Res.json();
@@ -63,8 +64,13 @@ const MetricasMensais = () => {
                 } else {
                     setTopProductsData([]);
                 }
+            } catch (error) {
+                console.error("Erro ao buscar top 5 produtos:", error);
+                setTopProductsData([]);
+            }
 
-                // Fetch Receita Mensal
+            // Fetch Receita Mensal
+            try {
                 const receitaRes = await fetch(`http://localhost:8080/produtos/receita/mensal?plataforma=${platformId}`);
                 if (receitaRes.ok) {
                     const data = await receitaRes.json();
@@ -79,14 +85,13 @@ const MetricasMensais = () => {
                     setRevenueData([]);
                     setTotalRevenue(0);
                 }
-
             } catch (error) {
-                console.error("Erro ao buscar dados da plataforma:", error);
-            } finally {
-                setLoading(false);
+                console.error("Erro ao buscar receita mensal:", error);
+                setRevenueData([]);
+                setTotalRevenue(0);
             }
 
-            // Fetch Produtos Inativos (separado)
+            // Fetch Produtos Inativos
             try {
                 const inativosRes = await fetch(`http://localhost:8080/produtos/inativos?plataforma=${platformId}`);
                 if (inativosRes.ok) {
@@ -100,11 +105,13 @@ const MetricasMensais = () => {
                 console.error("Erro ao buscar produtos inativos:", error);
                 setInactiveProducts([]);
             }
+
+            setLoading(false);
         };
 
         // Função para buscar dados que não dependem da plataforma
         const fetchGeneralData = async () => {
-             try {
+            try {
                 const entradasRes = await fetch(`http://localhost:8080/produtos/entradas/mes-atual`);
                 if (entradasRes.ok) {
                     const data = await entradasRes.json();
@@ -114,10 +121,17 @@ const MetricasMensais = () => {
                             quantidade: data[0][1],
                             valor: data[0][2]
                         });
+                    } else {
+                        setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
                     }
+                } else if (entradasRes.status === 204) {
+                    setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
+                } else {
+                    setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
                 }
             } catch (error) {
                 console.error("Erro ao buscar dados de entradas:", error);
+                setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
             }
         };
 
@@ -205,18 +219,26 @@ const MetricasMensais = () => {
                 <div className="metrics-content">
                     {/* Stats Section */}
                     <div className="stats-section">
-                        <div className="stat-item">
-                            <span className="stat-label">Entradas no mês atual:</span>
-                            <span className="stat-value highlight">{entradasMes.mes}</span>
-                        </div>
-                        <div className="stat-item">
-                            <span className="stat-label">Quantidade de produtos:</span>
-                            <span className="stat-value">{entradasMes.quantidade}</span>
-                        </div>
-                        <div className="stat-item">
-                            <span className="stat-label">Valor investido:</span>
-                            <span className="stat-value">{formatCurrency(entradasMes.valor)}</span>
-                        </div>
+                        {entradasMes.quantidade > 0 ? (
+                            <>
+                                <div className="stat-item">
+                                    <span className="stat-label">Entradas no mês atual:</span>
+                                    <span className="stat-value highlight">{entradasMes.mes}</span>
+                                </div>
+                                <div className="stat-item">
+                                    <span className="stat-label">Quantidade de produtos:</span>
+                                    <span className="stat-value">{entradasMes.quantidade}</span>
+                                </div>
+                                <div className="stat-item">
+                                    <span className="stat-label">Valor investido:</span>
+                                    <span className="stat-value">{formatCurrency(entradasMes.valor)}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="stat-item">
+                                <span className="stat-label">Não há compras neste mês.</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Revenue Card */}
