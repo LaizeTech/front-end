@@ -135,7 +135,7 @@ const Login = () => {
               />
               <label htmlFor="remember" className="text-[9px] sm:text-[10px] leading-none text-gray-600 select-none">Lembrar senha</label>
             </div>
-            <a href="#" className="text-[9px] sm:text-[10px] leading-none text-gray-500 hover:text-pink-500 transition-colors">Esqueceu sua senha?</a>
+            
           </div><br></br>
           <button
             type="submit"

@@ -267,20 +267,23 @@
   font-size: clamp(11px, 1vw, 13px);
 }
 
+.date {
+  color: #495057;
+  width: 12%;
+  text-align: center;
+  font-size: 11px;
+}
+
 .platform-badge {
-  padding: clamp(3px, 0.4vw, 5px) clamp(6px, 0.7vw, 10px);
-  border-radius: clamp(12px, 1.2vw, 18px);
-  font-size: clamp(9px, 0.9vw, 11px);
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 10px;
   font-weight: 600;
   color: white;
   text-transform: uppercase;
   display: inline-block;
-  min-width: clamp(70px, 7vw, 90px);
-  max-width: 100%;
+  width: 80px;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .platform-badge.orange {
@@ -299,16 +302,38 @@
   color: #495057;
   width: 12%;
   text-align: center;
-  font-size: clamp(10px, 0.95vw, 12px);
+  font-size: 11px;
 }
+
+.platform-badge {
+  padding: clamp(3px, 0.4vw, 5px) clamp(6px, 0.7vw, 10px);
+  border-radius: clamp(12px, 1.2vw, 18px);
+  font-size: clamp(9px, 0.9vw, 11px);
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: clamp(70px, 7vw, 90px);
+  max-width: 100%;
+  text-align: center;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.platform-badge.orange { background-color: #ff9500; }
+.platform-badge.blue { background-color: #007bff; }
+.platform-badge.gray { background-color: #6c757d; }
 
 .status-badge {
   padding: clamp(3px, 0.4vw, 5px) clamp(3px, 0.4vw, 5px) !important;
   border-radius: clamp(10px, 1vw, 14px);
   font-size: clamp(9px, 0.9vw, 11px);
   font-weight: 600;
-  color: white;
-  text-transform: capitalize;
+  color: #ffffff;
+  text-transform: uppercase;
   display: inline-block;
   min-width: clamp(60px, 6vw, 80px);
   max-width: 100%;
@@ -318,6 +343,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all 0.2s ease;
 }
 
 .status-badge.green {
@@ -489,6 +515,7 @@
     min-width: 75px;
   }
   
+  /* badges já definidas acima; ajustes específicos para mobile se necessário */
   .platform-badge,
   .status-badge {
     min-width: 65px;

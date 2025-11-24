@@ -251,7 +251,7 @@ const Estoque = () => {
                                 )}
                             </div>
                             <div className="product-info">
-                                <h3 className="product-name">{product.name}</h3>
+                                <h3 className="estoque-product-name">{product.name}</h3>
                                 <div className="product-details">
                                     <div className="quantity-info">
                                         <span className="quantity-label">Quantidade em estoque:</span>
