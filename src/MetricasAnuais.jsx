@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
 import { 
   PieChart, Pie, Cell, BarChart, Bar, 
   XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip 
 } from 'recharts';
 import { ChevronDown, Plus } from 'lucide-react';
+import NovaPlataformaModal from './components/NovaPlataformaModal';
 import './MetricasAnuais.css';
 
 // URL base da sua API Spring Boot (ajuste a porta se necessário)
@@ -13,6 +15,7 @@ const API_URL = 'http://localhost:8080/produtos';
 const PIE_COLORS = ['#ff6b35', '#e91e63', '#f8a5c2', '#4caf50', '#2196f3'];
 
 const MetricasAnuais = () => {
+  
   // Estados para armazenar os dados vindos da API
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [platformData, setPlatformData] = useState([]);
@@ -26,6 +29,9 @@ const MetricasAnuais = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+    // Estado para modal de nova plataforma
+    const [showNovaPlataformaModal, setShowNovaPlataformaModal] = useState(false);
 
   // Hook para buscar os anos disponíveis quando o componente montar
   useEffect(() => {
@@ -80,16 +86,21 @@ const MetricasAnuais = () => {
       setIsLoading(true);
       setError(null);
       
+      // 1. Buscar Receita Total (para o Card)
       try {
-        // 1. Buscar Receita Total (para o Card)
         const revenueRes = await fetch(`${API_URL}/vendas/total?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!revenueRes.ok) {
           throw new Error('Erro ao buscar receita total');
         }
         const revenueData = await revenueRes.json();
         setTotalRevenue(revenueData || 0);
+      } catch (error) {
+        console.error("Erro ao buscar receita total:", error);
+        setTotalRevenue(0);
+      }
 
-        // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
+      // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
+      try {
         const platformRes = await fetch(`${API_URL}/vendas/por-plataforma?ano=${selectedYear}`);
         if (!platformRes.ok) {
           throw new Error('Erro ao buscar vendas por plataforma');
@@ -104,8 +115,13 @@ const MetricasAnuais = () => {
             }))
           : [];
         setPlatformData(mappedPlatformData);
+      } catch (error) {
+        console.error("Erro ao buscar vendas por plataforma:", error);
+        setPlatformData([]);
+      }
 
-        // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
+      // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
+      try {
         const top5Res = await fetch(`${API_URL}/top5?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!top5Res.ok) {
           throw new Error('Erro ao buscar top 5 produtos');
@@ -120,8 +136,13 @@ const MetricasAnuais = () => {
             }))
           : [];
         setTop5ProductData(mappedTop5Data);
+      } catch (error) {
+        console.error("Erro ao buscar top 5 produtos:", error);
+        setTop5ProductData([]);
+      }
 
-        // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
+      // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
+      try {
         const monthlyRes = await fetch(`${API_URL}/receita/mensal?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!monthlyRes.ok) {
           throw new Error('Erro ao buscar receita mensal');
@@ -136,13 +157,12 @@ const MetricasAnuais = () => {
             }))
           : [];
         setMonthlyRevenueData(mappedMonthlyData);
-
       } catch (error) {
-        console.error("Erro ao buscar dados da API:", error);
-        setError(error.message || "Erro ao carregar os dados. Tente novamente mais tarde.");
-      } finally {
-        setIsLoading(false);
+        console.error("Erro ao buscar receita mensal:", error);
+        setMonthlyRevenueData([]);
       }
+
+      setIsLoading(false);
     };
 
     if (selectedYear) {
@@ -157,11 +177,20 @@ const MetricasAnuais = () => {
           <h1 className="page-title">Métricas anuais</h1>
           <p className="page-subtitle">Análise anual geral</p>
         </div>
-        <button className="add-platform-btn">
+        <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
           <Plus size={16} />
           Nova plataforma
         </button>
       </div>
+      <NovaPlataformaModal
+        isOpen={showNovaPlataformaModal}
+        onClose={() => setShowNovaPlataformaModal(false)}
+        onSave={(novaPlataforma) => {
+          // Atualizar a lista de plataformas após adicionar uma nova
+          // TODO: Implementar a lógica de atualização da lista de plataformas
+          setShowNovaPlataformaModal(false);
+        }}
+      />
 
       <div className="year-selector">
         <div className="year-dropdown-container">
