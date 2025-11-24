@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Plus, Download } from 'lucide-react';
 import RegistroSaidaModal from './components/RegistroSaidaModal';
-//import './saidas.css';
+import './saidas.css';
 
 const Saidas = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -186,17 +186,28 @@ const Saidas = () => {
     input.click();
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Salvar arquivo localmente
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(file);
-      link.download = file.name;
-      link.click();
-      
-      console.log(`Arquivo ${file.name} foi baixado para a pasta de downloads`);
-      alert(`Arquivo "${file.name}" selecionado e baixado!`);
+      try {
+        // Fazer download do arquivo selecionado
+        const blob = new Blob([file], { type: file.type });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', file.name);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        console.log(`Arquivo ${file.name} foi baixado para a pasta de downloads`);
+        alert(`Arquivo "${file.name}" baixado com sucesso!`);
+      } catch (error) {
+        console.error('Erro ao fazer download:', error);
+        alert('Erro ao baixar arquivo');
+      }
     }
   };
 
@@ -315,12 +326,12 @@ const Saidas = () => {
           <div className="header-buttons">
             {selectedItems.length > 0 && (
               <button onClick={handleExportar} className="action-button export-button">
-                <Download size={16} />
+                <Download style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
                 Exportar
               </button>
             )}
             <button onClick={handleInserirSaida} className="action-button insert-button">
-              <Plus size={16} />
+              <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
               Inserir Saída
             </button>
             <button onClick={fetchSaidas} className="refresh-button" disabled={loading}>
@@ -361,7 +372,7 @@ const Saidas = () => {
                     <div className="header-with-search">
                       <span>Nome do produto</span>
                       <ChevronDown 
-                        size={16} 
+                        style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }}
                         className={`search-toggle ${showSearch ? 'active' : ''}`}
                         onClick={handleToggleSearch}
                       />

@@ -164,7 +164,7 @@ const MetricasAnuais = () => {
           <p className="page-subtitle">Análise anual geral</p>
         </div>
         <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
-          <Plus size={16} />
+          <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
           Nova plataforma
         </button>
       </div>
@@ -185,7 +185,7 @@ const MetricasAnuais = () => {
             onClick={() => setShowYearDropdown(!showYearDropdown)}
           >
             <span>Selecione o ano</span>
-            <ChevronDown size={16} />
+            <ChevronDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
           </button>
           {showYearDropdown && (
             <div className="year-dropdown-menu">

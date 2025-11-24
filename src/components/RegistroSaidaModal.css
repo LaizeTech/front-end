@@ -13,10 +13,10 @@
 
 .registro-saida-modal {
   background: white;
-  border-radius: 24px;
+  border-radius: clamp(16px, 2vw, 24px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  max-width: 1000px;
-  width: 59%;
+  max-width: clamp(800px, 85vw, 1000px);
+  width: clamp(55%, 60vw, 59%);
   max-height: 85vh;
   overflow: hidden;
   display: flex;
@@ -27,14 +27,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: clamp(18px, 2vw, 24px);
   border-bottom: 1px solid #e9ecef;
   background-color: #f8f9fa;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: clamp(16px, 1.8vw, 20px);
   font-weight: 600;
   color: #212529;
 }
@@ -43,8 +43,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: clamp(3px, 0.4vw, 4px);
+  border-radius: clamp(3px, 0.4vw, 4px);
   color: #6c757d;
   transition: all 0.2s ease;
 }
@@ -55,7 +55,7 @@
 }
 
 .modal-content {
-  padding: 20px;
+  padding: clamp(16px, 1.8vw, 20px);
   flex: 1;
   overflow-y: auto;
   display: flex;
@@ -64,18 +64,18 @@
 
 .modal-grid {
   display: grid;
-  grid-template-columns: 350px 350px;
-  gap: 16px;
+  grid-template-columns: clamp(280px, 32vw, 350px) clamp(280px, 32vw, 350px);
+  gap: clamp(12px, 1.5vw, 16px);
   height: calc(100% - 80px);
-  margin-top: 6px;
-  margin-left: 8px;
+  margin-top: clamp(4px, 0.6vw, 6px);
+  margin-left: clamp(6px, 0.8vw, 8px);
   min-height: 0;
 }
 
 .card {
   background: #f5f5f5;
-  border-radius: 16px;
-  padding: 12px;
+  border-radius: clamp(12px, 1.5vw, 16px);
+  padding: clamp(10px, 1.2vw, 12px);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -83,12 +83,12 @@
 }
 
 .card-title {
-  font-size: 13px;
+  font-size: clamp(12px, 1.3vw, 13px);
   font-weight: 600;
   color: #333;
-  margin: 0 0 12px 0;
+  margin: 0 0 clamp(10px, 1.2vw, 12px) 0;
   text-align: center;
-  padding-bottom: 8px;
+  padding-bottom: clamp(6px, 0.8vw, 8px);
   border-bottom: 1px solid #ddd;
 }
 
@@ -374,6 +374,18 @@
 }
 
 /* Responsividade */
+@media (max-width: 1024px) {
+  .registro-saida-modal {
+    max-width: 90%;
+    width: 90%;
+  }
+  
+  .modal-grid {
+    grid-template-columns: clamp(250px, 30vw, 320px) clamp(250px, 30vw, 320px);
+    gap: clamp(12px, 1.4vw, 14px);
+  }
+}
+
 @media (max-width: 1200px) {
   .modal-grid {
     grid-template-columns: 1fr 1fr;

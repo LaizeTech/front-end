@@ -82,7 +82,7 @@ const Login = () => {
 
 
   return (
-  <div className="min-h-screen relative overflow-hidden bg-stone-50 flex items-center justify-center px-4">
+  <div className="min-h-screen relative overflow-hidden bg-stone-50 flex items-center justify-center px-4 sm:px-6 md:px-8">
       {/* Soft pink corners with fixed radial gradients at corners */}
       <div
         aria-hidden
@@ -97,49 +97,49 @@ const Login = () => {
       />
 
       {/* Centered form content (no card background) */}
-  <div className="relative z-10 w-full max-w-[420px] -mt-6">
-  <h1 className="text-9xl font-black extra-bold text-gray-950 mb-12">Login</h1><br></br>
-        <form onSubmit={handleSubmit} className="space-y-8">
+  <div className="relative z-10 w-full max-w-[320px] sm:max-w-[380px] md:max-w-[420px] -mt-6 sm:-mt-4 md:-mt-6">
+  <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black extra-bold text-gray-950 mb-8 sm:mb-10 md:mb-12">Login</h1><br></br>
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7 md:space-y-8">
           <div>
-            <label htmlFor="email" className="block text-xl font-semibold text-gray-700 mb-3">Email</label>
+            <label htmlFor="email" className="block text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-2.5 md:mb-3">Email</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Insira seu e-mail"
-              className="h-12 w-full px-6 py-9 rounded-md border-2 border-gray-200 bg-gray-50 text-gray-900 text-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="h-11 sm:h-12 w-full px-4 sm:px-5 md:px-6 py-8 sm:py-8.5 md:py-9 rounded-md border-2 border-gray-200 bg-gray-50 text-gray-900 text-base sm:text-lg md:text-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div><br></br>
           <div>
-            <label htmlFor="password" className="block text-xl font-semibold text-gray-700 mb-3">Senha</label>
+            <label htmlFor="password" className="block text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-2.5 md:mb-3">Senha</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Insira sua senha"
-              className="h-12 w-full px-6 py-9 rounded-md border-2 border-gray-200 bg-gray-50 text-gray-900 text-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="h-11 sm:h-12 w-full px-4 sm:px-5 md:px-6 py-8 sm:py-8.5 md:py-9 rounded-md border-2 border-gray-200 bg-gray-50 text-gray-900 text-base sm:text-lg md:text-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div><br></br>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
             <div className="flex items-center gap-1">
               <input
                 type="checkbox"
                 id="remember"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="accent-pink-500 w-4 h-4 scale-75 rounded shrink-0"
+                className="accent-pink-500 w-3.5 sm:w-4 h-3.5 sm:h-4 scale-75 rounded shrink-0"
               />
-              <label htmlFor="remember" className="text-[10px] leading-none text-gray-600 select-none">Lembrar senha</label>
+              <label htmlFor="remember" className="text-[9px] sm:text-[10px] leading-none text-gray-600 select-none">Lembrar senha</label>
             </div>
-            <a href="#" className="text-[10px] leading-none text-gray-500 hover:text-pink-500 transition-colors">Esqueceu sua senha?</a>
+            <a href="#" className="text-[9px] sm:text-[10px] leading-none text-gray-500 hover:text-pink-500 transition-colors">Esqueceu sua senha?</a>
           </div><br></br>
           <button
             type="submit"
-            className="h-12 w-full py-9 rounded-md bg-linear-to-r from-pink-600 to-fuchsia-500 text-white text-2xl font-semibold shadow-sm hover:from-pink-700 hover:to-fuchsia-600 transition-colors"
+            className="h-11 sm:h-12 w-full py-8 sm:py-8.5 md:py-9 rounded-md bg-linear-to-r from-pink-600 to-fuchsia-500 text-white text-lg sm:text-xl md:text-2xl font-semibold shadow-sm hover:from-pink-700 hover:to-fuchsia-600 transition-colors"
           >
             Entrar
           </button>

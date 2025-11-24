@@ -1,5 +1,5 @@
 .metricas-anuais {
-  padding: 24px;
+  padding: clamp(16px, 2vw, 28px);
   background-color: #f8f9fa;
   min-height: 100vh;
 }
@@ -8,7 +8,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
+  margin-bottom: clamp(20px, 2.5vw, 32px);
+  gap: clamp(12px, 1.5vw, 20px);
+  flex-wrap: wrap;
 }
 
 .header-left {
@@ -18,14 +20,14 @@
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: clamp(22px, 2.2vw, 32px);
   font-weight: 600;
   color: #212529;
   margin: 0;
 }
 
 .page-subtitle {
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 18px);
   color: #666;
   margin: 0;
 }
@@ -33,13 +35,13 @@
 .add-platform-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: clamp(6px, 0.8vw, 10px);
+  padding: clamp(7px, 0.8vw, 10px) clamp(12px, 1.4vw, 18px);
   background-color: transparent;
   border: 2px solid #e91e63;
-  border-radius: 6px;
+  border-radius: clamp(5px, 0.6vw, 8px);
   color: #e91e63;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -53,8 +55,8 @@
 .year-selector {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: clamp(18px, 2.2vw, 28px);
+  margin-bottom: clamp(24px, 3vw, 40px);
 }
 .year-dropdown-container {
   position: relative;
@@ -63,13 +65,13 @@
 .year-dropdown {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
+  gap: clamp(10px, 1.2vw, 14px);
+  padding: clamp(10px, 1.2vw, 14px) clamp(16px, 1.8vw, 24px);
   background: linear-gradient(135deg, #e91e63, #d81b60);
   border: none;
-  border-radius: 25px;
+  border-radius: clamp(20px, 2.2vw, 28px);
   color: white;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -97,11 +99,11 @@
 
 .year-option {
   width: 100%;
-  padding: 12px 16px;
+  padding: clamp(10px, 1.2vw, 14px) clamp(14px, 1.6vw, 18px);
   border: none;
   background: white;
   color: #333;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   cursor: pointer;
   text-align: left;
   transition: background-color 0.2s ease;
@@ -134,12 +136,12 @@
 }
 
 .year-label {
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #666;
 }
 
 .year-value {
-  font-size: 24px;
+  font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 700;
   color: #e91e63;
 }
@@ -148,13 +150,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
-  gap: 24px;
+  gap: clamp(18px, 2.2vw, 28px);
 }
 
 .revenue-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   grid-column: 2;
@@ -162,21 +164,21 @@
 }
 
 .revenue-label {
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 18px);
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 10px);
 }
 
 .revenue-amount {
-  font-size: 36px;
+  font-size: clamp(28px, 3.2vw, 42px);
   font-weight: 700;
   color: #e91e63;
 }
 
 .chart-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -196,46 +198,46 @@
 }
 
 .chart-title {
-  font-size: 18px;
+  font-size: clamp(16px, 1.7vw, 20px);
   font-weight: 600;
   color: #e91e63;
-  margin: 0 0 20px 0;
+  margin: 0 0 clamp(16px, 2vw, 24px) 0;
 }
 
 .chart-container {
   width: 100%;
-  height: 300px;
+  height: clamp(220px, 28vw, 320px);
 }
 
 .platform-chart .chart-container {
-  height: 300px;
+  height: clamp(260px, 30vw, 340px);
 }
 
 .monthly-chart .chart-container {
-  height: 245px;
+  height: clamp(200px, 24vw, 280px);
 }
 
 .platform-legend {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: clamp(10px, 1.2vw, 14px);
+  margin-top: clamp(16px, 2vw, 24px);
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(10px, 1.2vw, 14px);
 }
 
 .legend-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: clamp(14px, 1.5vw, 18px);
+  height: clamp(14px, 1.5vw, 18px);
+  border-radius: clamp(3px, 0.4vw, 5px);
 }
 
 .legend-text {
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #212529;
   font-weight: 500;
 }
@@ -260,17 +262,17 @@
 .ranking-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px;
+  gap: clamp(8px, 1vw, 12px);
+  padding: clamp(12px, 1.5vw, 18px);
 }
 
 .ranking-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
+  gap: clamp(12px, 1.4vw, 16px);
+  padding: clamp(12px, 1.4vw, 16px) clamp(14px, 1.6vw, 20px);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: clamp(8px, 1vw, 12px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   transition: all 0.2s ease;
 }
@@ -284,10 +286,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  font-size: 15px;
+  min-width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  border-radius: clamp(6px, 0.8vw, 10px);
+  font-size: clamp(13px, 1.4vw, 16px);
   font-weight: 700;
   color: #fff;
   background-color: #e91e63;
@@ -321,59 +323,242 @@
 }
 
 .ranking-name {
-  font-size: 15px;
+  font-size: clamp(13px, 1.4vw, 16px);
   font-weight: 600;
   color: #212529;
 }
 
 .ranking-value {
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 15px);
   color: #666;
   font-weight: 500;
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .metricas-anuais {
-    padding: 16px;
+/* Media Queries Responsivas */
+@media (max-width: 1366px) {
+  .annual-content {
+    gap: clamp(16px, 2vw, 24px);
   }
-  
+
+  .chart-container {
+    height: clamp(200px, 26vw, 300px);
+  }
+
+  .platform-chart .chart-container {
+    height: clamp(240px, 28vw, 320px);
+  }
+
+  .monthly-chart .chart-container {
+    height: clamp(180px, 22vw, 260px);
+  }
+}
+
+@media (max-width: 1280px) {
+  .annual-content {
+    gap: clamp(14px, 1.8vw, 22px);
+  }
+
+  .page-header {
+    gap: clamp(10px, 1.3vw, 18px);
+  }
+
+  .chart-title {
+    margin-bottom: clamp(14px, 1.8vw, 20px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .annual-content {
+    grid-template-columns: 1fr;
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .revenue-card,
+  .platform-chart,
+  .monthly-chart,
+  .product-chart {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .chart-container {
+    height: clamp(220px, 28vw, 320px);
+  }
+
+  .platform-chart .chart-container {
+    height: clamp(260px, 32vw, 360px);
+  }
+
+  .monthly-chart .chart-container {
+    height: clamp(200px, 26vw, 300px);
+  }
+}
+
+@media (max-width: 900px) {
   .page-header {
     flex-direction: column;
-    gap: 16px;
     align-items: stretch;
+    gap: clamp(12px, 1.5vw, 16px);
   }
-  
-  .page-title {
-    font-size: 24px;
-    text-align: center;
+
+  .add-platform-btn {
+    justify-content: center;
+    width: 100%;
   }
-  
+
   .year-selector {
     flex-direction: column;
-    gap: 16px;
-    align-items: center;
+    align-items: flex-start;
+    gap: clamp(14px, 1.8vw, 18px);
   }
-  
+
   .year-dropdown {
     width: 100%;
     justify-content: center;
   }
-  
-  .chart-container {
-    height: 200px;
-  }
-  
-  .platform-chart .chart-container {
-    height: 250px;
-  }
-  
-  .revenue-amount {
-    font-size: 28px;
+
+  .year-display {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(6px, 0.8vw, 8px);
   }
 }
 
-/* Estilos para loading */
+@media (max-width: 768px) {
+  .metricas-anuais {
+    padding: clamp(12px, 1.8vw, 18px);
+  }
+
+  .chart-container {
+    height: clamp(240px, 36vw, 280px);
+  }
+
+  .platform-chart .chart-container {
+    height: clamp(280px, 42vw, 320px);
+  }
+
+  .monthly-chart .chart-container {
+    height: clamp(220px, 34vw, 260px);
+  }
+
+  .platform-legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: clamp(12px, 1.6vw, 18px);
+  }
+
+  .ranking-list {
+    padding: clamp(8px, 1.2vw, 14px);
+  }
+
+  .ranking-item {
+    padding: clamp(8px, 1.2vw, 12px) clamp(10px, 1.4vw, 14px);
+    gap: clamp(8px, 1.2vw, 12px);
+  }
+}
+
+@media (max-width: 600px) {
+  .page-title {
+    font-size: clamp(18px, 3.2vw, 24px);
+  }
+
+  .page-subtitle {
+    font-size: clamp(12px, 2.2vw, 15px);
+  }
+
+  .year-dropdown {
+    padding: clamp(8px, 1.4vw, 10px) clamp(12px, 2vw, 16px);
+    font-size: clamp(11px, 2vw, 13px);
+  }
+
+  .year-value {
+    font-size: clamp(16px, 3.2vw, 22px);
+  }
+
+  .revenue-amount {
+    font-size: clamp(22px, 4.5vw, 32px);
+  }
+
+  .chart-title {
+    font-size: clamp(14px, 2.6vw, 17px);
+  }
+
+  .ranking-position {
+    min-width: clamp(24px, 4vw, 30px);
+    height: clamp(24px, 4vw, 30px);
+    font-size: clamp(11px, 2.2vw, 14px);
+  }
+
+  .ranking-name {
+    font-size: clamp(11px, 2.2vw, 14px);
+  }
+
+  .ranking-value {
+    font-size: clamp(10px, 2vw, 13px);
+  }
+}
+
+@media (max-width: 480px) {
+  .metricas-anuais {
+    padding: clamp(10px, 2vw, 14px);
+  }
+
+  .page-header {
+    gap: clamp(10px, 2vw, 14px);
+  }
+
+  .add-platform-btn {
+    font-size: clamp(11px, 2.2vw, 13px);
+    padding: clamp(6px, 1.2vw, 8px) clamp(10px, 2vw, 14px);
+  }
+
+  .annual-content {
+    gap: clamp(12px, 2.5vw, 18px);
+  }
+
+  .chart-card {
+    padding: clamp(12px, 2.5vw, 18px);
+  }
+
+  .revenue-card {
+    padding: clamp(14px, 2.8vw, 20px);
+  }
+
+  .chart-container {
+    height: clamp(220px, 52vw, 260px);
+  }
+
+  .platform-chart .chart-container {
+    height: clamp(260px, 60vw, 300px);
+  }
+
+  .monthly-chart .chart-container {
+    height: clamp(200px, 48vw, 240px);
+  }
+
+  .legend-item {
+    gap: clamp(6px, 1.4vw, 10px);
+  }
+
+  .legend-text {
+    font-size: clamp(10px, 2vw, 12px);
+  }
+
+  .ranking-list {
+    gap: clamp(6px, 1.4vw, 10px);
+    padding: clamp(6px, 1.4vw, 10px);
+  }
+
+  .ranking-item {
+    flex-wrap: wrap;
+  }
+
+  .ranking-info {
+    min-width: 0;
+  }
+}/* Estilos para loading */
 .loading-container {
   display: flex;
   flex-direction: column;

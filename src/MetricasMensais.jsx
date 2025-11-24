@@ -161,7 +161,7 @@ const MetricasMensais = () => {
             <div className="page-header">
                 <h1 className="page-title">Métricas mensais</h1>
                 <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
-                    <Plus size={16} /> Nova plataforma
+                    <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} /> Nova plataforma
                 </button>
             </div>
             <NovaPlataformaModal 
@@ -192,7 +192,7 @@ const MetricasMensais = () => {
                                 ))}
                             </select>
                             <div className="select-arrow">
-                                <ChevronDown size={16} />
+                                <ChevronDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
                             </div>
                         </div>
                     </div>

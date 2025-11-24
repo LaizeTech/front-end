@@ -1,7 +1,7 @@
 .image-placeholder {
   background-color: #e9ecef;
   border: 2px dashed #ced4da;
-  border-radius: 8px;
+  border-radius: clamp(6px, 0.8vw, 8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,5 +16,25 @@
 
 .placeholder-icon {
   opacity: 0.6;
+  width: clamp(32px, 4vw, 48px);
+  height: clamp(32px, 4vw, 48px);
+}
+
+@media (max-width: 768px) {
+  .image-placeholder {
+    border-width: 1px;
+  }
+  
+  .placeholder-icon {
+    width: clamp(24px, 3.5vw, 36px);
+    height: clamp(24px, 3.5vw, 36px);
+  }
+}
+
+@media (max-width: 480px) {
+  .placeholder-icon {
+    width: 24px;
+    height: 24px;
+  }
 }
 

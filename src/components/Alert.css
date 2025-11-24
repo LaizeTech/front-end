@@ -1,11 +1,11 @@
 .alert {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  min-width: 300px;
-  max-width: 500px;
-  padding: 16px;
-  border-radius: 8px;
+  top: clamp(10px, 1.5vw, 20px);
+  right: clamp(10px, 1.5vw, 20px);
+  min-width: clamp(250px, 30vw, 300px);
+  max-width: clamp(400px, 50vw, 500px);
+  padding: clamp(12px, 1.5vw, 16px);
+  border-radius: clamp(6px, 0.8vw, 8px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   transform: translateX(100%);
@@ -21,28 +21,28 @@
 .alert-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(10px, 1.2vw, 12px);
 }
 
 .alert-icon {
-  font-size: 18px;
+  font-size: clamp(16px, 1.7vw, 18px);
   font-weight: bold;
   flex-shrink: 0;
 }
 
 .alert-message {
   flex: 1;
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 14px);
   line-height: 1.4;
 }
 
 .alert-close {
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 16px);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: clamp(3px, 0.4vw, 4px);
+  border-radius: clamp(3px, 0.4vw, 4px);
   transition: background-color 0.2s ease;
   flex-shrink: 0;
 }
