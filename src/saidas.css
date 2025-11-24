@@ -263,30 +263,6 @@
   font-size: 12px;
 }
 
-.platform-badge {
-  padding: 4px 8px;
-  border-radius: 15px;
-  font-size: 10px;
-  font-weight: 600;
-  color: white;
-  text-transform: uppercase;
-  display: inline-block;
-  width: 80px;
-  text-align: center;
-}
-
-.platform-badge.orange {
-  background-color: #ff9500 ;
-}
-
-.platform-badge.blue {
-  background-color: #007bff;
-}
-
-.platform-badge.gray {
-  background-color: #6c757d;
-}
-
 .date {
   color: #495057;
   width: 12%;
@@ -294,35 +270,42 @@
   font-size: 11px;
 }
 
-.status-badge {
-  padding: 4px 4px !important;
-  border-radius: 12px;
+.platform-badge {
+  padding: 4px 8px;
+  border-radius: 15px;
   font-size: 10px;
   font-weight: 600;
-  color: white;
-  text-transform: capitalize;
+  color: #ffffff;
+  text-transform: uppercase;
   display: inline-block;
-  width: 70px;
+  width: 80px;
   text-align: center;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
 }
+.platform-badge.orange { background-color: #ff9500; }
+.platform-badge.blue { background-color: #007bff; }
+.platform-badge.gray { background-color: #6c757d; }
 
-.status-badge.green {
-  background-color: #28a745;
+.status-badge {
+  padding: 4px 8px !important;
+  border-radius: 15px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
 }
-
-.status-badge.red {
-  background-color: #dc3545;
-}
-
-.status-badge.gray {
-  background-color: #6c757d;
-}
-
-.status-badge.orange {
-  background-color: #fd7e14;
-}
+.status-badge.green { background-color: #28a745; }
+.status-badge.red { background-color: #dc3545; }
+.status-badge.gray { background-color: #6c757d; }
+.status-badge.orange { background-color: #fd7e14; }
 
 .price {
   font-weight: 600;
@@ -371,31 +354,7 @@
     min-width: 60px;
   }
   
-  .platform-badge,
-  .status-badge {
-    min-width: 60px;
-    font-size: 10px;
-    padding: 3px 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .saidas {
-    padding: 12px;
-  }
-  
-  .page-title {
-    font-size: 24px;
-  }
-  
-  .exits-table {
-    font-size: 11px;
-  }
-  
-  .exits-table th,
-  .exits-table td {
-    padding: 8px 6px;
-  }
+  /* badges já definidas acima; ajustes específicos para mobile se necessário */
   
   .checkbox-column {
     width: 40px;

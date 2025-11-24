@@ -5,7 +5,7 @@
 }
 
 .page-header {
-  margin-bottom: 32px;
+  margin-bottom: 20px; /* reduz espaço abaixo do título principal */
 }
 
 .page-title {
@@ -102,7 +102,7 @@
   font-size: 20px;
   font-weight: 600;
   color: #212529;
-  margin: 0 0 24px 0;
+  
 }
 
 .section-header {
@@ -151,13 +151,14 @@
 .employee-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px; /* espaçamento reduzido entre os blocos do formulário */
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px; /* espaçamento interno menor entre label e input */
+  margin-bottom: 0; /* evita espaço extra acumulado */
 }
 
 .form-label {
