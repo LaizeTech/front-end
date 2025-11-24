@@ -133,13 +133,22 @@
   padding: 20px;
 }
 
-.product-name {
+.estoque-product-name {
   font-size: 18px;
   font-weight: 600;
   color: #212529;
   margin: 0 0 16px 0;
-  white-space: normal; /* CORREÇÃO: Permite que o texto quebre a linha */
-  word-break: break-word; /* CORREÇÃO: Garante que palavras longas quebrem */
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* Alta especificidade para garantir override de estilos globais .product-name */
+.estoque .estoque-product-name {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
 }
 
 .product-details {
@@ -172,8 +181,8 @@
 }
 
 .quantity-badge.yellow {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #ffd556;
+  color: #ffffff;
 }
 
 .quantity-badge.green {
@@ -185,25 +194,40 @@
   align-items: center;
 }
 
+/* Badge de status ajustada para ocupar corretamente o fundo em múltiplas linhas */
 .status-badge {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: #fff;
+  white-space: normal; /* permite quebra para textos longos */
+  min-width: 140px; /* largura mínima para evitar recortes do fundo */
+  background-clip: padding-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  text-transform: uppercase;
+  letter-spacing: .5px;
 }
 
 .status-badge.red {
-  background-color: #dc3545;
+  background: linear-gradient(135deg,#dc3545,#c92a3a);
+  color: #ffffff !important;
 }
 
+/* Amarelo mais suave e elegante */
 .status-badge.yellow {
-  background-color: #ffc107;
-  color: #212529;
+  background: linear-gradient(135deg,#ffe066,#ffd152);
+  color: white;
 }
 
 .status-badge.green {
-  background-color: #28a745;
+  background: linear-gradient(135deg,#28a745,#23963c);
+  color: #ffffff !important;
 }
 
 .store-info {

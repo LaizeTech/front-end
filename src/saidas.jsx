@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Plus, Download } from 'lucide-react';
 import RegistroSaidaModal from './components/RegistroSaidaModal';
-//import './saidas.css';
+import './saidas.css';
 
 const Saidas = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -379,7 +379,7 @@ const Saidas = () => {
                       </div>
                     )}
                   </th>
-                  <th>Quantidade</th>
+                  <th>Qtd</th>
                   <th>Plataforma</th>
                   <th>Data</th>
                   <th>Status do produto</th>
