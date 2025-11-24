@@ -1,11 +1,11 @@
 .saidas {
-  padding: 10px;
+  padding: clamp(12px, 1.5vw, 20px);
   background-color: #f8f9fa;
   min-height: 100vh;
 }
 
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: clamp(16px, 2vw, 28px);
 }
 
 .header-content {
@@ -20,7 +20,7 @@
 .header-buttons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(10px, 1.2vw, 14px);
   flex-wrap: wrap;
 }
 
@@ -28,10 +28,10 @@
   background-color: #e91e63;
   color: white;
   border: none;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(12px, 1.4vw, 18px);
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: clamp(5px, 0.6vw, 8px);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -50,7 +50,7 @@
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: clamp(20px, 2vw, 32px);
   font-weight: 700;
   color: #212529;
   margin: 0;
@@ -66,7 +66,7 @@
 
 .table-container {
   background: white;
-  border-radius: 12px;
+  border-radius: clamp(8px, 1vw, 14px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e9ecef;
   overflow: hidden;
@@ -81,7 +81,7 @@
 .exits-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
   table-layout: fixed;
   min-width: 900px;
   display: table;
@@ -98,13 +98,13 @@
 }
 
 .exits-table th {
-  padding: 10px 8px;
+  padding: clamp(8px, 1vw, 12px) clamp(6px, 0.8vw, 10px);
   text-align: center;
   font-weight: 600;
   color: #495057;
   white-space: nowrap;
   border-right: 1px solid #e9ecef;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 .exits-table th:last-child {
@@ -186,7 +186,7 @@
 }
 
 .exits-table td {
-  padding: 8px 6px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(5px, 0.6vw, 8px);
   vertical-align: middle;
   border-right: 1px solid #e9ecef;
   display: table-cell;
@@ -212,6 +212,8 @@
 
 .exits-table td:nth-child(4) { /* Plataforma */
   text-align: center;
+  max-width: 120px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(3px, 0.4vw, 6px);
 }
 
 .exits-table td:nth-child(5) { /* Data */
@@ -220,6 +222,8 @@
 
 .exits-table td:nth-child(6) { /* Status */
   text-align: center;
+  max-width: 120px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(3px, 0.4vw, 6px);
 }
 
 .exits-table td:nth-child(7) { /* Preço */
@@ -236,8 +240,8 @@
 }
 
 .checkbox-column input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: clamp(14px, 1.4vw, 18px);
+  height: clamp(14px, 1.4vw, 18px);
   accent-color: #e91e63;
   cursor: pointer;
 }
@@ -248,7 +252,7 @@
   width: 25%;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
@@ -260,7 +264,7 @@
   color: #495057;
   text-align: center;
   width: 8%;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 .date {
@@ -275,67 +279,349 @@
   border-radius: 15px;
   font-size: 10px;
   font-weight: 600;
-  color: #ffffff;
+  color: white;
   text-transform: uppercase;
   display: inline-block;
   width: 80px;
   text-align: center;
+}
+
+.platform-badge.orange {
+  background-color: #ff9500 ;
+}
+
+.platform-badge.blue {
+  background-color: #007bff;
+}
+
+.platform-badge.gray {
+  background-color: #6c757d;
+}
+
+.date {
+  color: #495057;
+  width: 12%;
+  text-align: center;
+  font-size: 11px;
+}
+
+.platform-badge {
+  padding: clamp(3px, 0.4vw, 5px) clamp(6px, 0.7vw, 10px);
+  border-radius: clamp(12px, 1.2vw, 18px);
+  font-size: clamp(9px, 0.9vw, 11px);
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: clamp(70px, 7vw, 90px);
+  max-width: 100%;
+  text-align: center;
   border: none;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .platform-badge.orange { background-color: #ff9500; }
 .platform-badge.blue { background-color: #007bff; }
 .platform-badge.gray { background-color: #6c757d; }
 
 .status-badge {
-  padding: 4px 8px !important;
-  border-radius: 15px;
-  font-size: 10px;
+  padding: clamp(3px, 0.4vw, 5px) clamp(3px, 0.4vw, 5px) !important;
+  border-radius: clamp(10px, 1vw, 14px);
+  font-size: clamp(9px, 0.9vw, 11px);
   font-weight: 600;
   color: #ffffff;
   text-transform: uppercase;
   display: inline-block;
-  width: 80px;
+  min-width: clamp(60px, 6vw, 80px);
+  max-width: 100%;
   text-align: center;
   border: none;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: all 0.2s ease;
 }
-.status-badge.green { background-color: #28a745; }
-.status-badge.red { background-color: #dc3545; }
-.status-badge.gray { background-color: #6c757d; }
-.status-badge.orange { background-color: #fd7e14; }
+
+.status-badge.green {
+  background-color: #28a745;
+}
+
+.status-badge.red {
+  background-color: #dc3545;
+}
+
+.status-badge.gray {
+  background-color: #6c757d;
+}
+
+.status-badge.orange {
+  background-color: #fd7e14;
+}
 
 .price {
   font-weight: 600;
   color: #28a745;
   width: 12%;
   text-align: center;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 .supplier {
   color: #495057;
   width: 15%;
   text-align: center;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive Breakpoints */
+
+/* Notebooks grandes (1280px - 1366px) */
+@media (max-width: 1366px) and (min-width: 1280px) {
   .saidas {
-    padding: 8px;
+    padding: 18px;
+  }
+  
+  .exits-table {
+    min-width: 950px;
+  }
+  
+  .page-title {
+    font-size: 30px;
+  }
+}
+
+/* Notebooks médios (1024px - 1279px) */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .saidas {
+    padding: 16px;
+  }
+  
+  .exits-table {
+    min-width: 900px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .header-buttons {
+    gap: 10px;
+  }
+}
+
+/* Tablets em paisagem (900px - 1023px) */
+@media (max-width: 1023px) and (min-width: 900px) {
+  .saidas {
+    padding: 14px;
+  }
+  
+  .exits-table {
+    min-width: 850px;
+    font-size: 12px;
+  }
+  
+  .page-title {
+    font-size: 26px;
+  }
+  
+  .platform-badge,
+  .status-badge {
+    min-width: 75px;
+    font-size: 10px;
+  }
+  
+  .header-content {
+    gap: 12px;
+  }
+}
+
+/* Tablets em retrato (768px - 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+  .saidas {
+    padding: 12px;
+  }
+  
+  .exits-table {
+    font-size: 11px;
+    min-width: 800px;
+  }
+  
+  .exits-table th,
+  .exits-table td {
+    padding: 9px 7px;
   }
   
   .page-title {
     font-size: 24px;
   }
   
+  .product-name {
+    min-width: 160px;
+  }
+  
+  .platform-badge,
+  .status-badge {
+    min-width: 70px;
+    font-size: 9px;
+    padding: 3px 7px;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .header-buttons {
+    flex-wrap: wrap;
+  }
+}
+
+/* Tablets pequenos (600px - 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
+  .saidas {
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 22px;
+  }
+  
+  .exits-table {
+    font-size: 11px;
+    min-width: 750px;
+  }
+  
+  .exits-table th,
+  .exits-table td {
+    padding: 8px 6px;
+  }
+  
+  .product-name {
+    min-width: 140px;
+  }
+  
+  .quantity,
+  .date,
+  .price,
+  .supplier {
+    min-width: 75px;
+  }
+  
+  /* badges já definidas acima; ajustes específicos para mobile se necessário */
+  .platform-badge,
+  .status-badge {
+    min-width: 65px;
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .header-buttons {
+    justify-content: center;
+  }
+  
+  .selected-info-bar {
+    text-align: center;
+  }
+  
+  .choice-modal {
+    width: 95%;
+    max-width: 400px;
+  }
+}
+
+/* Smartphones grandes (481px - 599px) */
+@media (max-width: 599px) and (min-width: 481px) {
+  .saidas {
+    padding: 10px;
+  }
+  
+  .page-title {
+    font-size: 20px;
+    text-align: center;
+  }
+  
   .exits-table {
     font-size: 10px;
     min-width: 700px;
+  }
+  
+  .exits-table th,
+  .exits-table td {
+    padding: 7px 5px;
+  }
+  
+  .product-name {
+    min-width: 130px;
+  }
+  
+  .quantity,
+  .date,
+  .price,
+  .supplier {
+    min-width: 70px;
+  }
+  
+  .platform-badge,
+  .status-badge {
+    min-width: 60px;
+    font-size: 8px;
+    padding: 3px 5px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .header-buttons {
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .action-button,
+  .refresh-button {
+    font-size: 12px;
+    padding: 7px 12px;
+  }
+  
+  .choice-modal {
+    width: 95%;
+  }
+  
+  .choice-btn {
+    padding: 16px;
+  }
+}
+
+/* Smartphones pequenos (até 480px) */
+@media (max-width: 480px) {
+  .saidas {
+    padding: 10px;
+  }
+  
+  .page-title {
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .exits-table {
+    font-size: 10px;
+    min-width: 650px;
   }
   
   .exits-table th,
@@ -354,26 +640,61 @@
     min-width: 60px;
   }
   
-  /* badges já definidas acima; ajustes específicos para mobile se necessário */
-  
-  .checkbox-column {
-    width: 40px;
+  .platform-badge,
+  .status-badge {
+    min-width: 55px;
+    font-size: 8px;
+    padding: 2px 4px;
   }
   
-  .table-checkbox {
-    width: 14px;
-    height: 14px;
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
   
-  .product-name {
-    min-width: 100px;
+  .header-buttons {
+    flex-direction: column;
+    gap: 8px;
   }
   
-  .quantity,
-  .date,
-  .price,
-  .supplier {
-    min-width: 50px;
+  .action-button,
+  .refresh-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .selected-info-bar {
+    text-align: center;
+    font-size: 12px;
+  }
+  
+  .choice-modal {
+    width: 95%;
+    max-width: 350px;
+  }
+  
+  .choice-modal .modal-content {
+    padding: 16px;
+  }
+  
+  .choice-btn {
+    padding: 14px;
+  }
+  
+  .choice-btn .btn-icon {
+    font-size: 24px;
+    min-width: 36px;
+  }
+  
+  .choice-btn .btn-text strong {
+    font-size: 14px;
+  }
+  
+  .choice-btn .btn-text span {
+    font-size: 12px;
   }
 }
 
@@ -401,18 +722,18 @@
 .error-container,
 .empty-container {
   background: white;
-  border-radius: 12px;
+  border-radius: clamp(10px, 1.2vw, 14px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e9ecef;
-  padding: 60px 24px;
+  padding: clamp(48px, 5vw, 70px) clamp(20px, 2.5vw, 30px);
   text-align: center;
-  margin-top: 24px;
+  margin-top: clamp(20px, 2.5vw, 30px);
 }
 
 .loading-container p,
 .error-container p,
 .empty-container p {
-  font-size: 16px;
+  font-size: clamp(14px, 1.4vw, 18px);
   color: #6c757d;
   margin: 0;
 }
@@ -421,12 +742,12 @@
   background-color: #e91e63;
   color: white;
   border: none;
-  padding: 12px 24px;
-  font-size: 14px;
+  padding: clamp(10px, 1.2vw, 14px) clamp(20px, 2.2vw, 28px);
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: clamp(6px, 0.8vw, 10px);
   cursor: pointer;
-  margin-top: 16px;
+  margin-top: clamp(12px, 1.4vw, 18px);
   transition: background-color 0.2s ease;
 }
 
@@ -442,25 +763,25 @@
 .selected-info-bar {
   background-color: #e3f2fd;
   border: 1px solid #90caf9;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  font-size: 14px;
+  border-radius: clamp(5px, 0.6vw, 8px);
+  padding: clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 18px);
+  margin-bottom: clamp(16px, 1.8vw, 24px);
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #1565c0;
   font-weight: 500;
 }
 
 .action-button {
-  padding: 8px 16px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(12px, 1.4vw, 18px);
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: clamp(5px, 0.6vw, 8px);
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: clamp(6px, 0.7vw, 10px);
 }
 
 .insert-button {
@@ -507,10 +828,10 @@
   }
 }
 
-/* Modal de Escolha */
+/* Modal de Escolha - Responsivo */
 .choice-modal {
   background: white;
-  border-radius: 16px;
+  border-radius: clamp(12px, 1.4vw, 18px);
   max-width: 500px;
   width: 90%;
   max-height: 70vh;
@@ -524,14 +845,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 28px);
   border-bottom: 1px solid #e9ecef;
   background-color: #f8f9fa;
 }
 
 .choice-modal .modal-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: clamp(16px, 1.6vw, 20px);
   font-weight: 600;
   color: #212529;
 }
@@ -539,7 +860,7 @@
 .choice-modal .close-button {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: clamp(20px, 2.2vw, 26px);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
@@ -553,33 +874,33 @@
 }
 
 .choice-modal .modal-content {
-  padding: 24px;
+  padding: clamp(18px, 2.2vw, 28px);
   flex: 1;
 }
 
 .choice-modal .modal-content p {
   margin: 0 0 10px 0;
   color: #666;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
 }
 
 .choice-buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(12px, 1.4vw, 18px);
 }
 
 .choice-btn {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: clamp(16px, 2vw, 24px);
   border: 2px solid #e9ecef;
-  border-radius: 12px;
+  border-radius: clamp(10px, 1.2vw, 14px);
   background: white;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  gap: 16px;
+  gap: clamp(12px, 1.5vw, 18px);
 }
 
 .choice-btn:hover {
@@ -589,25 +910,25 @@
 }
 
 .choice-btn .btn-icon {
-  font-size: 32px;
-  min-width: 48px;
+  font-size: clamp(28px, 3vw, 36px);
+  min-width: clamp(40px, 4.5vw, 52px);
   text-align: center;
 }
 
 .choice-btn .btn-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: clamp(3px, 0.4vw, 5px);
 }
 
 .choice-btn .btn-text strong {
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 18px);
   color: #333;
   font-weight: 600;
 }
 
 .choice-btn .btn-text span {
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 15px);
   color: #666;
 }
 

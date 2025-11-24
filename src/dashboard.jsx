@@ -299,7 +299,7 @@ const Dashboard = () => {
     <div className="dashboard">
       {/* Chatbot Button */}
       <button className="chatbot-button" title="Abrir Chat">
-        <Bot size={28} />
+        <Bot style={{ width: 'clamp(24px, 2.5vw, 32px)', height: 'clamp(24px, 2.5vw, 32px)' }} />
       </button>
 
       <div className="dashboard-header">

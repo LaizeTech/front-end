@@ -9,14 +9,14 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: clamp(10px, 1.5vw, 20px);
 }
 
 .modal-content {
   display: flex;
   flex-direction: column;
   background: white;
-  border-radius: 12px;
+  border-radius: clamp(10px, 1.2vw, 12px);
   padding: 0;
   max-width: 100%;
   width: 100%;
@@ -29,13 +29,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 10px 0 20px;
-  margin-bottom: 3px;
+  padding: clamp(8px, 1vw, 10px) clamp(8px, 1vw, 10px) 0 clamp(16px, 1.8vw, 20px);
+  margin-bottom: clamp(2px, 0.3vw, 3px);
   position: relative;
 }
 
 .modal-title {
-  font-size: 20px;
+  font-size: clamp(16px, 1.8vw, 20px);
   font-weight: 600;
   color: #212529;
   margin: 0;
@@ -50,8 +50,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
+  padding: clamp(6px, 0.8vw, 8px);
+  border-radius: clamp(3px, 0.4vw, 4px);
   color: #6b7280;
   transition: all 0.2s ease;
   display: flex;
@@ -65,28 +65,28 @@
 }
 
 .modal-form {
-  padding: 0 24px 24px 24px;
+  padding: 0 clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(16px, 1.8vw, 20px);
 }
 
 .modal-loading {
-  padding: 40px 24px;
+  padding: clamp(32px, 3.5vw, 40px) clamp(18px, 2vw, 24px);
   text-align: center;
   color: #6b7280;
 }
 
 .modal-loading p {
   margin: 0;
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 16px);
 }
 
 .modal-message {
-  padding: 12px 24px;
-  margin: 0 0 16px 0;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: clamp(10px, 1.2vw, 12px) clamp(18px, 2vw, 24px);
+  margin: 0 0 clamp(12px, 1.5vw, 16px) 0;
+  border-radius: clamp(5px, 0.6vw, 6px);
+  font-size: clamp(12px, 1.3vw, 14px);
   font-weight: 500;
 }
 
@@ -246,6 +246,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .modal-form {
+    gap: clamp(14px, 1.6vw, 18px);
+  }
+}
+
 @media (max-width: 768px) {
   .modal-overlay {
     padding: 10px;

@@ -1,5 +1,5 @@
 .dashboard {
-  padding: 16px;
+  padding: clamp(12px, 1.5vw, 20px);
   background-color: #f8f9fa;
   min-height: 100vh;
   position: relative;
@@ -10,14 +10,13 @@
 /* Chatbot Button - canto inferior direito, mais à esquerda */
 .chatbot-button {
   position: fixed;
-  /* Fica acima do botão de acessibilidade, alinhado à direita com ele */
   right: 20px;
-  bottom: 90px; /* acima do botão de acessibilidade com folga */
-  width: 60px;
-  height: 60px;
+  bottom: 90px;
+  width: clamp(50px, 5vw, 64px);
+  height: clamp(50px, 5vw, 64px);
   background: linear-gradient(135deg, #e91e63, #ad1457);
   border: none;
-  border-radius: 12px;
+  border-radius: clamp(10px, 1vw, 14px);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -53,14 +52,14 @@
 .dropdown-button {
   background: #fff;
   border: 1px solid #e9ecef;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: clamp(7px, 0.8vw, 10px) clamp(12px, 1.2vw, 18px);
+  border-radius: clamp(4px, 0.5vw, 8px);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: clamp(6px, 0.7vw, 10px);
   color: #212529;
-  font-size: 14px;
+  font-size: clamp(12px, 1.1vw, 15px);
   font-weight: 500;
 }
 
@@ -116,7 +115,7 @@
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: clamp(20px, 2vw, 28px);
   font-weight: 700;
   color: #212529;
   margin: 0;
@@ -125,18 +124,18 @@
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: clamp(10px, 1.2vw, 16px);
   max-width: 100%;
 }
 
 .dashboard-card {
   background: white;
-  border-radius: 10px;
-  padding: 8px;
+  border-radius: clamp(8px, 0.8vw, 12px);
+  padding: clamp(10px, 1.2vw, 16px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #e9ecef;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 140px;
+  min-height: clamp(130px, 14vw, 160px);
 }
 
 .dashboard-card:hover {
@@ -145,19 +144,20 @@
 }
 
 .card-header {
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 10px);
 }
 
 .card-header h3 {
-  font-size: 14px;
+  font-size: clamp(13px, 1.2vw, 16px);
   font-weight: 600;
   color: #212529;
   margin: 0 0 2px 0;
 }
 
 .card-subtitle {
-  font-size: 11px;
+  font-size: clamp(10px, 0.9vw, 12px);
   color: #6c757d;
+  line-height: 1.4;
 }
 
 /* Revenue Card */
@@ -173,13 +173,14 @@
 }
 
 .revenue-period {
-  font-size: 11px;
+  font-size: clamp(10px, 0.9vw, 12px);
   opacity: 0.9;
   color: black;
+  line-height: 1.3;
 }
 
 .revenue-amount {
-  font-size: 24px;
+  font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 700;
   color: white;
   margin-top: 6px;
@@ -190,12 +191,12 @@
 .products-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: clamp(6px, 0.7vw, 10px);
 }
 
 /* Estilo para lista com scroll */
 .scrollable-list {
-  max-height: 200px;
+  max-height: clamp(160px, 18vw, 220px);
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -222,16 +223,25 @@
 .category-item,
 .product-item {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px;
+  align-items: flex-start;
+  gap: clamp(6px, 0.7vw, 10px);
+  padding: clamp(5px, 0.6vw, 8px);
   background-color: #f8f9fa;
-  border-radius: 6px;
-  border-left: 3px solid;
+  border-radius: clamp(4px, 0.5vw, 8px);
+  border-left: clamp(2px, 0.25vw, 4px) solid;
 }
 
 .category-item {
   border-color: #dc3545;
+}
+
+/* Container para ícone e detalhes */
+.category-info,
+.product-info {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 0.8vw, 12px);
+  width: 100%;
 }
 
 /* Cores específicas para cada tipo de alerta */
@@ -253,11 +263,11 @@
 
 .category-icon,
 .product-icon {
-  width: 10px;
-  height: 10px;
+  width: clamp(8px, 0.8vw, 12px);
+  height: clamp(8px, 0.8vw, 12px);
   border-radius: 50%;
-  flex-shrink: 0; /* garante alinhamento */
-  margin-top: 2px; /* ajusta posição vertical */
+  flex-shrink: 0;
+  margin-top: clamp(4px, 0.4vw, 6px);
 }
 
 .category-icon.low-stock {
@@ -285,84 +295,89 @@
 .product-details {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: clamp(2px, 0.3vw, 4px);
   flex: 1;
   min-width: 0;
+  justify-content: flex-start;
 }
 
 .category-name,
 .product-name {
   font-weight: 600;
   color: #212529;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
   white-space: normal;
   word-wrap: break-word;
+  line-height: 1.3;
 }
 
 .category-name{
-  padding-left: 10px;
+  padding-left: 0;
 }
 
 .category-quantity,
 .category-store,
 .product-quantity,
 .product-store {
-  font-size: 10px;
+  font-size: clamp(9px, 0.85vw, 11px);
   color: #6c757d;
+  line-height: 1.4;
+  margin: 0;
 }
 
 /* Sales Card */
 .sales-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: clamp(5px, 0.6vw, 8px);
 }
 
 .sales-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px;
+  padding: clamp(5px, 0.6vw, 8px);
   background-color: #f8f9fa;
-  border-radius: 6px;
+  border-radius: clamp(4px, 0.5vw, 8px);
 }
 
 .sales-name {
   font-weight: 500;
   color: #212529;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 .sales-value {
   font-weight: 600;
   color: #495057;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 /* Activity Card */
 .activity-list {
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 10px);
 }
 
 .activity-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
+  gap: clamp(6px, 0.8vw, 10px);
+  padding: clamp(6px, 0.8vw, 10px);
   background-color: #f8f9fa;
-  border-radius: 6px;
+  border-radius: clamp(4px, 0.5vw, 8px);
 }
 
 .activity-icon {
-  width: 32px;
-  height: 32px;
+  width: clamp(28px, 2.8vw, 36px);
+  height: clamp(28px, 2.8vw, 36px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 12px;
+  font-size: clamp(11px, 1vw, 13px);
+  flex-shrink: 0;
 }
 
 .activity-icon.entry {
@@ -380,19 +395,20 @@
 }
 
 .activity-count {
-  font-size: 14px;
+  font-size: clamp(13px, 1.2vw, 16px);
   font-weight: 700;
   color: #212529;
 }
 
 .activity-description {
-  font-size: 11px;
+  font-size: clamp(10px, 0.9vw, 12px);
   color: #6c757d;
+  line-height: 1.3;
 }
 
 /* Employees Card */
 .employees-count {
-  font-size: 32px;
+  font-size: clamp(28px, 3vw, 40px);
   font-weight: 700;
   color: #e91e63;
   text-align: center;
@@ -441,68 +457,382 @@
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+/* Notebooks grandes (1280px - 1366px) */
+@media (max-width: 1366px) and (min-width: 1280px) {
+  .dashboard {
+    padding: 18px;
   }
-  .revenue-card {
-    grid-column: span 1;
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  
+  .dashboard-card {
+    min-height: 150px;
+    padding: 10px;
+  }
+  
+  .page-title {
+    font-size: 26px;
+  }
+  
+  .revenue-amount {
+    font-size: 26px;
+  }
+  
+  .employees-count {
+    font-size: 34px;
+  }
+  
+  .card-header h3 {
+    font-size: 15px;
+  }
+  
+  .category-name,
+  .product-name,
+  .sales-name,
+  .sales-value {
+    font-size: 13px;
   }
 }
 
-@media (max-width: 768px) {
+/* Notebooks médios (1024px - 1279px) */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .dashboard {
+    padding: 16px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .dashboard-card {
+    min-height: 140px;
+    padding: 10px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .revenue-amount {
+    font-size: 24px;
+  }
+  
+  .employees-count {
+    font-size: 32px;
+  }
+  
+  .scrollable-list {
+    max-height: 180px;
+  }
+  
+  .chatbot-button {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Tablets em paisagem (900px - 1023px) */
+@media (max-width: 1023px) and (min-width: 900px) {
+  .dashboard {
+    padding: 16px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  
+  .revenue-card {
+    grid-column: span 1;
+  }
+  
+  .dashboard-card {
+    min-height: 160px;
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .revenue-amount {
+    font-size: 24px;
+  }
+  
+  .employees-count {
+    font-size: 32px;
+  }
+  
+  .card-header h3 {
+    font-size: 15px;
+  }
+  
+  .category-name,
+  .product-name {
+    font-size: 13px;
+  }
+  
+  .scrollable-list {
+    max-height: 200px;
+  }
+  
+  .chatbot-button {
+    width: 54px;
+    height: 54px;
+    right: 16px;
+    bottom: 85px;
+  }
+}
+
+/* Tablets em retrato (768px - 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+  .dashboard {
+    padding: 14px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .revenue-card {
+    grid-column: span 2;
+  }
+  
+  .dashboard-card {
+    min-height: 150px;
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 22px;
+  }
+  
+  .revenue-amount {
+    font-size: 22px;
+  }
+  
+  .employees-count {
+    font-size: 30px;
+  }
+  
+  .card-header h3 {
+    font-size: 14px;
+  }
+  
+  .category-name,
+  .product-name {
+    font-size: 12px;
+  }
+  
+  .category-quantity,
+  .product-quantity {
+    font-size: 11px;
+  }
+  
+  .scrollable-list {
+    max-height: 180px;
+  }
+  
+  .chatbot-button {
+    width: 52px;
+    height: 52px;
+    right: 14px;
+    bottom: 80px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .metrics-dropdown {
+    align-self: flex-end;
+  }
+}
+
+/* Tablets pequenos e celulares grandes (600px - 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
   .dashboard {
     padding: 12px;
   }
+  
   .dashboard-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
+  
+  .revenue-card {
+    grid-column: span 1;
+  }
+  
   .dashboard-card {
-    padding: 10px;
+    padding: 14px;
+    min-height: 140px;
   }
+  
   .page-title {
-    font-size: 20px;
+    font-size: 22px;
   }
+  
   .revenue-amount {
-    font-size: 20px;
-  }
-  .employees-count {
     font-size: 24px;
   }
- 
+  
+  .employees-count {
+    font-size: 28px;
+  }
+  
+  .card-header h3 {
+    font-size: 15px;
+  }
+  
+  .category-name,
+  .product-name {
+    font-size: 13px;
+  }
+  
+  .scrollable-list {
+    max-height: 200px;
+  }
+  
   .chatbot-button {
     width: 50px;
     height: 50px;
-    right: 10px; /* alinha com acessibilidade no tablet/mobile */
-    bottom: 74px; /* acima do botão de acessibilidade */
-    
+    right: 12px;
+    bottom: 76px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
 
+/* Smartphones (481px - 599px) */
+@media (max-width: 599px) and (min-width: 481px) {
+  .dashboard {
+    padding: 12px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .dashboard-card {
+    padding: 12px;
+  }
+  
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .revenue-amount {
+    font-size: 22px;
+  }
+  
+  .employees-count {
+    font-size: 26px;
+  }
+  
+  .card-header h3 {
+    font-size: 14px;
+  }
+  
+  .chatbot-button {
+    width: 48px;
+    height: 48px;
+    right: 10px;
+    bottom: 74px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .dropdown-button {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+}
+
+/* Smartphones pequenos (até 480px) */
 @media (max-width: 480px) {
   .dashboard {
     padding: 10px;
   }
-  .dashboard-card {
-    padding: 8px;
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
+  
+  .dashboard-card {
+    padding: 10px;
+    min-height: 120px;
+  }
+  
   .page-title {
     font-size: 18px;
   }
+  
   .revenue-amount {
-    font-size: 18px;
-  }
-  .employees-count {
     font-size: 20px;
   }
- 
-  /* Smaller chatbot button for small screens */
+  
+  .employees-count {
+    font-size: 24px;
+  }
+  
+  .card-header h3 {
+    font-size: 13px;
+  }
+  
+  .category-name,
+  .product-name {
+    font-size: 12px;
+  }
+  
+  .category-quantity,
+  .product-quantity {
+    font-size: 10px;
+  }
+  
+  .scrollable-list {
+    max-height: 150px;
+  }
+  
   .chatbot-button {
-    width: 42px;
-    height: 42px;
-    right: 10px; /* alinha com acessibilidade no mobile pequeno */
-    bottom: 64px; /* espaço confortável acima do botão de acessibilidade */
+    width: 44px;
+    height: 44px;
+    right: 10px;
+    bottom: 66px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .dropdown-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .dropdown-content a {
+    font-size: 13px;
+    padding: 10px 14px;
   }
 }
 

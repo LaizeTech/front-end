@@ -355,12 +355,12 @@ const Saidas = () => {
           <div className="header-buttons">
             {selectedItems.length > 0 && (
               <button onClick={handleExportar} className="action-button export-button">
-                <Download size={16} />
+                <Download style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
                 Exportar
               </button>
             )}
             <button onClick={handleInserirSaida} className="action-button insert-button">
-              <Plus size={16} />
+              <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
               Inserir Saída
             </button>
             <button onClick={fetchSaidas} className="refresh-button" disabled={loading}>
@@ -401,7 +401,7 @@ const Saidas = () => {
                     <div className="header-with-search">
                       <span>Plataforma</span>
                       <ChevronDown 
-                        size={16} 
+                        style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }}
                         className={`search-toggle ${showSearch ? 'active' : ''}`}
                         onClick={handleToggleSearch}
                       />

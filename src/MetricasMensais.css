@@ -1,5 +1,5 @@
 .metricas-mensais {
-  padding: 24px;
+  padding: clamp(16px, 2vw, 28px);
   background-color: #f8f9fa;
   min-height: 100vh;
 }
@@ -8,11 +8,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: clamp(20px, 2.5vw, 32px);
+  gap: clamp(12px, 1.5vw, 20px);
+  flex-wrap: wrap;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: clamp(22px, 2.2vw, 32px);
   font-weight: 600;
   color: #212529;
   margin: 0;
@@ -21,13 +23,13 @@
 .add-platform-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: clamp(6px, 0.8vw, 10px);
+  padding: clamp(7px, 0.8vw, 10px) clamp(12px, 1.4vw, 18px);
   background-color: transparent;
   border: 2px solid #e91e63;
-  border-radius: 6px;
+  border-radius: clamp(5px, 0.6vw, 8px);
   color: #e91e63;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -39,7 +41,7 @@
 }
 
 .platform-selector {
-  margin-bottom: 32px;
+  margin-bottom: clamp(24px, 3vw, 40px);
 }
 
 .selector-container {
@@ -64,13 +66,13 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 100%;
-  min-width: 240px;
-  padding: 12px 40px 12px 16px;
+  min-width: clamp(200px, 22vw, 260px);
+  padding: clamp(10px, 1.2vw, 14px) clamp(35px, 4vw, 45px) clamp(10px, 1.2vw, 14px) clamp(14px, 1.6vw, 18px);
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border: 2px solid #e9ecef;
-  border-radius: 8px;
+  border-radius: clamp(6px, 0.8vw, 10px);
   color: #495057;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -186,25 +188,25 @@
 .metrics-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: clamp(18px, 2.2vw, 28px);
   align-items: start;
 }
 
 .stats-section {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(12px, 1.5vw, 18px);
 }
 
 .stat-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: clamp(6px, 0.8vw, 10px) 0;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -213,12 +215,12 @@
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #666;
 }
 
 .stat-value {
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 600;
   color: #212529;
 }
@@ -230,28 +232,28 @@
 
 .revenue-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 .revenue-label {
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 18px);
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 10px);
 }
 
 .revenue-amount {
-  font-size: 36px;
+  font-size: clamp(28px, 3.2vw, 42px);
   font-weight: 700;
   color: #e91e63;
 }
 
 .inactive-section {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   grid-column: 1 / -1;
 }
@@ -260,17 +262,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: clamp(12px, 1.5vw, 18px);
+  gap: clamp(10px, 1.2vw, 16px);
+  flex-wrap: wrap;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 18px);
   font-weight: 600;
   color: #212529;
 }
 
 .see-more {
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #e91e63;
   cursor: pointer;
   text-decoration: underline;
@@ -285,25 +289,25 @@
 .inactive-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  max-height: 120px;
+  gap: clamp(10px, 1.2vw, 14px);
+  max-height: clamp(100px, 12vw, 140px);
   overflow-y: auto;
 }
 
 .inactive-item {
   background-color: #f8f9fa;
   border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 14px;
+  border-radius: clamp(6px, 0.8vw, 10px);
+  padding: clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 18px);
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #666;
   flex-shrink: 0;
   white-space: nowrap;
 }
 
 .remaining-count {
-  margin-top: 12px;
-  font-size: 14px;
+  margin-top: clamp(10px, 1.2vw, 14px);
+  font-size: clamp(12px, 1.2vw, 15px);
   color: #6c757d;
   font-style: italic;
   text-align: center;
@@ -313,30 +317,113 @@
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: clamp(18px, 2.2vw, 28px);
 }
 
 .chart-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 28px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chart-title {
-  font-size: 18px;
+  font-size: clamp(16px, 1.7vw, 20px);
   font-weight: 600;
   color: #e91e63;
-  margin: 0 0 20px 0;
+  margin: 0 0 clamp(16px, 2vw, 24px) 0;
 }
 
 .chart-container {
   width: 100%;
-  height: 250px;
+  height: clamp(220px, 25vw, 280px);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
+/* Responsive Breakpoints */
+
+/* Notebooks grandes (1280px - 1366px) */
+@media (max-width: 1366px) and (min-width: 1280px) {
+  .metricas-mensais {
+    padding: 26px;
+  }
+  
+  .page-title {
+    font-size: 30px;
+  }
+  
+  .chart-container {
+    height: 260px;
+  }
+}
+
+/* Notebooks médios (1024px - 1279px) */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .metricas-mensais {
+    padding: 24px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .metrics-content {
+    gap: 20px;
+  }
+  
+  .chart-container {
+    height: 240px;
+  }
+}
+
+/* Tablets em paisagem (900px - 1023px) */
+@media (max-width: 1023px) and (min-width: 900px) {
+  .metricas-mensais {
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 26px;
+  }
+  
+  .metrics-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    height: 240px;
+  }
+  
+  .platform-dropdown {
+    min-width: 100%;
+  }
+}
+
+/* Tablets em retrato (768px - 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+  .metricas-mensais {
+    padding: 18px;
+  }
+  
+  .page-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .add-platform-btn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+  
   .metrics-content {
     grid-template-columns: 1fr;
   }
@@ -344,22 +431,41 @@
   .charts-section {
     grid-template-columns: 1fr;
   }
+  
+  .chart-container {
+    height: 220px;
+  }
+  
+  .platform-dropdown {
+    min-width: 100%;
+    font-size: 13px;
+  }
+  
+  .inactive-list {
+    gap: 10px;
+  }
 }
 
-@media (max-width: 768px) {
+/* Tablets pequenos (600px - 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
   .metricas-mensais {
     padding: 16px;
   }
   
   .page-header {
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     align-items: stretch;
   }
   
   .page-title {
-    font-size: 24px;
+    font-size: 22px;
     text-align: center;
+  }
+  
+  .add-platform-btn {
+    width: 100%;
+    justify-content: center;
   }
   
   .custom-select-wrapper {
@@ -376,11 +482,162 @@
     right: 10px;
   }
   
-  .inactive-list {
-    flex-direction: column;
+  .metrics-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
   
   .chart-container {
     height: 200px;
+  }
+  
+  .inactive-list {
+    flex-direction: column;
+  }
+  
+  .inactive-item {
+    width: 100%;
+  }
+}
+
+/* Smartphones grandes (481px - 599px) */
+@media (max-width: 599px) and (min-width: 481px) {
+  .metricas-mensais {
+    padding: 14px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .page-title {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .add-platform-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .platform-dropdown {
+    font-size: 12px;
+    padding: 9px 32px 9px 10px;
+  }
+  
+  .metrics-content {
+    gap: 14px;
+  }
+  
+  .charts-section {
+    gap: 14px;
+  }
+  
+  .chart-container {
+    height: 180px;
+  }
+  
+  .revenue-amount {
+    font-size: 32px;
+  }
+  
+  .stat-label,
+  .stat-value {
+    font-size: 13px;
+  }
+}
+
+/* Smartphones pequenos (até 480px) */
+@media (max-width: 480px) {
+  .metricas-mensais {
+    padding: 12px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .page-title {
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .add-platform-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .custom-select-wrapper {
+    max-width: 100%;
+  }
+  
+  .platform-dropdown {
+    min-width: 100%;
+    font-size: 12px;
+    padding: 9px 32px 9px 10px;
+  }
+  
+  .select-arrow {
+    right: 8px;
+  }
+  
+  .metrics-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .stats-section,
+  .revenue-card,
+  .inactive-section {
+    padding: 16px;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .chart-card {
+    padding: 16px;
+  }
+  
+  .chart-container {
+    height: 160px;
+  }
+  
+  .revenue-amount {
+    font-size: 28px;
+  }
+  
+  .stat-label,
+  .stat-value {
+    font-size: 12px;
+  }
+  
+  .inactive-list {
+    flex-direction: column;
+    max-height: none;
+  }
+  
+  .inactive-item {
+    width: 100%;
+  }
+  
+  .chart-title {
+    font-size: 16px;
+    margin-bottom: 12px;
   }
 }

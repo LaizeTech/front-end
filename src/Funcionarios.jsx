@@ -336,7 +336,7 @@ const Funcionarios = () => {
                   className="password-toggle-btn"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff style={{ width: 'clamp(16px, 1.8vw, 22px)', height: 'clamp(16px, 1.8vw, 22px)' }} /> : <Eye style={{ width: 'clamp(16px, 1.8vw, 22px)', height: 'clamp(16px, 1.8vw, 22px)' }} />}
                 </button>
               </div>
             </div>
@@ -359,7 +359,7 @@ const Funcionarios = () => {
                   className="password-toggle-btn"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? <EyeOff style={{ width: 'clamp(16px, 1.8vw, 22px)', height: 'clamp(16px, 1.8vw, 22px)' }} /> : <Eye style={{ width: 'clamp(16px, 1.8vw, 22px)', height: 'clamp(16px, 1.8vw, 22px)' }} />}
                 </button>
               </div>
             </div>
