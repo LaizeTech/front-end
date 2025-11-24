@@ -34,15 +34,14 @@ const Saidas = () => {
       
       // 2. Transforma os dados recebidos do backend para o formato que a tabela espera
       const transformedData = data.map(item => ({
-        id: item.id_saida, // Usando o ID real da saída para a chave
-        productName: item.nome_produto,
-        quantity: item.quantidade || 0,
-        platform: item.plataforma || 'N/A',
+        id: item.id_saida,
+        platform: item.nome_plataforma || 'N/A',
+        type: item.nome_tipo || 'N/A',
         date: formatDate(item.data_venda),
-        status: formatStatusDisplay(item.status_produto),
-        statusColor: getStatusColor(item.status_produto),
         price: formatPrice(item.preco_venda),
-        supplier: item.fornecedor || 'N/A'
+        discount: formatPrice(item.total_desconto),
+        status: formatStatusDisplay(item.nome_status),
+        statusColor: getStatusColor(item.nome_status)
       }));
       
       setExits(transformedData);
@@ -64,7 +63,7 @@ const Saidas = () => {
       setFilteredExits(exits);
     } else {
       const filtered = exits.filter(exit =>
-        exit.productName.toLowerCase().includes(searchTerm.toLowerCase())
+        exit.platform.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredExits(filtered);
     }
@@ -96,6 +95,10 @@ const Saidas = () => {
     if (!status) return 'N/A';
     const statusStr = String(status).trim().toUpperCase();
     switch (statusStr) {
+      case 'FINALIZADA':
+      case 'FINALIZADO':
+      case 'COMPLETED':
+        return 'FINALIZADA';
       case 'ATIVO':
       case 'ACTIVE':
       case '1':
@@ -107,8 +110,15 @@ const Saidas = () => {
       case '0':
       case 'FALSE':
         return 'DESATIVO';
+      case 'PENDENTE':
+      case 'PENDING':
+        return 'PENDENTE';
+      case 'CANCELADA':
+      case 'CANCELADO':
+      case 'CANCELLED':
+        return 'CANCELADA';
       default:
-        return 'N/A';
+        return statusStr || 'N/A';
     }
   };
 
@@ -116,6 +126,10 @@ const Saidas = () => {
     if (!status) return 'gray';
     const statusStr = String(status).trim().toUpperCase();
     switch (statusStr) {
+      case 'FINALIZADA':
+      case 'FINALIZADO':
+      case 'COMPLETED':
+        return 'green';
       case 'ATIVO':
       case 'ACTIVE':
       case '1':
@@ -126,6 +140,13 @@ const Saidas = () => {
       case 'INACTIVE':
       case '0':
       case 'FALSE':
+        return 'red';
+      case 'PENDENTE':
+      case 'PENDING':
+        return 'orange';
+      case 'CANCELADA':
+      case 'CANCELADO':
+      case 'CANCELLED':
         return 'red';
       default: 
         console.log('Status não reconhecido:', status);
@@ -140,9 +161,13 @@ const Saidas = () => {
       case 'shoope': 
         return 'orange';
       case 'nuvemshop':
+        return 'blue';
       case 'mercado livre':
       case 'mercadolivre':
-        return 'blue';
+        return 'yellow';
+      case 'loja física':
+      case 'loja fisica':
+        return 'purple';
       default: return 'gray';
     }
   };
@@ -190,23 +215,28 @@ const Saidas = () => {
     const file = event.target.files[0];
     if (file) {
       try {
-        // Fazer download do arquivo selecionado
-        const blob = new Blob([file], { type: file.type });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', file.name);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const formData = new FormData();
+        formData.append('arquivo', file);
         
-        console.log(`Arquivo ${file.name} foi baixado para a pasta de downloads`);
-        alert(`Arquivo "${file.name}" baixado com sucesso!`);
+        const response = await fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Erro no upload: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Arquivo enviado com sucesso:', result);
+        alert(`Arquivo "${file.name}" enviado com sucesso!`);
+        
+        // Recarregar os dados após o upload
+        fetchSaidas();
+        
       } catch (error) {
-        console.error('Erro ao fazer download:', error);
-        alert('Erro ao baixar arquivo');
+        console.error('Erro ao enviar arquivo:', error);
+        alert(`Erro ao enviar arquivo "${file.name}": ${error.message}`);
       }
     }
   };
@@ -272,15 +302,14 @@ const Saidas = () => {
     
     // Exemplo simples de exportação para CSV
     const csvContent = [
-      ['Nome do Produto', 'Quantidade', 'Plataforma', 'Data', 'Status', 'Preço', 'Fornecedor'],
+      ['Plataforma', 'Tipo', 'Data da Venda', 'Preço de Venda', 'Desconto', 'Status'],
       ...selectedExits.map(exit => [
-        exit.productName,
-        exit.quantity,
         exit.platform,
+        exit.type,
         exit.date,
-        exit.status,
         exit.price,
-        exit.supplier
+        exit.discount,
+        exit.status
       ])
     ].map(row => row.join(',')).join('\n');
     
@@ -350,7 +379,7 @@ const Saidas = () => {
       {filteredExits.length === 0 && searchTerm && (
         <div className="search-notification">
           <div className="search-notification-content">
-            <p>Nenhum produto encontrado para "{searchTerm}"</p>
+            <p>Nenhuma plataforma encontrada para "{searchTerm}"</p>
           </div>
         </div>
       )}
@@ -370,7 +399,7 @@ const Saidas = () => {
                   </th>
                   <th className="sortable-header">
                     <div className="header-with-search">
-                      <span>Nome do produto</span>
+                      <span>Plataforma</span>
                       <ChevronDown 
                         style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }}
                         className={`search-toggle ${showSearch ? 'active' : ''}`}
@@ -381,7 +410,7 @@ const Saidas = () => {
                       <div className="search-input-container">
                         <input
                           type="text"
-                          placeholder="Pesquisar produto..."
+                          placeholder="Pesquisar plataforma..."
                           value={searchTerm}
                           onChange={handleSearchChange}
                           className="product-search-input"
@@ -390,12 +419,11 @@ const Saidas = () => {
                       </div>
                     )}
                   </th>
-                  <th>Quantidade</th>
-                  <th>Plataforma</th>
-                  <th>Data</th>
-                  <th>Status do produto</th>
-                  <th>Preço</th>
-                  <th>Fornecedor</th>
+                  <th>Tipo</th>
+                  <th>Data da Venda</th>
+                  <th>Preço de Venda</th>
+                  <th>Desconto</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -404,13 +432,12 @@ const Saidas = () => {
                     <td className="checkbox-column">
                       <input type="checkbox" checked={selectedItems.includes(exit.id)} onChange={() => handleSelectItem(exit.id)} />
                     </td>
-                    <td className="product-name">{exit.productName}</td>
-                    <td className="quantity">{exit.quantity}</td>
                     <td><span className={`platform-badge ${getPlatformColor(exit.platform)}`}>{exit.platform}</span></td>
+                    <td className="type">{exit.type}</td>
                     <td className="date">{exit.date}</td>
-                    <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
                     <td className="price">{exit.price}</td>
-                    <td className="supplier">{exit.supplier}</td>
+                    <td className="discount">{exit.discount}</td>
+                    <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
                   </tr>
                 ))}
               </tbody>
