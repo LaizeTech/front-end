@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Plus, Download } from 'lucide-react';
+import { ChevronDown, Plus, Download, Eye } from 'lucide-react';
 import RegistroSaidaModal from './components/RegistroSaidaModal';
+import DetalhesSaidaModal from './components/DetalhesSaidaModal';
 import './saidas.css';
 
 const Saidas = () => {
@@ -10,6 +11,8 @@ const Saidas = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChoiceModalOpen, setIsChoiceModalOpen] = useState(false);
+  const [isDetalhesModalOpen, setIsDetalhesModalOpen] = useState(false);
+  const [selectedSaidaId, setSelectedSaidaId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredExits, setFilteredExits] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
@@ -33,16 +36,21 @@ const Saidas = () => {
       const data = await response.json();
       
       // 2. Transforma os dados recebidos do backend para o formato que a tabela espera
-      const transformedData = data.map(item => ({
-        id: item.id_saida,
-        platform: item.nome_plataforma || 'N/A',
-        type: item.nome_tipo || 'N/A',
-        date: formatDate(item.data_venda),
-        price: formatPrice(item.preco_venda),
-        discount: formatPrice(item.total_desconto),
-        status: formatStatusDisplay(item.nome_status),
-        statusColor: getStatusColor(item.nome_status)
-      }));
+      const transformedData = data.map(item => {
+        const transformed = {
+          id: item.id_saida,
+          platform: item.nome_plataforma || 'N/A',
+          type: item.nome_tipo || 'N/A',
+          date: formatDate(item.data_venda),
+          price: formatPrice(item.preco_venda),
+          discount: formatPrice(item.total_desconto),
+          status: formatStatusDisplay(item.nome_status),
+          statusColor: getStatusColor(item.nome_status)
+        };
+        return transformed;
+      });
+      
+      console.log('Dados transformados (primeiro registro):', transformedData[0]);
       
       setExits(transformedData);
     } catch (err) {
@@ -256,6 +264,16 @@ const Saidas = () => {
     setIsModalOpen(false);
   };
 
+  const handleVerDetalhes = (saidaId) => {
+    setSelectedSaidaId(saidaId);
+    setIsDetalhesModalOpen(true);
+  };
+
+  const handleCloseDetalhesModal = () => {
+    setIsDetalhesModalOpen(false);
+    setSelectedSaidaId(null);
+  };
+
   const handleSaveSaida = async (produtosSelecionados) => {
     try {
       // Implementar lógica para salvar as saídas no backend
@@ -424,6 +442,7 @@ const Saidas = () => {
                   <th>Preço de Venda</th>
                   <th>Desconto</th>
                   <th>Status</th>
+                  <th className="actions-column">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -438,6 +457,16 @@ const Saidas = () => {
                     <td className="price">{exit.price}</td>
                     <td className="discount">{exit.discount}</td>
                     <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
+                    <td className="actions-column">
+                      <button 
+                        className="action-btn view-details-btn"
+                        onClick={() => handleVerDetalhes(exit.id)}
+                        title="Ver detalhes dos produtos"
+                      >
+                        <Eye size={16} />
+                        Ver Mais
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -450,6 +479,12 @@ const Saidas = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveSaida}
+      />
+
+      <DetalhesSaidaModal
+        isOpen={isDetalhesModalOpen}
+        onClose={handleCloseDetalhesModal}
+        saidaId={selectedSaidaId}
       />
 
       {/* Modal de Escolha */}

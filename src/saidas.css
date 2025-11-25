@@ -98,13 +98,14 @@
 }
 
 .exits-table th {
-  padding: clamp(8px, 1vw, 12px) clamp(6px, 0.8vw, 10px);
+  padding: clamp(12px, 1.4vw, 16px) clamp(8px, 1vw, 12px);
   text-align: center;
   font-weight: 600;
   color: #495057;
   white-space: nowrap;
   border-right: 1px solid #e9ecef;
-  font-size: clamp(11px, 1vw, 13px);
+  font-size: clamp(11px, 1.1vw, 14px);
+  vertical-align: middle;
 }
 
 .exits-table th:last-child {
@@ -113,36 +114,35 @@
 
 .exits-table th:first-child {
   text-align: center;
-  width: 40px;
+  width: 50px;
 }
 
-/*
-.exits-table th:nth-child(2) { /* Nome do produto 
-  width: 25%;
-}*/
-
-.exits-table th:nth-child(3) { /* Quantidade */
-  width: 8%;
+.exits-table th:nth-child(2) { /* Plataforma */
+  width: 100%;
 }
 
-.exits-table th:nth-child(4) { /* Plataforma */
+.exits-table th:nth-child(3) { /* Tipo */
   width: 12%;
 }
 
-.exits-table th:nth-child(5) { /* Data */
-  width: 12%;
-}
-
-.exits-table th:nth-child(6) { /* Status */
+.exits-table th:nth-child(4) { /* Data da Venda */
   width: 15%;
 }
 
-.exits-table th:nth-child(7) { /* Preço */
-  width: 12%;
+.exits-table th:nth-child(5) { /* Preço de Venda */
+  width: 15%;
 }
 
-.exits-table th:nth-child(8) { /* Fornecedor */
+.exits-table th:nth-child(6) { /* Desconto */
   width: 15%;
+}
+
+.exits-table th:nth-child(7) { /* Status */
+  width: 18%;
+}
+
+.exits-table th:nth-child(8) { /* Ações */
+  width: 12%;
 }
 
 .sortable-header {
@@ -171,6 +171,8 @@
   border-bottom: 1px solid #e9ecef;
   transition: background-color 0.2s ease;
   background-color: white;
+  height: auto;
+  min-height: 50px;
 }
 
 .exits-table tbody tr:nth-child(even) {
@@ -186,11 +188,12 @@
 }
 
 .exits-table td {
-  padding: clamp(7px, 0.8vw, 10px) clamp(5px, 0.6vw, 8px);
+  padding: clamp(10px, 1.2vw, 14px) clamp(8px, 1vw, 12px);
   vertical-align: middle;
   border-right: 1px solid #e9ecef;
   display: table-cell;
   position: relative;
+  white-space: nowrap;
 }
 
 .exits-table td:last-child {
@@ -202,40 +205,43 @@
   text-align: center;
 }
 
-.exits-table td:nth-child(2) { /* Nome do produto */
-  text-align: start;
+.exits-table td:nth-child(2) { /* Plataforma */
+  text-align: center;
+  padding: clamp(8px, 1vw, 12px) clamp(6px, 0.8vw, 10px);
 }
 
-.exits-table td:nth-child(3) { /* Quantidade */
+.exits-table td:nth-child(3) { /* Tipo */
   text-align: center;
 }
 
-.exits-table td:nth-child(4) { /* Plataforma */
-  text-align: center;
-  max-width: 120px;
-  padding: clamp(7px, 0.8vw, 10px) clamp(3px, 0.4vw, 6px);
-}
-
-.exits-table td:nth-child(5) { /* Data */
+.exits-table td:nth-child(4) { /* Data da Venda */
   text-align: center;
 }
 
-.exits-table td:nth-child(6) { /* Status */
+.exits-table td:nth-child(5) { /* Preço de Venda */
   text-align: center;
-  max-width: 120px;
-  padding: clamp(7px, 0.8vw, 10px) clamp(3px, 0.4vw, 6px);
+  font-weight: 600;
+  color: #28a745;
 }
 
-.exits-table td:nth-child(7) { /* Preço */
+.exits-table td:nth-child(6) { /* Desconto */
   text-align: center;
+  font-weight: 600;
+  color: #dc3545;
 }
 
-.exits-table td:nth-child(8) { /* Fornecedor */
+.exits-table td:nth-child(7) { /* Status */
   text-align: center;
+  padding: clamp(8px, 1vw, 12px) clamp(6px, 0.8vw, 10px);
+}
+
+.exits-table td:nth-child(8) { /* Ações */
+  text-align: center;
+  padding: clamp(8px, 1vw, 12px) clamp(6px, 0.8vw, 10px);
 }
 
 .checkbox-column {
-  width: 40px;
+  width: 50px;
   text-align: center;
 }
 
@@ -246,63 +252,24 @@
   cursor: pointer;
 }
 
-.product-name {
+.type {
+  color: #495057;
+  text-align: center;
+  font-size: clamp(11px, 1vw, 13px);
   font-weight: 500;
-  color: #212529;
-  width: 25%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  font-size: clamp(11px, 1vw, 13px);
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.quantity {
-  font-weight: 600;
-  color: #495057;
+.discount {
+  color: #dc3545;
   text-align: center;
-  width: 8%;
   font-size: clamp(11px, 1vw, 13px);
+  font-weight: 600;
 }
 
 .date {
   color: #495057;
-  width: 12%;
   text-align: center;
-  font-size: 11px;
-}
-
-.platform-badge {
-  padding: 4px 8px;
-  border-radius: 15px;
-  font-size: 10px;
-  font-weight: 600;
-  color: white;
-  text-transform: uppercase;
-  display: inline-block;
-  width: 80px;
-  text-align: center;
-}
-
-.platform-badge.orange {
-  background-color: #ff9500 ;
-}
-
-.platform-badge.blue {
-  background-color: #007bff;
-}
-
-.platform-badge.gray {
-  background-color: #6c757d;
-}
-
-.date {
-  color: #495057;
-  width: 12%;
-  text-align: center;
-  font-size: 11px;
+  font-size: clamp(11px, 1vw, 13px);
 }
 
 .platform-badge {
@@ -323,8 +290,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .platform-badge.orange { background-color: #ff9500; }
 .platform-badge.blue { background-color: #007bff; }
+.platform-badge.yellow { background-color: #ffc107; }
+.platform-badge.purple { background-color: #6f42c1; }
 .platform-badge.gray { background-color: #6c757d; }
 
 .status-badge {
@@ -365,19 +335,8 @@
 .price {
   font-weight: 600;
   color: #28a745;
-  width: 12%;
   text-align: center;
   font-size: clamp(11px, 1vw, 13px);
-}
-
-.supplier {
-  color: #495057;
-  width: 15%;
-  text-align: center;
-  font-size: clamp(11px, 1vw, 13px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Responsive Breakpoints */
@@ -389,7 +348,7 @@
   }
   
   .exits-table {
-    min-width: 950px;
+    min-width: 850px;
   }
   
   .page-title {
@@ -404,7 +363,7 @@
   }
   
   .exits-table {
-    min-width: 900px;
+    min-width: 800px;
   }
   
   .page-title {
@@ -462,10 +421,6 @@
     font-size: 24px;
   }
   
-  .product-name {
-    min-width: 160px;
-  }
-  
   .platform-badge,
   .status-badge {
     min-width: 70px;
@@ -504,18 +459,6 @@
     padding: 8px 6px;
   }
   
-  .product-name {
-    min-width: 140px;
-  }
-  
-  .quantity,
-  .date,
-  .price,
-  .supplier {
-    min-width: 75px;
-  }
-  
-  /* badges já definidas acima; ajustes específicos para mobile se necessário */
   .platform-badge,
   .status-badge {
     min-width: 65px;
@@ -562,17 +505,6 @@
   .exits-table th,
   .exits-table td {
     padding: 7px 5px;
-  }
-  
-  .product-name {
-    min-width: 130px;
-  }
-  
-  .quantity,
-  .date,
-  .price,
-  .supplier {
-    min-width: 70px;
   }
   
   .platform-badge,
@@ -627,17 +559,6 @@
   .exits-table th,
   .exits-table td {
     padding: 6px 4px;
-  }
-  
-  .product-name {
-    min-width: 120px;
-  }
-  
-  .quantity,
-  .date,
-  .price,
-  .supplier {
-    min-width: 60px;
   }
   
   .platform-badge,
@@ -1122,3 +1043,71 @@
   }
 }
 
+/* Action Button - Ver Mais */
+.actions-column {
+  text-align: center;
+  min-width: 110px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 0.5vw, 6px);
+  padding: clamp(6px, 0.7vw, 8px) clamp(10px, 1.2vw, 14px);
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: clamp(5px, 0.6vw, 7px);
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.view-details-btn {
+  background-color: #3b82f6;
+}
+
+.view-details-btn:hover {
+  background-color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .action-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+  
+  .action-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions-column {
+    min-width: 90px;
+  }
+  
+  .action-btn {
+    padding: 4px 6px;
+    font-size: 9px;
+    gap: 3px;
+  }
+  
+  .action-btn svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}
