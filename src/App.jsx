@@ -14,22 +14,8 @@ import MetricasMensais from './MetricasMensais';
 import MetricasAnuais from './MetricasAnuais'
 import './App.css';
 
-// Exemplo de uso do fetch com a variável de ambiente
-import { useEffect } from 'react';
-
 function App() {
-  useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_BASE_URL;
-    fetch(`${API_URL}/usuario/login`)
-      .then(response => response.json())
-      .then(data => {
-        // Apenas exemplo: console.log
-        console.log('Login API response:', data);
-      })
-      .catch(error => {
-        console.error('Erro ao chamar login:', error);
-      });
-  }, []);
+
   return (
     <Router>
       <div className="App">
