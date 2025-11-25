@@ -4,6 +4,7 @@ import { TrendingUp, Package, Users, DollarSign, Bot } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  
   const salesData = [
     { name: 'Shoope', value: 40 },
     { name: 'Nuvem Shop', value: 40 },
