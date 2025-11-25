@@ -3,7 +3,22 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 
 import { TrendingUp, Package, Users, DollarSign, Bot } from 'lucide-react';
 import './Dashboard.css';
 
+// Exemplo de uso do fetch com a variável de ambiente
+import { useEffect } from 'react';
+
 const Dashboard = () => {
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    fetch(`${API_URL}/usuario/login`)
+      .then(response => response.json())
+      .then(data => {
+        // Apenas exemplo: console.log
+        console.log('Login API response:', data);
+      })
+      .catch(error => {
+        console.error('Erro ao chamar login:', error);
+      });
+  }, []);
   const salesData = [
     { name: 'Shoope', value: 40 },
     { name: 'Nuvem Shop', value: 40 },

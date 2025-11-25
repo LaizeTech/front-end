@@ -23,7 +23,8 @@ const MetricasMensais = () => {
     const fetchPlataformas = useCallback(async () => {
         setIsLoadingPlataformas(true);
         try {
-            const response = await fetch('http://localhost:8080/plataforma');
+            const API_URL = import.meta.env.VITE_API_BASE_URL;
+            const response = await fetch(`${API_URL}/plataforma`);
             if (response.status === 204) {
                 setPlataformas([]);
                 return;

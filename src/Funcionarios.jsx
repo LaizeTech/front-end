@@ -31,7 +31,8 @@ const Funcionarios = () => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:8080/usuarios/buscar-funcionarios/${id_empresa}`, {
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${API_URL}/usuarios/buscar-funcionarios/${id_empresa}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

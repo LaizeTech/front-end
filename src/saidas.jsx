@@ -19,7 +19,8 @@ const Saidas = () => {
       setLoading(true);
       setError(null); // Limpa erros anteriores
       // 1. URL alterada para o novo endpoint que retorna dados detalhados
-      const response = await fetch('http://localhost:8080/saidas/detalhes');
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${API_URL}/saidas/detalhes`);
 
       if (response.status === 204) {
         setExits([]); // Se não houver conteúdo, define a lista como vazia

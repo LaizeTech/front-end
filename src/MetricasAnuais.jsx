@@ -9,7 +9,7 @@ import NovaPlataformaModal from './components/NovaPlataformaModal';
 import './MetricasAnuais.css';
 
 // URL base da sua API Spring Boot (ajuste a porta se necessário)
-const API_URL = 'http://localhost:8080/produtos';
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/produtos`;
 
 // Cores para o gráfico de pizza, já que o backend não as fornece
 const PIE_COLORS = ['#ff6b35', '#e91e63', '#f8a5c2', '#4caf50', '#2196f3'];
@@ -37,7 +37,7 @@ const MetricasAnuais = () => {
   useEffect(() => {
     const fetchAvailableYears = async () => {
       try {
-        const response = await fetch(`${API_URL}/anos-disponiveis`);
+      const response = await fetch(`${API_URL}/anos-disponiveis`);
         if (!response.ok) {
           throw new Error('Erro ao buscar anos disponíveis');
         }

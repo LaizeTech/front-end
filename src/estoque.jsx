@@ -17,7 +17,7 @@ const Estoque = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilters, setActiveFilters] = useState([]); // NOVO: Armazena os IDs das categorias selecionadas
-    const API_URL = "http://localhost:8080"; // URL base da API
+    const API_URL = import.meta.env.VITE_API_BASE_URL; // URL base da API
 
     // Função para buscar o caminho da imagem de um produto específico
     const fetchImagePath = async (productId) => {

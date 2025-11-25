@@ -32,7 +32,8 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/usuarios/login", {
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${API_URL}/usuarios/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
