@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Plus, Download, Eye } from 'lucide-react';
+import { ChevronDown, Plus, Download, Eye, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import RegistroSaidaModal from './components/RegistroSaidaModal';
 import DetalhesSaidaModal from './components/DetalhesSaidaModal';
 import './saidas.css';
@@ -16,6 +16,7 @@ const Saidas = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredExits, setFilteredExits] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [dateSort, setDateSort] = useState(null); // null, 'asc', 'desc'
 
   const fetchSaidas = async () => {
     try {
@@ -68,15 +69,38 @@ const Saidas = () => {
 
   // Filtrar dados baseado no termo de pesquisa
   useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredExits(exits);
-    } else {
-      const filtered = exits.filter(exit =>
+    let result = [...exits];
+    
+    // Aplicar filtro de pesquisa
+    if (searchTerm.trim()) {
+      result = result.filter(exit =>
         exit.platform.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredExits(filtered);
     }
-  }, [exits, searchTerm]);
+    
+    // Aplicar ordenação por data
+    if (dateSort) {
+      result.sort((a, b) => {
+        const dateA = parseDateString(a.date);
+        const dateB = parseDateString(b.date);
+        
+        if (dateSort === 'asc') {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+    }
+    
+    setFilteredExits(result);
+  }, [exits, searchTerm, dateSort]);
+  
+  // Função para converter data no formato brasileiro para objeto Date
+  const parseDateString = (dateStr) => {
+    if (!dateStr || dateStr === 'N/A') return new Date(0);
+    const [day, month, year] = dateStr.split('/');
+    return new Date(year, month - 1, day);
+  };
 
   // --- Funções Auxiliares (Helpers) ---
 
@@ -260,6 +284,16 @@ const Saidas = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
+  
+  const handleDateSort = () => {
+    if (dateSort === null) {
+      setDateSort('asc');
+    } else if (dateSort === 'asc') {
+      setDateSort('desc');
+    } else {
+      setDateSort(null);
+    }
+  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -439,7 +473,14 @@ const Saidas = () => {
                     )}
                   </th>
                   <th>Tipo</th>
-                  <th>Data da Venda</th>
+                  <th className="sortable-header">
+                    <div className="header-with-search" onClick={handleDateSort} style={{ cursor: 'pointer' }}>
+                      <span>Data da Venda</span>
+                      {dateSort === null && <ArrowUpDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                      {dateSort === 'asc' && <ArrowUp style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                      {dateSort === 'desc' && <ArrowDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                    </div>
+                  </th>
                   <th>Preço de Venda</th>
                   <th>Desconto</th>
                   <th>Status</th>
@@ -448,8 +489,12 @@ const Saidas = () => {
               </thead>
               <tbody>
                 {filteredExits.map((exit) => (
-                  <tr key={exit.id}>
-                    <td className="checkbox-column">
+                  <tr 
+                    key={exit.id}
+                    onClick={() => handleVerDetalhes(exit.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td className="checkbox-column" onClick={(e) => e.stopPropagation()}>
                       <input type="checkbox" checked={selectedItems.includes(exit.id)} onChange={() => handleSelectItem(exit.id)} />
                     </td>
                     <td><span className={`platform-badge ${getPlatformColor(exit.platform)}`}>{exit.platform}</span></td>
@@ -458,7 +503,7 @@ const Saidas = () => {
                     <td className="price">{exit.price}</td>
                     <td className="discount">{exit.discount}</td>
                     <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
-                    <td className="actions-column">
+                    <td className="actions-column" onClick={(e) => e.stopPropagation()}>
                       <button 
                         className="action-btn view-details-btn"
                         onClick={() => handleVerDetalhes(exit.id)}

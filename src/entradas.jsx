@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown,    } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import './entradas.css';
 
 const Entradas = () => {
