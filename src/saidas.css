@@ -797,6 +797,8 @@
 .choice-modal .modal-content {
   padding: clamp(18px, 2.2vw, 28px);
   flex: 1;
+  margin-left: 5%;
+  margin-bottom: 5%;
 }
 
 .choice-modal .modal-content p {
