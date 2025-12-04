@@ -3,6 +3,10 @@ import { Eye, EyeOff } from 'lucide-react';
 import { getUserId, hasFinancialAccess, isUserActive, getCompanyId } from './utils/sessionUtils';
 import './Configuracoes.css';
 
+// Exemplo de uso do fetch com a variável de ambiente
+// const API_URL = import.meta.env.VITE_API_BASE_URL;
+// fetch(`${API_URL}/usuario/login`)
+
 const Configuracoes = () => {
   const userId = getUserId(); // Pegar ID do usuário do sessionStorage
   const acessoFinanceiro = hasFinancialAccess();
@@ -541,7 +545,7 @@ const Configuracoes = () => {
                         onClick={togglePasswordVisibility}
                         title={showPassword ? "Ocultar senha" : "Mostrar senha"}
                       >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showPassword ? <EyeOff style={{ width: 'clamp(14px, 1.6vw, 18px)', height: 'clamp(14px, 1.6vw, 18px)' }} /> : <Eye style={{ width: 'clamp(14px, 1.6vw, 18px)', height: 'clamp(14px, 1.6vw, 18px)' }} />}
                       </button>
                     </div>
                   </div>
@@ -568,7 +572,7 @@ const Configuracoes = () => {
                         onClick={toggleConfirmPasswordVisibility}
                         title={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
                       >
-                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showConfirmPassword ? <EyeOff style={{ width: 'clamp(14px, 1.6vw, 18px)', height: 'clamp(14px, 1.6vw, 18px)' }} /> : <Eye style={{ width: 'clamp(14px, 1.6vw, 18px)', height: 'clamp(14px, 1.6vw, 18px)' }} />}
                       </button>
                     </div>
                   </div>

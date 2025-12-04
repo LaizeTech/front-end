@@ -14,10 +14,11 @@ const Entradas = () => {
   }, []);
 
   const fetchHistoricoCompras = async () => {
-    try {
-      setLoading(true);
-      setNoData(false);
-      const response = await fetch('http://localhost:8080/compras/historico-compras');
+      try {
+        setLoading(true);
+        setNoData(false);
+        const API_URL = import.meta.env.VITE_API_BASE_URL;
+        const response = await fetch(`${API_URL}/compras/historico-compras`);
       
       if (response.status === 204) {
         setEntries([]);
@@ -70,16 +71,22 @@ const Entradas = () => {
   };
 
   const getCategoryColor = (category) => {
-    if (!category) return 'red'; // Teste: sempre retorna vermelho
-    
-    console.log('Categoria recebida:', category);
-    
-    // Para teste, vou retornar cores alternadas baseadas no índice
-    const colors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow', 'cyan'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    
-    console.log('Cor escolhida:', randomColor);
-    return randomColor;
+    if (!category) return 'gray';
+    const normalized = category.trim().toLowerCase();
+    switch (normalized) {
+      case 'maquiagem':
+        return 'red';
+      case 'skincare':
+        return 'cyan';
+      case 'higiene':
+        return 'green';
+      case 'cabelo':
+        return 'purple';
+      case 'perfumaria':
+        return 'orange';
+      default:
+        return 'gray';
+    }
   };
 
   const handleSelectAll = (e) => {
@@ -217,10 +224,11 @@ const Entradas = () => {
                 <th className="sortable-header">
                   Nome do produto <ChevronDown size={16} />
                 </th>
-                <th>Quantidade</th>
+                <th title="Quantidade">Qtd</th>
+                {/* Abreviado para caber no espaço da coluna */}
                 <th>Categoria</th>
-                <th>Data da Compra</th>
-                <th>Preço de Compra</th>
+                <th>Data Compra</th>
+                <th title="Preço de Compra">Preço Compra</th>
                 <th>Fornecedor</th>
               </tr>
             </thead>
@@ -237,18 +245,9 @@ const Entradas = () => {
                   <td className="product-name">{entry.nomeProduto}</td>
                   <td className="quantity">{entry.quantidadeProduto}</td>
                   <td>
-                    <span 
+                    <span
                       className={`category-badge ${entry.categoryColor}`}
-                      style={{
-                        backgroundColor: entry.categoryColor === 'blue' ? '#007bff' : 
-                                        entry.categoryColor === 'green' ? '#28a745' : 
-                                        entry.categoryColor === 'orange' ? '#ff9500' : 
-                                        entry.categoryColor === 'purple' ? '#6f42c1' : 
-                                        entry.categoryColor === 'red' ? '#dc3545' : 
-                                        entry.categoryColor === 'yellow' ? '#ffc107' : 
-                                        entry.categoryColor === 'cyan' ? '#17a2b8' : '#6c757d'
-                      }}
-                      title={`Cor: ${entry.categoryColor}`}
+                      title={entry.nomeCategoria}
                     >
                       {entry.nomeCategoria}
                     </span>

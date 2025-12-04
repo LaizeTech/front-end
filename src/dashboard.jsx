@@ -4,6 +4,7 @@ import { TrendingUp, Package, Users, DollarSign, Bot } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
+  
   const salesData = [
     { name: 'Shoope', value: 40 },
     { name: 'Nuvem Shop', value: 40 },
@@ -280,11 +281,26 @@ const Dashboard = () => {
     buscarSaidasUltimos3Dias();
   }, []);
 
+  // Ordenação: vermelhos (zerado) primeiro, depois amarelos, depois outros
+  const alertaProdutosOrdenados = Array.isArray(alertaProdutos)
+    ? [...alertaProdutos].sort((a, b) => {
+        const prioridade = { 'Alerta Vermelho': 0, 'Alerta Amarelo': 1, 'Alerta Violeta': 2 };
+        const pa = prioridade[a.nivel_alerta] ?? 99;
+        const pb = prioridade[b.nivel_alerta] ?? 99;
+        if (pa !== pb) return pa - pb;
+        // Dentro da mesma cor, itens com quantidade 0 primeiro
+        const aZerado = a.quantidade_produto === 0 ? 0 : 1;
+        const bZerado = b.quantidade_produto === 0 ? 0 : 1;
+        if (aZerado !== bZerado) return aZerado - bZerado;
+        return a.quantidade_produto - b.quantidade_produto; // menor quantidade antes
+      })
+    : alertaProdutos;
+
   return (
     <div className="dashboard">
       {/* Chatbot Button */}
       <button className="chatbot-button" title="Abrir Chat">
-        <Bot size={28} />
+        <Bot style={{ width: 'clamp(24px, 2.5vw, 32px)', height: 'clamp(24px, 2.5vw, 32px)' }} />
       </button>
 
       <div className="dashboard-header">
@@ -324,8 +340,8 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            ) : Array.isArray(alertaProdutos) ? (
-              alertaProdutos.map((item, index) => (
+            ) : Array.isArray(alertaProdutosOrdenados) ? (
+              alertaProdutosOrdenados.map((item, index) => (
                 <div key={index} className={`category-item ${
                   item.nivel_alerta === 'Alerta Vermelho' ? 'alert-red' :
                   item.nivel_alerta === 'Alerta Amarelo' ? 'alert-yellow' :

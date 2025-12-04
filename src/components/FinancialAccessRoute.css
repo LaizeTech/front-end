@@ -23,9 +23,9 @@
 
 .access-denied-modal {
   background: white;
-  border-radius: 16px;
-  padding: 40px;
-  max-width: 500px;
+  border-radius: clamp(12px, 1.5vw, 16px);
+  padding: clamp(30px, 4vw, 40px);
+  max-width: clamp(400px, 50vw, 500px);
   width: 90%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -46,14 +46,14 @@
 
 .modal-close-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: clamp(12px, 1.5vw, 16px);
+  right: clamp(12px, 1.5vw, 16px);
   background: none;
   border: none;
   cursor: pointer;
   color: #64748b;
-  padding: 8px;
-  border-radius: 8px;
+  padding: clamp(6px, 0.8vw, 8px);
+  border-radius: clamp(6px, 0.8vw, 8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,9 +68,14 @@
 .modal-icon {
   display: flex;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: clamp(18px, 2vw, 24px);
   color: #dc2626;
   animation: pulse 2s infinite;
+}
+
+.modal-icon svg {
+  width: clamp(48px, 6vw, 64px);
+  height: clamp(48px, 6vw, 64px);
 }
 
 @keyframes pulse {
@@ -83,24 +88,24 @@
 }
 
 .modal-title {
-  font-size: 28px;
+  font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 16px;
+  margin-bottom: clamp(12px, 1.5vw, 16px);
   margin-top: 0;
 }
 
 .modal-message {
-  font-size: 18px;
+  font-size: clamp(15px, 1.7vw, 18px);
   color: #475569;
-  margin-bottom: 12px;
+  margin-bottom: clamp(10px, 1.2vw, 12px);
   font-weight: 500;
 }
 
 .modal-submessage {
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 14px);
   color: #64748b;
-  margin-bottom: 32px;
+  margin-bottom: clamp(24px, 3vw, 32px);
   line-height: 1.6;
 }
 
@@ -108,10 +113,10 @@
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   border: none;
-  padding: 14px 32px;
-  font-size: 16px;
+  padding: clamp(12px, 1.5vw, 14px) clamp(24px, 3vw, 32px);
+  font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: clamp(8px, 1vw, 10px);
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
@@ -129,6 +134,27 @@
 }
 
 /* Responsividade */
+@media (max-width: 1024px) {
+  .access-denied-modal {
+    max-width: 90%;
+    padding: clamp(28px, 3.5vw, 36px);
+  }
+}
+
+@media (max-width: 768px) {
+  .access-denied-modal {
+    padding: clamp(24px, 3vw, 30px);
+  }
+  
+  .modal-title {
+    font-size: clamp(18px, 2.2vw, 24px);
+  }
+  
+  .modal-message {
+    font-size: clamp(14px, 1.6vw, 16px);
+  }
+}
+
 @media (max-width: 600px) {
   .access-denied-modal {
     padding: 30px 20px;
@@ -145,5 +171,29 @@
   .modal-icon svg {
     width: 48px;
     height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .access-denied-modal {
+    padding: 24px 16px;
+    width: 95%;
+  }
+  
+  .modal-title {
+    font-size: 20px;
+  }
+  
+  .modal-message {
+    font-size: 15px;
+  }
+  
+  .modal-submessage {
+    font-size: 12px;
+  }
+  
+  .modal-redirect-btn {
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }

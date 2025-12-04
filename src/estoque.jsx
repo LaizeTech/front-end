@@ -17,7 +17,7 @@ const Estoque = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilters, setActiveFilters] = useState([]); // NOVO: Armazena os IDs das categorias selecionadas
-    const API_URL = "http://localhost:8080"; // URL base da API
+    const API_URL = import.meta.env.VITE_API_BASE_URL; // URL base da API
 
     // Função para buscar o caminho da imagem de um produto específico
     const fetchImagePath = async (productId) => {
@@ -209,16 +209,16 @@ const Estoque = () => {
                 <h1 className="page-title">Gestão de Estoque</h1>
                 <div className="header-actions">
                     <button className="add-product-btn" onClick={handleAddProduct}>
-                        <Plus size={16} /> Novo Produto
+                        <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} /> Novo Produto
                     </button>
                     <button className="filter-btn" onClick={handleFilterProducts}>
-                        <Filter size={16} /> Filtrar Itens
+                        <Filter style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} /> Filtrar Itens
                     </button>
                 </div>
             </div>
             <div className="search-container">
                 <div className="search-box">
-                    <Search size={16} className="search-icon" />
+                    <Search style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} className="search-icon" />
                     <input
                         type="text"
                         placeholder="Pesquisar produto"
@@ -233,7 +233,7 @@ const Estoque = () => {
                     <div className="empty-state-card">
                         <p>{searchTerm ? "Nenhum produto encontrado com o termo de busca." : "Nenhum produto cadastrado."}</p>
                         <button className="add-product-btn" onClick={handleAddProduct} >
-                            <Plus size={16} /> Cadastrar Primeiro Produto
+                            <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} /> Cadastrar Primeiro Produto
                         </button>
                     </div>
                 ) : (
@@ -251,7 +251,7 @@ const Estoque = () => {
                                 )}
                             </div>
                             <div className="product-info">
-                                <h3 className="product-name">{product.name}</h3>
+                                <h3 className="estoque-product-name">{product.name}</h3>
                                 <div className="product-details">
                                     <div className="quantity-info">
                                         <span className="quantity-label">Quantidade em estoque:</span>
@@ -267,7 +267,7 @@ const Estoque = () => {
                                     <div className="store-info">
                                         <span className="store-name">Plataforma de venda:</span>
                                     </div>
-                                    <div className="platform-info" style={{ marginTop: '-10px' }}>
+                                    <div className="platform-info">
                                         <span className="platform-list">
                                             {product.platforms && product.platforms.length > 0
                                                 ? product.platforms.map(p => p.nomePlataforma).join(', ')
@@ -276,10 +276,10 @@ const Estoque = () => {
                                     </div>
                                     <div className="product-actions">
                                         <button className="add-product-link" onClick={() => handleAdicionarMaisProduto(product)} >
-                                            <Plus size={14} /> Adicionar produto
+                                            <Plus style={{ width: 'clamp(12px, 1.2vw, 16px)', height: 'clamp(12px, 1.2vw, 16px)' }} /> Adicionar produto
                                         </button>
                                         <button className="edit-product-link" onClick={() => handleEditProduct(product)} >
-                                            <Edit size={14} /> Editar Produto
+                                            <Edit style={{ width: 'clamp(12px, 1.2vw, 16px)', height: 'clamp(12px, 1.2vw, 16px)' }} /> Editar Produto
                                         </button>
                                     </div>
                                 </div>

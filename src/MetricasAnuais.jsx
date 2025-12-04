@@ -9,7 +9,7 @@ import NovaPlataformaModal from './components/NovaPlataformaModal';
 import './MetricasAnuais.css';
 
 // URL base da sua API Spring Boot (ajuste a porta se necessário)
-const API_URL = 'http://localhost:8080/produtos';
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/produtos`;
 
 // Cores para o gráfico de pizza, já que o backend não as fornece
 const PIE_COLORS = ['#ff6b35', '#e91e63', '#f8a5c2', '#4caf50', '#2196f3'];
@@ -37,7 +37,7 @@ const MetricasAnuais = () => {
   useEffect(() => {
     const fetchAvailableYears = async () => {
       try {
-        const response = await fetch(`${API_URL}/anos-disponiveis`);
+      const response = await fetch(`${API_URL}/anos-disponiveis`);
         if (!response.ok) {
           throw new Error('Erro ao buscar anos disponíveis');
         }
@@ -86,16 +86,21 @@ const MetricasAnuais = () => {
       setIsLoading(true);
       setError(null);
       
+      // 1. Buscar Receita Total (para o Card)
       try {
-        // 1. Buscar Receita Total (para o Card)
         const revenueRes = await fetch(`${API_URL}/vendas/total?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!revenueRes.ok) {
           throw new Error('Erro ao buscar receita total');
         }
         const revenueData = await revenueRes.json();
         setTotalRevenue(revenueData || 0);
+      } catch (error) {
+        console.error("Erro ao buscar receita total:", error);
+        setTotalRevenue(0);
+      }
 
-        // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
+      // 2. Buscar Vendas por Plataforma (Gráfico de Pizza)
+      try {
         const platformRes = await fetch(`${API_URL}/vendas/por-plataforma?ano=${selectedYear}`);
         if (!platformRes.ok) {
           throw new Error('Erro ao buscar vendas por plataforma');
@@ -110,8 +115,13 @@ const MetricasAnuais = () => {
             }))
           : [];
         setPlatformData(mappedPlatformData);
+      } catch (error) {
+        console.error("Erro ao buscar vendas por plataforma:", error);
+        setPlatformData([]);
+      }
 
-        // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
+      // 3. Buscar Top 5 Produtos (Gráfico de Barras Horizontal)
+      try {
         const top5Res = await fetch(`${API_URL}/top5?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!top5Res.ok) {
           throw new Error('Erro ao buscar top 5 produtos');
@@ -126,8 +136,13 @@ const MetricasAnuais = () => {
             }))
           : [];
         setTop5ProductData(mappedTop5Data);
+      } catch (error) {
+        console.error("Erro ao buscar top 5 produtos:", error);
+        setTop5ProductData([]);
+      }
 
-        // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
+      // 4. Buscar Receita Mensal (Gráfico de Barras Vertical)
+      try {
         const monthlyRes = await fetch(`${API_URL}/receita/mensal?plataforma=${plataformaId}&ano=${selectedYear}`);
         if (!monthlyRes.ok) {
           throw new Error('Erro ao buscar receita mensal');
@@ -142,13 +157,12 @@ const MetricasAnuais = () => {
             }))
           : [];
         setMonthlyRevenueData(mappedMonthlyData);
-
       } catch (error) {
-        console.error("Erro ao buscar dados da API:", error);
-        setError(error.message || "Erro ao carregar os dados. Tente novamente mais tarde.");
-      } finally {
-        setIsLoading(false);
+        console.error("Erro ao buscar receita mensal:", error);
+        setMonthlyRevenueData([]);
       }
+
+      setIsLoading(false);
     };
 
     if (selectedYear) {
@@ -164,7 +178,7 @@ const MetricasAnuais = () => {
           <p className="page-subtitle">Análise anual geral</p>
         </div>
         <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
-          <Plus size={16} />
+          <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
           Nova plataforma
         </button>
       </div>
@@ -185,7 +199,7 @@ const MetricasAnuais = () => {
             onClick={() => setShowYearDropdown(!showYearDropdown)}
           >
             <span>Selecione o ano</span>
-            <ChevronDown size={16} />
+            <ChevronDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
           </button>
           {showYearDropdown && (
             <div className="year-dropdown-menu">

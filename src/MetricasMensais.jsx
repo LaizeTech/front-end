@@ -23,7 +23,8 @@ const MetricasMensais = () => {
     const fetchPlataformas = useCallback(async () => {
         setIsLoadingPlataformas(true);
         try {
-            const response = await fetch('http://localhost:8080/plataforma');
+            const API_URL = import.meta.env.VITE_API_BASE_URL;
+            const response = await fetch(`${API_URL}/plataforma`);
             if (response.status === 204) {
                 setPlataformas([]);
                 return;
@@ -53,8 +54,9 @@ const MetricasMensais = () => {
             if (!platformId) return;
 
             setLoading(true);
+
+            // Fetch Top 5 Produtos
             try {
-                // Fetch Top 5 Produtos
                 const top5Res = await fetch(`http://localhost:8080/produtos/top5?plataforma=${platformId}`);
                 if (top5Res.ok) {
                     const data = await top5Res.json();
@@ -63,8 +65,13 @@ const MetricasMensais = () => {
                 } else {
                     setTopProductsData([]);
                 }
+            } catch (error) {
+                console.error("Erro ao buscar top 5 produtos:", error);
+                setTopProductsData([]);
+            }
 
-                // Fetch Receita Mensal
+            // Fetch Receita Mensal
+            try {
                 const receitaRes = await fetch(`http://localhost:8080/produtos/receita/mensal?plataforma=${platformId}`);
                 if (receitaRes.ok) {
                     const data = await receitaRes.json();
@@ -79,27 +86,33 @@ const MetricasMensais = () => {
                     setRevenueData([]);
                     setTotalRevenue(0);
                 }
+            } catch (error) {
+                console.error("Erro ao buscar receita mensal:", error);
+                setRevenueData([]);
+                setTotalRevenue(0);
+            }
 
-                // Fetch Produtos Inativos
+            // Fetch Produtos Inativos
+            try {
                 const inativosRes = await fetch(`http://localhost:8080/produtos/inativos?plataforma=${platformId}`);
                 if (inativosRes.ok) {
                     const data = await inativosRes.json();
-                    const formattedData = data.map(name => ({ name: name, category: name })); // Ajuste se tiver categoria
+                    const formattedData = data.map(name => ({ name: name }));
                     setInactiveProducts(formattedData);
                 } else {
                     setInactiveProducts([]);
                 }
-
             } catch (error) {
-                console.error("Erro ao buscar dados da plataforma:", error);
-            } finally {
-                setLoading(false);
+                console.error("Erro ao buscar produtos inativos:", error);
+                setInactiveProducts([]);
             }
+
+            setLoading(false);
         };
 
         // Função para buscar dados que não dependem da plataforma
         const fetchGeneralData = async () => {
-             try {
+            try {
                 const entradasRes = await fetch(`http://localhost:8080/produtos/entradas/mes-atual`);
                 if (entradasRes.ok) {
                     const data = await entradasRes.json();
@@ -109,10 +122,17 @@ const MetricasMensais = () => {
                             quantidade: data[0][1],
                             valor: data[0][2]
                         });
+                    } else {
+                        setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
                     }
+                } else if (entradasRes.status === 204) {
+                    setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
+                } else {
+                    setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
                 }
             } catch (error) {
                 console.error("Erro ao buscar dados de entradas:", error);
+                setEntradasMes({ mes: '', quantidade: 0, valor: 0 });
             }
         };
 
@@ -156,7 +176,7 @@ const MetricasMensais = () => {
             <div className="page-header">
                 <h1 className="page-title">Métricas mensais</h1>
                 <button className="add-platform-btn" onClick={() => setShowNovaPlataformaModal(true)}>
-                    <Plus size={16} /> Nova plataforma
+                    <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} /> Nova plataforma
                 </button>
             </div>
             <NovaPlataformaModal 
@@ -180,14 +200,14 @@ const MetricasMensais = () => {
                                 onChange={handlePlatformChange}
                             >
                                 <option value="" disabled>Selecione a plataforma</option>
-{plataformas.map((plataforma) => (
-                                        <option key={plataforma.id} value={plataforma.id}>
-                                            {plataforma.nomePlataforma}
-                                        </option>
-                                    ))}
+                                {plataformas.map((plataforma) => (
+                                    <option key={plataforma.idPlataforma} value={plataforma.idPlataforma}>
+                                        {plataforma.nomePlataforma}
+                                    </option>
+                                ))}
                             </select>
                             <div className="select-arrow">
-                                <ChevronDown size={16} />
+                                <ChevronDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
                             </div>
                         </div>
                     </div>
@@ -200,18 +220,26 @@ const MetricasMensais = () => {
                 <div className="metrics-content">
                     {/* Stats Section */}
                     <div className="stats-section">
-                        <div className="stat-item">
-                            <span className="stat-label">Entradas no mês atual:</span>
-                            <span className="stat-value highlight">{entradasMes.mes}</span>
-                        </div>
-                        <div className="stat-item">
-                            <span className="stat-label">Quantidade de produtos:</span>
-                            <span className="stat-value">{entradasMes.quantidade}</span>
-                        </div>
-                        <div className="stat-item">
-                            <span className="stat-label">Valor investido:</span>
-                            <span className="stat-value">{formatCurrency(entradasMes.valor)}</span>
-                        </div>
+                        {entradasMes.quantidade > 0 ? (
+                            <>
+                                <div className="stat-item">
+                                    <span className="stat-label">Entradas no mês atual:</span>
+                                    <span className="stat-value highlight">{entradasMes.mes}</span>
+                                </div>
+                                <div className="stat-item">
+                                    <span className="stat-label">Quantidade de produtos:</span>
+                                    <span className="stat-value">{entradasMes.quantidade}</span>
+                                </div>
+                                <div className="stat-item">
+                                    <span className="stat-label">Valor investido:</span>
+                                    <span className="stat-value">{formatCurrency(entradasMes.valor)}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="stat-item">
+                                <span className="stat-label">Não há compras neste mês.</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Revenue Card */}

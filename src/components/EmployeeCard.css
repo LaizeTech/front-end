@@ -1,11 +1,11 @@
 .employee-card {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: clamp(12px, 1.4vw, 16px);
   background: white;
-  border-radius: 8px;
+  border-radius: clamp(6px, 0.8vw, 8px);
   border: 1px solid #e5e7eb;
-  margin-bottom: 12px;
+  margin-bottom: clamp(8px, 1vw, 12px);
   transition: all 0.2s ease;
 }
 
@@ -15,12 +15,12 @@
 }
 
 .employee-avatar {
-  margin-right: 16px;
+  margin-right: clamp(12px, 1.4vw, 16px);
 }
 
 .avatar-circle {
-  width: 48px;
-  height: 48px;
+  width: clamp(40px, 4.5vw, 48px);
+  height: clamp(40px, 4.5vw, 48px);
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
@@ -28,36 +28,36 @@
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 18px;
+  font-size: clamp(14px, 1.6vw, 18px);
   text-transform: uppercase;
 }
 
 .employee-info {
   flex: 1;
-  margin-right: 16px;
+  margin-right: clamp(12px, 1.4vw, 16px);
 }
 
 .employee-name {
-  margin: 0 0 4px 0;
-  font-size: 16px;
+  margin: 0 0 clamp(2px, 0.4vw, 4px) 0;
+  font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 600;
   color: #1f2937;
 }
 
 .employee-role {
   margin: 0;
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 14px);
   color: #6b7280;
 }
 
 .employee-status {
-  margin-right: 16px;
+  margin-right: clamp(12px, 1.4vw, 16px);
 }
 
 .status-badge {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
+  padding: clamp(3px, 0.4vw, 4px) clamp(8px, 1vw, 12px);
+  border-radius: clamp(12px, 1.4vw, 16px);
+  font-size: clamp(10px, 1.1vw, 12px);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -86,8 +86,8 @@
 .action-btn {
   background: none;
   border: none;
-  padding: 8px;
-  border-radius: 4px;
+  padding: clamp(6px, 0.8vw, 8px);
+  border-radius: clamp(3px, 0.4vw, 4px);
   cursor: pointer;
   color: #6b7280;
   transition: all 0.2s ease;
@@ -107,26 +107,26 @@
   right: 0;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: clamp(6px, 0.8vw, 8px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 100;
-  min-width: 120px;
+  min-width: clamp(100px, 12vw, 120px);
   overflow: hidden;
 }
 
 .dropdown-action {
   width: 100%;
-  padding: 12px 16px;
+  padding: clamp(10px, 1.2vw, 12px) clamp(12px, 1.5vw, 16px);
   border: none;
   background: none;
   text-align: left;
   cursor: pointer;
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 14px);
   color: #374151;
   transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: clamp(6px, 0.8vw, 8px);
 }
 
 .dropdown-action:hover {
@@ -146,4 +146,92 @@
 .activate-action:hover {
   background-color: #f0fdf4;
   color: #16a34a;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .employee-card {
+    padding: clamp(10px, 1.2vw, 14px);
+  }
+  
+  .avatar-circle {
+    width: clamp(36px, 4vw, 44px);
+    height: clamp(36px, 4vw, 44px);
+    font-size: clamp(13px, 1.5vw, 16px);
+  }
+  
+  .employee-name {
+    font-size: clamp(13px, 1.4vw, 15px);
+  }
+}
+
+@media (max-width: 768px) {
+  .employee-card {
+    flex-wrap: wrap;
+    padding: clamp(10px, 1.2vw, 12px);
+  }
+  
+  .employee-avatar {
+    margin-right: clamp(10px, 1.2vw, 12px);
+  }
+  
+  .avatar-circle {
+    width: clamp(32px, 3.8vw, 40px);
+    height: clamp(32px, 3.8vw, 40px);
+    font-size: clamp(12px, 1.4vw, 14px);
+  }
+  
+  .employee-status {
+    margin-right: clamp(8px, 1vw, 12px);
+  }
+}
+
+@media (max-width: 600px) {
+  .employee-card {
+    padding: clamp(8px, 1vw, 10px);
+  }
+  
+  .employee-info {
+    margin-right: clamp(8px, 1vw, 10px);
+  }
+  
+  .employee-name {
+    font-size: clamp(12px, 1.3vw, 14px);
+  }
+  
+  .employee-role {
+    font-size: clamp(11px, 1.2vw, 12px);
+  }
+  
+  .status-badge {
+    font-size: clamp(9px, 1vw, 10px);
+    padding: clamp(2px, 0.3vw, 3px) clamp(6px, 0.8vw, 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .employee-avatar {
+    margin-right: 0;
+  }
+  
+  .employee-info {
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  .employee-status {
+    margin-right: 0;
+  }
+  
+  .employee-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

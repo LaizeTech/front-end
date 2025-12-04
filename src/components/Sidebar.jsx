@@ -20,6 +20,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [logoError, setLogoError] = useState(false);
+  const [searchExpanded, setSearchExpanded] = useState(false);
 
   // Verificar o acesso financeiro do usuário
   const acessoFinanceiro = sessionStorage.getItem('acessoFinanceiro') === 'true';
@@ -139,14 +140,23 @@ const Sidebar = () => {
       </div>
 
       <div className="search-container">
-        <div className="search-box">
-          <Search className="search-icon" size={16} />
+        <div className={`search-box ${searchExpanded ? 'expanded' : ''}`}>
+          <Search 
+            className="search-icon" 
+            size={16} 
+            onClick={() => setSearchExpanded(!searchExpanded)}
+          />
           <input 
             type="text" 
             placeholder="Pesquisar seções ou conteúdo..." 
             className="search-input"
             value={searchTerm}
             onChange={handleSearchChange}
+            onBlur={() => {
+              if (!searchTerm) {
+                setTimeout(() => setSearchExpanded(false), 200);
+              }
+            }}
           />
         </div>
       </div>

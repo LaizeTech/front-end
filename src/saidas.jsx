@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Plus, Download } from 'lucide-react';
+import { ChevronDown, Plus, Download, Eye, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import RegistroSaidaModal from './components/RegistroSaidaModal';
-//import './saidas.css';
+import DetalhesSaidaModal from './components/DetalhesSaidaModal';
+import './saidas.css';
 
 const Saidas = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -10,16 +11,20 @@ const Saidas = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChoiceModalOpen, setIsChoiceModalOpen] = useState(false);
+  const [isDetalhesModalOpen, setIsDetalhesModalOpen] = useState(false);
+  const [selectedSaidaId, setSelectedSaidaId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredExits, setFilteredExits] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [dateSort, setDateSort] = useState(null); // null, 'asc', 'desc'
 
   const fetchSaidas = async () => {
     try {
       setLoading(true);
       setError(null); // Limpa erros anteriores
       // 1. URL alterada para o novo endpoint que retorna dados detalhados
-      const response = await fetch('http://localhost:8080/saidas/detalhes');
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${API_URL}/saidas/detalhes`);
 
       if (response.status === 204) {
         setExits([]); // Se não houver conteúdo, define a lista como vazia
@@ -33,17 +38,21 @@ const Saidas = () => {
       const data = await response.json();
       
       // 2. Transforma os dados recebidos do backend para o formato que a tabela espera
-      const transformedData = data.map(item => ({
-        id: item.id_saida, // Usando o ID real da saída para a chave
-        productName: item.nome_produto,
-        quantity: item.quantidade || 0,
-        platform: item.plataforma || 'N/A',
-        date: formatDate(item.data_venda),
-        status: formatStatusDisplay(item.status_produto),
-        statusColor: getStatusColor(item.status_produto),
-        price: formatPrice(item.preco_venda),
-        supplier: item.fornecedor || 'N/A'
-      }));
+      const transformedData = data.map(item => {
+        const transformed = {
+          id: item.id_saida,
+          platform: item.nome_plataforma || 'N/A',
+          type: item.nome_tipo || 'N/A',
+          date: formatDate(item.data_venda),
+          price: formatPrice(item.preco_venda),
+          discount: formatPrice(item.total_desconto),
+          status: formatStatusDisplay(item.nome_status),
+          statusColor: getStatusColor(item.nome_status)
+        };
+        return transformed;
+      });
+      
+      console.log('Dados transformados (primeiro registro):', transformedData[0]);
       
       setExits(transformedData);
     } catch (err) {
@@ -60,15 +69,38 @@ const Saidas = () => {
 
   // Filtrar dados baseado no termo de pesquisa
   useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredExits(exits);
-    } else {
-      const filtered = exits.filter(exit =>
-        exit.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    let result = [...exits];
+    
+    // Aplicar filtro de pesquisa
+    if (searchTerm.trim()) {
+      result = result.filter(exit =>
+        exit.platform.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredExits(filtered);
     }
-  }, [exits, searchTerm]);
+    
+    // Aplicar ordenação por data
+    if (dateSort) {
+      result.sort((a, b) => {
+        const dateA = parseDateString(a.date);
+        const dateB = parseDateString(b.date);
+        
+        if (dateSort === 'asc') {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+    }
+    
+    setFilteredExits(result);
+  }, [exits, searchTerm, dateSort]);
+  
+  // Função para converter data no formato brasileiro para objeto Date
+  const parseDateString = (dateStr) => {
+    if (!dateStr || dateStr === 'N/A') return new Date(0);
+    const [day, month, year] = dateStr.split('/');
+    return new Date(year, month - 1, day);
+  };
 
   // --- Funções Auxiliares (Helpers) ---
 
@@ -96,6 +128,10 @@ const Saidas = () => {
     if (!status) return 'N/A';
     const statusStr = String(status).trim().toUpperCase();
     switch (statusStr) {
+      case 'FINALIZADA':
+      case 'FINALIZADO':
+      case 'COMPLETED':
+        return 'FINALIZADA';
       case 'ATIVO':
       case 'ACTIVE':
       case '1':
@@ -107,8 +143,15 @@ const Saidas = () => {
       case '0':
       case 'FALSE':
         return 'DESATIVO';
+      case 'PENDENTE':
+      case 'PENDING':
+        return 'PENDENTE';
+      case 'CANCELADA':
+      case 'CANCELADO':
+      case 'CANCELLED':
+        return 'CANCELADA';
       default:
-        return 'N/A';
+        return statusStr || 'N/A';
     }
   };
 
@@ -116,6 +159,10 @@ const Saidas = () => {
     if (!status) return 'gray';
     const statusStr = String(status).trim().toUpperCase();
     switch (statusStr) {
+      case 'FINALIZADA':
+      case 'FINALIZADO':
+      case 'COMPLETED':
+        return 'green';
       case 'ATIVO':
       case 'ACTIVE':
       case '1':
@@ -126,6 +173,13 @@ const Saidas = () => {
       case 'INACTIVE':
       case '0':
       case 'FALSE':
+        return 'red';
+      case 'PENDENTE':
+      case 'PENDING':
+        return 'orange';
+      case 'CANCELADA':
+      case 'CANCELADO':
+      case 'CANCELLED':
         return 'red';
       default: 
         console.log('Status não reconhecido:', status);
@@ -140,9 +194,13 @@ const Saidas = () => {
       case 'shoope': 
         return 'orange';
       case 'nuvemshop':
+        return 'blue';
       case 'mercado livre':
       case 'mercadolivre':
-        return 'blue';
+        return 'yellow';
+      case 'loja física':
+      case 'loja fisica':
+        return 'purple';
       default: return 'gray';
     }
   };
@@ -186,17 +244,33 @@ const Saidas = () => {
     input.click();
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Salvar arquivo localmente
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(file);
-      link.download = file.name;
-      link.click();
-      
-      console.log(`Arquivo ${file.name} foi baixado para a pasta de downloads`);
-      alert(`Arquivo "${file.name}" selecionado e baixado!`);
+      try {
+        const formData = new FormData();
+        formData.append('arquivo', file);
+        
+        const response = await fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Erro no upload: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Arquivo enviado com sucesso:', result);
+        alert(`Arquivo "${file.name}" enviado com sucesso!`);
+        
+        // Recarregar os dados após o upload
+        fetchSaidas();
+        
+      } catch (error) {
+        console.error('Erro ao enviar arquivo:', error);
+        alert(`Erro ao enviar arquivo "${file.name}": ${error.message}`);
+      }
     }
   };
 
@@ -210,9 +284,29 @@ const Saidas = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
+  
+  const handleDateSort = () => {
+    if (dateSort === null) {
+      setDateSort('asc');
+    } else if (dateSort === 'asc') {
+      setDateSort('desc');
+    } else {
+      setDateSort(null);
+    }
+  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleVerDetalhes = (saidaId) => {
+    setSelectedSaidaId(saidaId);
+    setIsDetalhesModalOpen(true);
+  };
+
+  const handleCloseDetalhesModal = () => {
+    setIsDetalhesModalOpen(false);
+    setSelectedSaidaId(null);
   };
 
   const handleSaveSaida = async (produtosSelecionados) => {
@@ -261,15 +355,14 @@ const Saidas = () => {
     
     // Exemplo simples de exportação para CSV
     const csvContent = [
-      ['Nome do Produto', 'Quantidade', 'Plataforma', 'Data', 'Status', 'Preço', 'Fornecedor'],
+      ['Plataforma', 'Tipo', 'Data da Venda', 'Preço de Venda', 'Desconto', 'Status'],
       ...selectedExits.map(exit => [
-        exit.productName,
-        exit.quantity,
         exit.platform,
+        exit.type,
         exit.date,
-        exit.status,
         exit.price,
-        exit.supplier
+        exit.discount,
+        exit.status
       ])
     ].map(row => row.join(',')).join('\n');
     
@@ -315,12 +408,12 @@ const Saidas = () => {
           <div className="header-buttons">
             {selectedItems.length > 0 && (
               <button onClick={handleExportar} className="action-button export-button">
-                <Download size={16} />
+                <Download style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
                 Exportar
               </button>
             )}
             <button onClick={handleInserirSaida} className="action-button insert-button">
-              <Plus size={16} />
+              <Plus style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />
               Inserir Saída
             </button>
             <button onClick={fetchSaidas} className="refresh-button" disabled={loading}>
@@ -339,7 +432,7 @@ const Saidas = () => {
       {filteredExits.length === 0 && searchTerm && (
         <div className="search-notification">
           <div className="search-notification-content">
-            <p>Nenhum produto encontrado para "{searchTerm}"</p>
+            <p>Nenhuma plataforma encontrada para "{searchTerm}"</p>
           </div>
         </div>
       )}
@@ -359,9 +452,9 @@ const Saidas = () => {
                   </th>
                   <th className="sortable-header">
                     <div className="header-with-search">
-                      <span>Nome do produto</span>
+                      <span>Plataforma</span>
                       <ChevronDown 
-                        size={16} 
+                        style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }}
                         className={`search-toggle ${showSearch ? 'active' : ''}`}
                         onClick={handleToggleSearch}
                       />
@@ -370,7 +463,7 @@ const Saidas = () => {
                       <div className="search-input-container">
                         <input
                           type="text"
-                          placeholder="Pesquisar produto..."
+                          placeholder="Pesquisar plataforma..."
                           value={searchTerm}
                           onChange={handleSearchChange}
                           className="product-search-input"
@@ -379,27 +472,47 @@ const Saidas = () => {
                       </div>
                     )}
                   </th>
-                  <th>Quantidade</th>
-                  <th>Plataforma</th>
-                  <th>Data</th>
-                  <th>Status do produto</th>
-                  <th>Preço</th>
-                  <th>Fornecedor</th>
+                  <th>Tipo</th>
+                  <th className="sortable-header">
+                    <div className="header-with-search" onClick={handleDateSort} style={{ cursor: 'pointer' }}>
+                      <span>Data da Venda</span>
+                      {dateSort === null && <ArrowUpDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                      {dateSort === 'asc' && <ArrowUp style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                      {dateSort === 'desc' && <ArrowDown style={{ width: 'clamp(14px, 1.4vw, 18px)', height: 'clamp(14px, 1.4vw, 18px)' }} />}
+                    </div>
+                  </th>
+                  <th>Preço de Venda</th>
+                  <th>Desconto</th>
+                  <th>Status</th>
+                  <th className="actions-column">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredExits.map((exit) => (
-                  <tr key={exit.id}>
-                    <td className="checkbox-column">
+                  <tr 
+                    key={exit.id}
+                    onClick={() => handleVerDetalhes(exit.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td className="checkbox-column" onClick={(e) => e.stopPropagation()}>
                       <input type="checkbox" checked={selectedItems.includes(exit.id)} onChange={() => handleSelectItem(exit.id)} />
                     </td>
-                    <td className="product-name">{exit.productName}</td>
-                    <td className="quantity">{exit.quantity}</td>
                     <td><span className={`platform-badge ${getPlatformColor(exit.platform)}`}>{exit.platform}</span></td>
+                    <td className="type">{exit.type}</td>
                     <td className="date">{exit.date}</td>
-                    <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
                     <td className="price">{exit.price}</td>
-                    <td className="supplier">{exit.supplier}</td>
+                    <td className="discount">{exit.discount}</td>
+                    <td><span className={`status-badge ${exit.statusColor}`}>{exit.status}</span></td>
+                    <td className="actions-column" onClick={(e) => e.stopPropagation()}>
+                      <button 
+                        className="action-btn view-details-btn"
+                        onClick={() => handleVerDetalhes(exit.id)}
+                        title="Ver detalhes dos produtos"
+                      >
+                        <Eye size={16} />
+                        Ver Mais
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -412,6 +525,12 @@ const Saidas = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveSaida}
+      />
+
+      <DetalhesSaidaModal
+        isOpen={isDetalhesModalOpen}
+        onClose={handleCloseDetalhesModal}
+        saidaId={selectedSaidaId}
       />
 
       {/* Modal de Escolha */}

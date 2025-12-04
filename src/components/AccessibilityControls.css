@@ -55,7 +55,7 @@
   bottom: 100%;
   right: 0;
   margin-bottom: 10px;
-  width: 320px;
+  width: clamp(280px, 90vw, 320px);
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -64,7 +64,7 @@
   visibility: hidden;
   transform: translateY(10px);
   transition: all 0.3s ease;
-  max-height: 400px;
+  max-height: clamp(300px, 50vh, 400px);
   overflow-y: auto;
 }
 
@@ -222,38 +222,78 @@
 }
 
 /* Responsivo */
+@media (max-width: 1024px) {
+  .accessibility-panel {
+    width: clamp(260px, 85vw, 300px);
+    max-height: clamp(280px, 45vh, 360px);
+  }
+}
+
 @media (max-width: 768px) {
   .accessibility-controls.fixed {
     bottom: 10px;
     right: 10px;
-    left: 10px;
   }
 
   .accessibility-toggle {
-    width: 100%;
-    max-width: none;
+    min-width: 120px;
+    padding: 10px 14px;
   }
 
   .accessibility-panel {
-    width: 100%;
+    width: clamp(240px, 80vw, 280px);
+    max-height: clamp(250px, 40vh, 320px);
     right: 0;
-    left: 0;
   }
 }
 
 @media (max-width: 480px) {
+  .accessibility-controls.fixed {
+    bottom: 8px;
+    right: 8px;
+  }
+
+  .accessibility-toggle {
+    min-width: 100px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
   .accessibility-panel {
-    width: calc(100vw - 20px);
-    right: 10px;
-    left: 10px;
+    width: clamp(220px, 75vw, 260px);
+    max-height: clamp(220px, 35vh, 280px);
+    right: 0;
+    margin-bottom: 8px;
+  }
+
+  .accessibility-header {
+    padding: 12px 16px;
   }
 
   .accessibility-header h3 {
     font-size: 14px;
   }
 
+  .control-group {
+    padding: 12px 16px;
+  }
+
   .control-buttons {
     flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .control-button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .accessibility-info {
+    padding: 12px 16px;
+  }
+
+  .accessibility-info p {
+    font-size: 11px;
   }
 }
 

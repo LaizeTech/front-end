@@ -1,5 +1,5 @@
 .estoque {
-  padding: 24px;
+  padding: clamp(16px, 2vw, 28px);
   background-color: #f8f9fa;
   min-height: 100vh;
 }
@@ -8,13 +8,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: clamp(20px, 2.5vw, 32px);
   flex-wrap: wrap;
-  gap: 16px;
+  gap: clamp(12px, 1.5vw, 20px);
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: clamp(24px, 2.8vw, 36px);
   font-weight: 700;
   color: #212529;
   margin: 0;
@@ -22,19 +22,19 @@
 
 .header-actions {
   display: flex;
-  gap: 12px;
+  gap: clamp(10px, 1.2vw, 14px);
 }
 
 .add-product-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: clamp(6px, 0.8vw, 10px);
+  padding: clamp(8px, 1vw, 12px) clamp(12px, 1.5vw, 18px);
   background: linear-gradient(135deg, #e91e63, #ad1457);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: clamp(6px, 0.8vw, 10px);
+  font-size: clamp(12px, 1.3vw, 15px);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -49,13 +49,13 @@
 .filter-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: clamp(6px, 0.8vw, 10px);
+  padding: clamp(8px, 1vw, 12px) clamp(12px, 1.5vw, 18px);
   background-color: white;
   color: #495057;
   border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: clamp(6px, 0.8vw, 10px);
+  font-size: clamp(12px, 1.3vw, 15px);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -122,10 +122,10 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 16px 12px 40px;
+  padding: clamp(10px, 1.2vw, 14px) clamp(14px, 1.6vw, 18px) clamp(10px, 1.2vw, 14px) clamp(36px, 4vw, 44px);
   border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: clamp(6px, 0.8vw, 10px);
+  font-size: clamp(12px, 1.3vw, 15px);
   background-color: white;
   outline: none;
   transition: all 0.2s ease;
@@ -139,17 +139,20 @@
 .products-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 20px;
+  gap: clamp(16px, 2vw, 24px);
 }
 
 .product-card {
   background: white;
   width: 100%;
-  border-radius: 12px;
+  border-radius: clamp(10px, 1.2vw, 14px);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e9ecef;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: fit-content;
 }
 
 .product-card:hover {
@@ -159,28 +162,69 @@
 
 .product-image {
   width: 100%;
-  height: 150px;
+  height: clamp(140px, 18vw, 200px);
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: #6c757d;
+  background-color: #f8f9fa;
 }
 
 .product-info {
-  padding: 20px;
+  padding: clamp(12px, 1.5vw, 16px);
+  display: flex;
+  flex-direction: column;
 }
 
 .product-name {
-  font-size: 18px;
+  font-size: clamp(13px, 1.4vw, 16px);
   font-weight: 600;
   color: #212529;
   margin: 0 0 16px 0;
-  white-space: normal; /* CORREÇÃO: Permite que o texto quebre a linha */
-  word-break: break-word; /* CORREÇÃO: Garante que palavras longas quebrem */
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* Alta especificidade para garantir override de estilos globais .product-name */
+.estoque .estoque-product-name {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  margin: 0 0 clamp(10px, 1.2vw, 14px) 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .product-details {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(8px, 1vw, 12px);
+  flex: 1;
 }
 
 .quantity-info {
@@ -190,16 +234,23 @@
 }
 
 .quantity-label {
-  font-size: 14px;
+  font-size: clamp(10px, 1.1vw, 12px);
   color: #6c757d;
+  font-weight: 500;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .quantity-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 12px);
+  border-radius: clamp(12px, 1.5vw, 16px);
+  font-size: clamp(9px, 1vw, 11px);
   font-weight: 600;
   color: white;
+  min-width: clamp(24px, 3vw, 32px);
+  text-align: center;
 }
 
 .quantity-badge.red {
@@ -207,8 +258,8 @@
 }
 
 .quantity-badge.yellow {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #ffd556;
+  color: #ffffff;
 }
 
 .quantity-badge.green {
@@ -220,45 +271,91 @@
   align-items: center;
 }
 
+/* Badge de status ajustada para ocupar corretamente o fundo em múltiplas linhas */
 .status-badge {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: #fff;
+  white-space: normal; /* permite quebra para textos longos */
+  min-width: 140px; /* largura mínima para evitar recortes do fundo */
+  background-clip: padding-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: clamp(4px, 0.5vw, 6px) clamp(8px, 1vw, 10px);
+  border-radius: clamp(4px, 0.5vw, 6px);
+  font-size: clamp(8px, 0.9vw, 10px);
   font-weight: 500;
   color: white;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .status-badge.red {
-  background-color: #dc3545;
+  background: linear-gradient(135deg,#dc3545,#c92a3a);
+  color: #ffffff !important;
 }
 
+/* Amarelo mais suave e elegante */
 .status-badge.yellow {
-  background-color: #ffc107;
-  color: #212529;
+  background: linear-gradient(135deg,#ffe066,#ffd152);
+  color: white;
 }
 
 .status-badge.green {
-  background-color: #28a745;
+  background: linear-gradient(135deg,#28a745,#23963c);
+  color: #ffffff !important;
 }
 
 .store-info {
-  padding-top: 8px;
+  padding-top: clamp(6px, 0.8vw, 8px);
   border-top: 1px solid #e9ecef;
+  margin-top: clamp(4px, 0.6vw, 6px);
 }
 
 .store-name {
-  font-size: 12px;
+  font-size: clamp(9px, 1vw, 11px);
   color: #6c757d;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-info {
+  margin-top: clamp(-8px, -1vw, -6px);
+}
+
+.platform-list {
+  font-size: clamp(9px, 1vw, 11px);
+  color: #495057;
+  font-weight: 400;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 /* Estilos para os botões de ação dos produtos */
 .product-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
+  gap: clamp(4px, 0.6vw, 6px);
+  margin-top: clamp(8px, 1vw, 10px);
+  padding-top: clamp(8px, 1vw, 10px);
   border-top: 1px solid #e9ecef;
 }
 
@@ -266,15 +363,15 @@
 .edit-product-link {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: clamp(4px, 0.5vw, 6px);
   background: none;
   border: none;
   color: #e91e63;
-  font-size: 12px;
+  font-size: clamp(9px, 1vw, 11px);
   font-weight: 600;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: clamp(2px, 0.3vw, 4px) clamp(4px, 0.6vw, 6px);
+  border-radius: clamp(3px, 0.4vw, 4px);
   transition: all 0.2s ease;
   text-align: left;
   text-decoration: underline;
@@ -292,77 +389,170 @@
 
 
 
-/* Responsive */
-@media (max-width: 768px) {
-  .estoque {
-    padding: 16px;
-  }
-  
-  .estoque-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-  
-  .page-title {
-    font-size: 28px;
-  }
-  
+/* Media Queries Responsivas */
+@media (max-width: 1366px) {
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(14px, 1.8vw, 20px);
   }
-  
+
+  .product-image {
+    height: clamp(110px, 14vw, 160px);
+  }
+}
+
+@media (max-width: 1280px) {
+  .estoque-header {
+    gap: clamp(10px, 1.3vw, 16px);
+  }
+
+  .products-grid {
+    gap: clamp(12px, 1.6vw, 18px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(14px, 1.8vw, 20px);
+  }
+
+  .product-image {
+    height: clamp(130px, 18vw, 200px);
+  }
+
   .search-box {
     max-width: 100%;
   }
+}
 
-  
+@media (max-width: 900px) {
+  .estoque-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .add-product-btn,
+  .filter-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .estoque {
+    padding: clamp(12px, 1.8vw, 18px);
+  }
+
+  .page-title {
+    font-size: clamp(20px, 3.2vw, 28px);
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(12px, 1.8vw, 16px);
+  }
+
+  .product-image {
+    height: clamp(110px, 20vw, 160px);
+  }
+
+  .product-info {
+    padding: clamp(12px, 1.6vw, 16px);
+  }
 
   .product-actions {
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
+    gap: clamp(5px, 0.8vw, 8px);
   }
-  
-  .add-product-link,
-  .edit-product-link {
+}
+
+@media (max-width: 600px) {
+  .header-actions {
+    flex-direction: column;
+    gap: clamp(8px, 1.4vw, 12px);
+  }
+
+  .add-product-btn,
+  .filter-btn {
     width: 100%;
-    text-align: center;
-    justify-content: center;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(12px, 2vw, 16px);
+  }
+
+  .product-image {
+    height: clamp(140px, 28vw, 200px);
+  }
+
+  .product-name {
+    font-size: clamp(14px, 2.5vw, 17px);
+  }
+
+  .quantity-label {
+    font-size: clamp(11px, 2vw, 13px);
+  }
+
+  .store-name {
+    font-size: clamp(9px, 1.8vw, 11px);
   }
 }
 
 @media (max-width: 480px) {
   .estoque {
-    padding: 12px;
+    padding: clamp(10px, 2vw, 14px);
   }
-  
+
+  .page-title {
+    font-size: clamp(18px, 3.8vw, 24px);
+  }
+
   .header-actions {
-    flex-direction: column;
-    width: 100%;
+    gap: clamp(8px, 1.6vw, 12px);
   }
-  
+
   .add-product-btn,
   .filter-btn {
+    font-size: clamp(11px, 2.2vw, 13px);
+    padding: clamp(7px, 1.4vw, 10px) clamp(10px, 2vw, 14px);
+  }
+
+  .products-grid {
+    gap: clamp(10px, 2vw, 14px);
+  }
+
+  .product-card {
+    border-radius: clamp(8px, 1.6vw, 12px);
+  }
+
+  .product-info {
+    padding: clamp(10px, 2vw, 14px);
+  }
+
+  .product-image {
+    height: clamp(120px, 32vw, 180px);
+  }
+
+  .product-name {
+    font-size: clamp(13px, 2.8vw, 16px);
+    margin-bottom: clamp(8px, 1.6vw, 12px);
+  }
+
+  .product-actions {
+    margin-top: clamp(8px, 1.6vw, 12px);
+    padding-top: clamp(8px, 1.6vw, 12px);
+  }
+
+  .add-product-link,
+  .edit-product-link {
     width: 100%;
     justify-content: center;
-  }
-  
-  .page-title {
-    font-size: 24px;
-  }
-  
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .product-info {
-    padding: 16px;
+    font-size: clamp(9px, 1.8vw, 11px);
   }
 }
