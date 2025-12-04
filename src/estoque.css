@@ -76,6 +76,41 @@
   max-width: 400px;
 }
 
+.product-image {
+    /* Define uma altura fixa para o contêiner (ajuste conforme a necessidade do seu card) */
+    height: 200px; 
+    width: 100%;
+    overflow: hidden; /* Garante que a imagem não vaze */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8; /* Cor de fundo para o placeholder */
+}
+
+/* 2. Estilo para a tag <img> (.product-img) */
+.product-img {
+    /* Regras essenciais para o ajuste */
+    width: 100%; /* Ocupa 100% da largura do contêiner */
+    height: 100%; /* Ocupa 100% da altura do contêiner */
+    
+    /* Garante que a imagem cubra o contêiner sem distorcer, cortando o excesso */
+    object-fit: cover; 
+    
+    /* Se preferir que a imagem inteira apareça (com barras laterais/superiores): */
+    /* object-fit: contain; */
+}
+
+/* 3. Estilo para o placeholder (opcional) */
+.image-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: #999;
+    border: 1px dashed #ccc;
+}
+
 .search-icon {
   position: absolute;
   left: 12px;
